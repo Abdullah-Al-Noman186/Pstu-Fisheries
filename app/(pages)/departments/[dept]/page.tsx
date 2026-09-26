@@ -9,8 +9,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 
-export default function DeptPage({ params }: { params: Promise<{ dept: string }> }) {
-  const { dept } = use(params);
+export default async function DeptPage({ params }: { params: Promise<{ dept: string }> }) {
+  const { dept } = await params ;
   const deptKey  = dept.toUpperCase() as Department;
   const deptName = DEPARTMENTS[deptKey];
 
