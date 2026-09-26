@@ -2,7 +2,7 @@
   "name": "pstu-fisheries",
   "version": "0.1.0",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -28,7 +28,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^7.6.0",
     "mongoose": "^8.3.1",
-    "next": "^16.3.6",
+    "next": "^15.3.4",
     "postcss": "^8",
     "react": "^18",
     "react-dom": "^18",
@@ -40,6 +40,6 @@
   },
   "devDependencies": {
     "eslint": "^8.57.0",
-    "eslint-config-next": "^15.0.0"
+    "eslint-config-next": "^15.3.4"
   }
 }
