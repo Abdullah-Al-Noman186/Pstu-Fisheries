@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Profile from "@/models/Profile";
 
-export async function GET(_: NextRequest, { params }: { params: { uid: string } }) {
+export async function GET(_: NextRequest, { params }: { params: Promise<{ uid: string }> }) {
   try {
     await connectDB();
-    const profile = await Profile.findOne({ uid: params.uid });
+    const { uid }  = await params;
+    const profile  = await Profile.findOne({ uid });
     if (!profile) return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
     return NextResponse.json({ success: true, data: profile });
   } catch {

@@ -7,15 +7,19 @@ import { FaCalendar, FaUser, FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
-export default function NewsDetailPage({ params }: { params: { slug: string } }) {
-  const [news, setNews]     = useState<News | null>(null);
+export default function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const [news, setNews]       = useState<News | null>(null);
   const [loading, setLoading] = useState(true);
+  const [slug, setSlug]       = useState("");
 
   useEffect(() => {
-    axios.get(`/api/news?slug=${params.slug}`)
-      .then(({ data }) => { if (data.success && data.data[0]) setNews(data.data[0]); })
-      .finally(() => setLoading(false));
-  }, [params.slug]);
+    params.then(p => {
+      setSlug(p.slug);
+      axios.get(`/api/news?slug=${p.slug}`)
+        .then(({ data }) => { if (data.success && data.data[0]) setNews(data.data[0]); })
+        .finally(() => setLoading(false));
+    });
+  }, [params]);
 
   if (loading) return <div className="pt-24"><LoadingSpinner /></div>;
   if (!news) return <div className="pt-24 text-center text-gray-400 py-20">Article not found.</div>;
