@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { DEPARTMENTS, Department } from "@/types";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -20,10 +19,10 @@ export default async function DeptPage({ params }: { params: Promise<{ dept: str
             className="inline-flex items-center gap-2 text-ocean-300 hover:text-white text-sm mb-6 transition-colors">
             <FaArrowLeft /> All Departments
           </Link>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <div>
             <span className="font-mono font-bold text-teal-400 text-lg">{deptKey}</span>
             <h1 className="text-3xl md:text-4xl font-display font-bold mt-1">{deptName}</h1>
-          </motion.div>
+          </div>
         </div>
       </div>
       <DeptTeachers deptKey={deptKey} />
