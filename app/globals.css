@@ -1,26 +1,50 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply text-gray-800 font-sans antialiased; }
+  h1, h2, h3 { @apply font-display; }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .btn-ocean {
+    @apply bg-ocean-700 hover:bg-ocean-800 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg;
+  }
+  .btn-teal {
+    @apply bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200;
+  }
+  .card-fish {
+    @apply bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-ocean-100;
+  }
+  .section-title {
+    @apply text-3xl md:text-4xl font-display font-bold text-ocean-900 mb-3;
+  }
+  .section-sub {
+    @apply text-ocean-600 text-lg max-w-2xl;
+  }
+  .wave-divider {
+    @apply w-16 h-1 bg-teal-500 rounded-full my-4;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.fish-scale-bg {
+  background-color: #eff8ff;
+  background-image:
+    radial-gradient(circle at 50% 0%,   rgba(29,114,235,0.08) 25%, transparent 25%),
+    radial-gradient(circle at 0%   50%, rgba(29,114,235,0.05) 25%, transparent 25%),
+    radial-gradient(circle at 100% 50%, rgba(29,114,235,0.05) 25%, transparent 25%);
+  background-size: 60px 60px;
 }
+
+.ocean-text-gradient {
+  background: linear-gradient(135deg, #142a54, #1d72eb, #14b8a6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #eff8ff; }
+::-webkit-scrollbar-thumb { background: #1d72eb; border-radius: 4px; }
