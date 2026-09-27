@@ -45,32 +45,82 @@ const stats = [
 
 export default function StatsSection() {
   return (
-    <section className="relative overflow-hidden bg-[#020b18] py-20 sm:py-24">
+    <section className="relative overflow-hidden bg-[#F0FAFC] py-20 sm:py-24">
 
       {/* =====================================================
-          BACKGROUND ATMOSPHERE
+          BACKGROUND OCEAN ATMOSPHERE
       ===================================================== */}
 
       <div className="pointer-events-none absolute inset-0">
 
-        {/* Top transition from hero */}
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#020b18] to-transparent" />
+        {/* Soft top transition */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#D9F3FA] to-transparent" />
 
-        {/* Soft ocean glow */}
-        <div className="absolute left-[10%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-teal-400/[0.045] blur-[120px]" />
-
-        <div className="absolute right-[8%] top-1/3 h-80 w-80 rounded-full bg-cyan-400/[0.04] blur-[130px]" />
-
-        {/* Very subtle grid */}
+        {/* Ocean blue glow */}
         <div
-          className="absolute inset-0 opacity-[0.018]"
+          className="
+            absolute
+            left-[5%]
+            top-[25%]
+            h-80
+            w-80
+            rounded-full
+            bg-[#22C1DC]/10
+            blur-[110px]
+          "
+        />
+
+        {/* Aqua glow */}
+        <div
+          className="
+            absolute
+            right-[5%]
+            top-[15%]
+            h-96
+            w-96
+            rounded-full
+            bg-[#2DD4BF]/10
+            blur-[130px]
+          "
+        />
+
+        {/* Bottom blue glow */}
+        <div
+          className="
+            absolute
+            bottom-[-120px]
+            left-1/2
+            h-96
+            w-[700px]
+            -translate-x-1/2
+            rounded-full
+            bg-[#0891B2]/8
+            blur-[120px]
+          "
+        />
+
+        {/* Subtle ocean grid */}
+        <div
+          className="absolute inset-0 opacity-[0.035]"
           style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
+            backgroundImage: `
+              linear-gradient(#075985 1px, transparent 1px),
+              linear-gradient(90deg, #075985 1px, transparent 1px)
+            `,
+            backgroundSize: "70px 70px",
           }}
         />
+
+        {/* Floating bubbles */}
+        <div className="absolute left-[15%] top-[30%] h-3 w-3 rounded-full border border-[#0891B2]/20" />
+        <div className="absolute left-[22%] top-[65%] h-5 w-5 rounded-full border border-[#0891B2]/15" />
+        <div className="absolute right-[18%] top-[40%] h-4 w-4 rounded-full border border-[#2DD4BF]/20" />
+        <div className="absolute right-[12%] bottom-[25%] h-2 w-2 rounded-full bg-[#22C1DC]/20" />
       </div>
+
+      {/* =====================================================
+          MAIN CONTAINER
+      ===================================================== */}
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
@@ -83,29 +133,82 @@ export default function StatsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7 }}
-          className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
+          className="
+            mb-10
+            flex
+            flex-col
+            gap-5
+            sm:flex-row
+            sm:items-end
+            sm:justify-between
+          "
         >
-          <div>
-            <div className="mb-3 flex items-center gap-3">
-              <span className="h-px w-8 bg-gradient-to-r from-transparent to-teal-400/70" />
 
-              <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-teal-300/80">
+          <div>
+
+            {/* Small label */}
+            <div className="mb-3 flex items-center gap-3">
+
+              <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#0891B2]" />
+
+              <span
+                className="
+                  text-[10px]
+                  font-bold
+                  uppercase
+                  tracking-[0.3em]
+                  text-[#087EA4]
+                "
+              >
                 By the numbers
               </span>
+
+              <span className="h-1.5 w-1.5 rounded-full bg-[#2DD4BF]" />
+
             </div>
 
-            <h2 className="max-w-xl text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            {/* Heading */}
+            <h2
+              className="
+                max-w-xl
+                text-2xl
+                font-bold
+                tracking-tight
+                text-[#123B4A]
+                sm:text-3xl
+              "
+            >
               A community built around{" "}
-              <span className="bg-gradient-to-r from-cyan-300 to-teal-300 bg-clip-text text-transparent">
+
+              <span
+                className="
+                  bg-gradient-to-r
+                  from-[#087EA4]
+                  via-[#0891B2]
+                  to-[#0D9488]
+                  bg-clip-text
+                  text-transparent
+                "
+              >
                 knowledge & impact.
               </span>
             </h2>
+
           </div>
 
-          <p className="max-w-sm text-sm leading-6 text-slate-500">
+          {/* Description */}
+          <p
+            className="
+              max-w-sm
+              text-sm
+              leading-6
+              text-[#55727D]
+            "
+          >
             A snapshot of the people, research and academic community shaping
             the future of fisheries and aquatic sciences.
           </p>
+
         </motion.div>
 
         {/* =====================================================
@@ -113,19 +216,32 @@ export default function StatsSection() {
         ===================================================== */}
 
         <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.98 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.2 }}
+          initial={{
+            opacity: 0,
+            y: 30,
+            scale: 0.98,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.2,
+          }}
           transition={{
             duration: 0.8,
             ease: [0.22, 1, 0.36, 1],
           }}
           className="
-            relative overflow-hidden
+            relative
+            overflow-hidden
             rounded-[2rem]
-            border border-white/[0.09]
-            bg-white/[0.025]
-            shadow-[0_30px_80px_rgba(0,0,0,0.25)]
+            border
+            border-[#087EA4]/10
+            bg-white/70
+            shadow-[0_25px_70px_rgba(8,126,164,0.10)]
             backdrop-blur-[28px]
           "
         >
@@ -134,12 +250,61 @@ export default function StatsSection() {
               GLASS REFLECTION
           ================================================= */}
 
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/[0.055] to-transparent" />
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-x-0
+              top-0
+              h-32
+              bg-gradient-to-b
+              from-white/90
+              to-transparent
+            "
+          />
 
-          <div className="pointer-events-none absolute -right-32 -top-40 h-80 w-40 rotate-[35deg] bg-white/[0.018] blur-2xl" />
+          {/* Top ocean shine */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              left-1/4
+              top-0
+              h-px
+              w-1/2
+              bg-gradient-to-r
+              from-transparent
+              via-[#22C1DC]/40
+              to-transparent
+            "
+          />
 
-          {/* Inner glass border */}
-          <div className="pointer-events-none absolute inset-1 rounded-[1.9rem] border border-white/[0.025]" />
+          {/* Right glass reflection */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              -right-32
+              -top-40
+              h-80
+              w-40
+              rotate-[35deg]
+              bg-[#22C1DC]/[0.025]
+              blur-2xl
+            "
+          />
+
+          {/* Inner border */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-1
+              rounded-[1.9rem]
+              border
+              border-[#087EA4]/[0.04]
+            "
+          />
 
           {/* =================================================
               STATS GRID
@@ -170,182 +335,290 @@ export default function StatsSection() {
                     delay: index * 0.08,
                   }}
                   className={`
-                    group relative
+                    group
+                    relative
                     min-h-[190px]
                     p-6
                     sm:p-7
-                    ${index < stats.length - 1
-                      ? "border-b border-white/[0.06] lg:border-b-0 lg:border-r"
-                      : ""}
-                    ${index === 1
-                      ? "md:border-r md:border-white/[0.06] lg:border-r"
-                      : ""}
-                    ${index === 2
-                      ? "md:border-b md:border-white/[0.06] lg:border-b-0"
-                      : ""}
-                    transition-colors duration-500
-                    hover:bg-white/[0.025]
+
+                    ${
+                      index < stats.length - 1
+                        ? "border-b border-[#087EA4]/[0.08] lg:border-b-0 lg:border-r"
+                        : ""
+                    }
+
+                    ${
+                      index === 1
+                        ? "md:border-r md:border-[#087EA4]/[0.08] lg:border-r"
+                        : ""
+                    }
+
+                    ${
+                      index === 2
+                        ? "md:border-b md:border-[#087EA4]/[0.08] lg:border-b-0"
+                        : ""
+                    }
+
+                    transition-all
+                    duration-500
+                    hover:bg-[#E8F8FB]/70
                   `}
                 >
 
-                  {/* Hover glow */}
-                  <div className="
-                    pointer-events-none
-                    absolute -right-10 -top-10
-                    h-28 w-28
-                    rounded-full
-                    bg-teal-300/[0.07]
-                    opacity-0
-                    blur-3xl
-                    transition-opacity
-                    duration-500
-                    group-hover:opacity-100
-                  " />
+                  {/* =================================================
+                      HOVER GLOW
+                  ================================================= */}
 
-                  {/* Top row */}
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      -right-10
+                      -top-10
+                      h-28
+                      w-28
+                      rounded-full
+                      bg-[#22C1DC]/15
+                      opacity-0
+                      blur-3xl
+                      transition-opacity
+                      duration-500
+                      group-hover:opacity-100
+                    "
+                  />
+
+                  {/* =================================================
+                      TOP ROW
+                  ================================================= */}
+
                   <div className="relative flex items-center justify-between">
 
-                    <div className="
-                      flex h-10 w-10
-                      items-center justify-center
-                      rounded-xl
-                      border border-white/[0.07]
-                      bg-white/[0.035]
-                      text-teal-300
-                      shadow-inner
-                      backdrop-blur-xl
-                      transition-all
-                      duration-500
-                      group-hover:border-teal-300/20
-                      group-hover:bg-teal-300/[0.06]
-                    ">
+                    {/* Icon */}
+                    <div
+                      className="
+                        flex
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-xl
+                        border
+                        border-[#087EA4]/10
+                        bg-gradient-to-br
+                        from-[#E8F8FB]
+                        to-white
+                        text-[#087EA4]
+                        shadow-[0_5px_20px_rgba(8,126,164,0.08)]
+                        transition-all
+                        duration-500
+
+                        group-hover:border-[#0891B2]/25
+                        group-hover:bg-[#D9F3FA]
+                        group-hover:text-[#075985]
+                        group-hover:shadow-[0_8px_25px_rgba(8,126,164,0.15)]
+                      "
+                    >
                       <Icon className="text-sm" />
                     </div>
 
-                    {/* Tiny index */}
-                    <span className="
-                      font-mono
-                      text-[9px]
-                      tracking-widest
-                      text-white/[0.12]
-                      transition-colors
-                      group-hover:text-teal-300/30
-                    ">
+                    {/* Index */}
+                    <span
+                      className="
+                        font-mono
+                        text-[9px]
+                        tracking-widest
+                        text-[#087EA4]/25
+                        transition-colors
+                        duration-300
+                        group-hover:text-[#087EA4]/50
+                      "
+                    >
                       0{index + 1}
                     </span>
+
                   </div>
 
-                  {/* Number */}
+                  {/* =================================================
+                      NUMBER
+                  ================================================= */}
+
                   <div className="relative mt-7 flex items-end gap-2">
 
-                    <span className="
-                      text-4xl
-                      font-bold
-                      tracking-[-0.04em]
-                      text-white
-                      transition-all
-                      duration-500
-                      group-hover:text-teal-50
-                    ">
+                    <span
+                      className="
+                        text-4xl
+                        font-bold
+                        tracking-[-0.04em]
+                        text-[#123B4A]
+                        transition-all
+                        duration-500
+                        group-hover:text-[#075985]
+                      "
+                    >
                       {stat.value}
                     </span>
 
-                    <FaArrowUp className="
-                      mb-2
-                      text-[8px]
-                      text-teal-300/40
-                      transition-all
-                      duration-500
-                      group-hover:-translate-y-1
-                      group-hover:text-teal-300
-                    " />
+                    <FaArrowUp
+                      className="
+                        mb-2
+                        text-[8px]
+                        text-[#0891B2]/50
+                        transition-all
+                        duration-500
+                        group-hover:-translate-y-1
+                        group-hover:text-[#0891B2]
+                      "
+                    />
+
                   </div>
 
-                  {/* Label */}
-                  <p className="
-                    relative
-                    mt-1
-                    text-sm
-                    font-medium
-                    text-slate-300
-                    transition-colors
-                    duration-300
-                    group-hover:text-white
-                  ">
+                  {/* =================================================
+                      LABEL
+                  ================================================= */}
+
+                  <p
+                    className="
+                      relative
+                      mt-1
+                      text-sm
+                      font-semibold
+                      text-[#164E63]
+                      transition-colors
+                      duration-300
+                      group-hover:text-[#075985]
+                    "
+                  >
                     {stat.label}
                   </p>
 
-                  {/* Human detail */}
-                  <p className="
-                    relative
-                    mt-1
-                    text-[11px]
-                    leading-5
-                    text-slate-600
-                    transition-colors
-                    duration-300
-                    group-hover:text-slate-500
-                  ">
+                  {/* =================================================
+                      DESCRIPTION
+                  ================================================= */}
+
+                  <p
+                    className="
+                      relative
+                      mt-1
+                      text-[11px]
+                      leading-5
+                      text-[#66838D]
+                      transition-colors
+                      duration-300
+                      group-hover:text-[#55727D]
+                    "
+                  >
                     {stat.description}
                   </p>
 
-                  {/* Bottom accent */}
-                  <div className="
-                    absolute
-                    bottom-0
-                    left-6
-                    h-px
-                    w-0
-                    bg-gradient-to-r
-                    from-teal-300/60
-                    to-transparent
-                    transition-all
-                    duration-700
-                    group-hover:w-16
-                  " />
+                  {/* =================================================
+                      BOTTOM ACCENT
+                  ================================================= */}
+
+                  <div
+                    className="
+                      absolute
+                      bottom-0
+                      left-6
+                      h-[2px]
+                      w-0
+                      rounded-full
+                      bg-gradient-to-r
+                      from-[#0891B2]
+                      to-[#2DD4BF]
+                      transition-all
+                      duration-700
+                      group-hover:w-16
+                    "
+                  />
 
                 </motion.div>
               );
             })}
+
           </div>
 
-          {/* Bottom glass highlight */}
-          <div className="
-            pointer-events-none
-            absolute
-            bottom-0
-            left-0
-            right-0
-            h-px
-            bg-gradient-to-r
-            from-transparent
-            via-white/[0.12]
-            to-transparent
-          " />
+          {/* =================================================
+              BOTTOM GLASS HIGHLIGHT
+          ================================================= */}
+
+          <div
+            className="
+              pointer-events-none
+              absolute
+              bottom-0
+              left-0
+              right-0
+              h-px
+              bg-gradient-to-r
+              from-transparent
+              via-[#0891B2]/20
+              to-transparent
+            "
+          />
+
         </motion.div>
 
         {/* =====================================================
-            SMALL FOOTNOTE
+            FOOTNOTE
         ===================================================== */}
 
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.5 }}
+          initial={{
+            opacity: 0,
+          }}
+          whileInView={{
+            opacity: 1,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.7,
+            delay: 0.5,
+          }}
           className="mt-5 flex items-center justify-between"
         >
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-teal-300 shadow-[0_0_10px_rgba(45,212,191,0.7)]" />
 
-            <span className="text-[9px] uppercase tracking-[0.25em] text-slate-600">
+          <div className="flex items-center gap-2">
+
+            <span
+              className="
+                h-1.5
+                w-1.5
+                rounded-full
+                bg-[#0891B2]
+                shadow-[0_0_10px_rgba(8,145,178,0.5)]
+              "
+            />
+
+            <span
+              className="
+                text-[9px]
+                font-medium
+                uppercase
+                tracking-[0.25em]
+                text-[#55727D]
+              "
+            >
               PSTU • Faculty of Fisheries
             </span>
+
           </div>
 
-          <span className="hidden text-[9px] uppercase tracking-[0.25em] text-slate-700 sm:block">
+          <span
+            className="
+              hidden
+              text-[9px]
+              font-medium
+              uppercase
+              tracking-[0.25em]
+              text-[#7A969E]
+              sm:block
+            "
+          >
             Education · Research · Sustainability
           </span>
+
         </motion.div>
 
       </div>

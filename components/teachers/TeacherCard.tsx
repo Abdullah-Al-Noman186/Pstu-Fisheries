@@ -1,3 +1,4 @@
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -7,8 +8,8 @@ import {
   FaEnvelope,
   FaBook,
   FaPhone,
-  // FaChalkboardTeacher,
   FaArrowUpRightFromSquare,
+  FaGraduationCap,
 } from "react-icons/fa6";
 
 interface Props {
@@ -28,48 +29,48 @@ const deptStyles: Record<
   }
 > = {
   AQC: {
-    accent: "text-cyan-300",
-    accentSoft: "bg-cyan-400/[0.08]",
-    border: "border-cyan-300/20",
-    glow: "group-hover:shadow-[0_0_35px_rgba(34,211,238,0.07)]",
-    dot: "bg-cyan-300",
+    accent: "text-[#087EA4]",
+    accentSoft: "bg-[#0891B2]/[0.08]",
+    border: "border-[#0891B2]/20",
+    glow: "hover:shadow-[0_20px_55px_rgba(8,145,178,0.12)]",
+    dot: "bg-[#0891B2]",
   },
   FBG: {
-    accent: "text-emerald-300",
-    accentSoft: "bg-emerald-400/[0.08]",
-    border: "border-emerald-300/20",
-    glow: "group-hover:shadow-[0_0_35px_rgba(52,211,153,0.07)]",
-    dot: "bg-emerald-300",
+    accent: "text-[#087A68]",
+    accentSoft: "bg-[#2DD4BF]/[0.10]",
+    border: "border-[#2DD4BF]/25",
+    glow: "hover:shadow-[0_20px_55px_rgba(45,212,191,0.12)]",
+    dot: "bg-[#2DD4BF]",
   },
   FMN: {
-    accent: "text-violet-300",
-    accentSoft: "bg-violet-400/[0.08]",
-    border: "border-violet-300/20",
-    glow: "group-hover:shadow-[0_0_35px_rgba(167,139,250,0.07)]",
-    dot: "bg-violet-300",
+    accent: "text-[#6D5CC6]",
+    accentSoft: "bg-[#8B7ED8]/[0.08]",
+    border: "border-[#8B7ED8]/20",
+    glow: "hover:shadow-[0_20px_55px_rgba(139,126,216,0.12)]",
+    dot: "bg-[#8B7ED8]",
   },
   FST: {
-    accent: "text-amber-300",
-    accentSoft: "bg-amber-400/[0.08]",
-    border: "border-amber-300/20",
-    glow: "group-hover:shadow-[0_0_35px_rgba(251,191,36,0.07)]",
-    dot: "bg-amber-300",
+    accent: "text-[#A16207]",
+    accentSoft: "bg-[#F59E0B]/[0.09]",
+    border: "border-[#F59E0B]/20",
+    glow: "hover:shadow-[0_20px_55px_rgba(245,158,11,0.12)]",
+    dot: "bg-[#F59E0B]",
   },
   MFO: {
-    accent: "text-sky-300",
-    accentSoft: "bg-sky-400/[0.08]",
-    border: "border-sky-300/20",
-    glow: "group-hover:shadow-[0_0_35px_rgba(56,189,248,0.07)]",
-    dot: "bg-sky-300",
+    accent: "text-[#075985]",
+    accentSoft: "bg-[#087EA4]/[0.08]",
+    border: "border-[#087EA4]/20",
+    glow: "hover:shadow-[0_20px_55px_rgba(8,126,164,0.12)]",
+    dot: "bg-[#087EA4]",
   },
 };
 
 const fallbackStyle = {
-  accent: "text-cyan-300",
-  accentSoft: "bg-cyan-400/[0.08]",
-  border: "border-cyan-300/20",
-  glow: "group-hover:shadow-[0_0_35px_rgba(34,211,238,0.07)]",
-  dot: "bg-cyan-300",
+  accent: "text-[#087EA4]",
+  accentSoft: "bg-[#0891B2]/[0.08]",
+  border: "border-[#0891B2]/20",
+  glow: "hover:shadow-[0_20px_55px_rgba(8,145,178,0.12)]",
+  dot: "bg-[#0891B2]",
 };
 
 export default function TeacherCard({
@@ -77,64 +78,71 @@ export default function TeacherCard({
   index = 0,
   onClick,
 }: Props) {
-  const style = deptStyles[teacher.department || ""] ?? fallbackStyle;
+  const style =
+    deptStyles[teacher.department || ""] ?? fallbackStyle;
+
+  const departmentName = teacher.department
+    ? DEPARTMENTS[teacher.department as Department]
+    : "";
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 22 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      viewport={{ once: true, margin: "-30px" }}
       transition={{
         duration: 0.45,
         delay: Math.min(index * 0.05, 0.3),
         ease: "easeOut",
       }}
       whileHover={{
-        y: -5,
-        transition: { duration: 0.25, ease: "easeOut" },
+        y: -6,
+        transition: {
+          duration: 0.25,
+          ease: "easeOut",
+        },
       }}
       onClick={onClick}
-      className={`group relative isolate cursor-pointer overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-xl transition-[border-color,box-shadow] duration-500 ${style.glow}`}
+      className={`group relative isolate cursor-pointer overflow-hidden rounded-[24px] border border-[#087EA4]/10 bg-white/80 shadow-[0_10px_35px_rgba(8,126,164,0.055)] backdrop-blur-xl transition-all duration-500 ${style.glow}`}
     >
       {/* =====================================================
           BACKGROUND ATMOSPHERE
       ====================================================== */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Department glow */}
         <div
-          className={`absolute -right-20 -top-20 h-48 w-48 rounded-full ${style.accentSoft} opacity-40 blur-[70px] transition-opacity duration-500 group-hover:opacity-70`}
+          className={`absolute -right-16 -top-16 h-44 w-44 rounded-full ${style.accentSoft} opacity-60 blur-[65px] transition-all duration-700 group-hover:scale-125 group-hover:opacity-90`}
         />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.018] via-transparent to-transparent" />
+        <div className="absolute -bottom-20 -left-16 h-36 w-36 rounded-full bg-[#2DD4BF]/[0.035] blur-[60px] transition-opacity duration-700 group-hover:opacity-80" />
 
-        <div
-          className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.025), transparent 45%)",
-          }}
-        />
+        {/* Soft top gradient */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0891B2]/[0.025] to-transparent" />
+
+        {/* Hover wash */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0891B2]/[0.025] via-transparent to-[#2DD4BF]/[0.02] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
       </div>
 
       {/* =====================================================
-          TOP ACCENT
+          TOP ACCENT LINE
       ====================================================== */}
       <div
-        className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-current to-transparent ${style.accent} opacity-25 transition-opacity duration-500 group-hover:opacity-60`}
+        className={`absolute inset-x-6 top-0 h-[2px] bg-gradient-to-r from-transparent via-current to-transparent ${style.accent} opacity-30 transition-opacity duration-500 group-hover:opacity-80`}
       />
 
       {/* =====================================================
-          HOD
+          HOD BADGE
       ====================================================== */}
       {teacher.isHOD && (
         <div
-          className={`absolute left-4 top-4 z-20 inline-flex items-center gap-1.5 rounded-full border ${style.border} ${style.accentSoft} px-2.5 py-1 backdrop-blur-xl`}
+          className={`absolute left-4 top-4 z-20 inline-flex items-center gap-1.5 rounded-full border ${style.border} ${style.accentSoft} px-2.5 py-1.5 backdrop-blur-md`}
         >
           <span
             className={`h-1.5 w-1.5 rounded-full ${style.dot} shadow-[0_0_8px_currentColor]`}
           />
 
           <span
-            className={`text-[8px] font-semibold uppercase tracking-[0.18em] ${style.accent}`}
+            className={`text-[8px] font-bold uppercase tracking-[0.16em] ${style.accent}`}
           >
             Head of Department
           </span>
@@ -142,133 +150,161 @@ export default function TeacherCard({
       )}
 
       {/* =====================================================
-          PROFILE AREA
+          MAIN CONTENT
       ====================================================== */}
-      <div className="relative z-10 flex flex-col items-center px-5 pb-5 pt-7 text-center">
-        {/* Avatar */}
-        <div className="relative mb-5">
-          <div
-            className={`absolute -inset-2 rounded-[22px] ${style.accentSoft} opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100`}
-          />
-
-          {teacher.photo ? (
-            <div
-              className={`relative h-[88px] w-[88px] overflow-hidden rounded-[20px] border ${style.border} bg-slate-900 shadow-2xl transition-transform duration-500 group-hover:scale-[1.025]`}
-            >
-              <Image
-                src={teacher.photo}
-                alt={teacher.name}
-                fill
-                sizes="88px"
-                className="object-cover"
-              />
-
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-            </div>
-          ) : (
-            <div
-              className={`relative flex h-[88px] w-[88px] items-center justify-center rounded-[20px] border ${style.border} ${style.accentSoft} shadow-2xl`}
-            >
-              <span
-                className={`font-display text-3xl font-semibold ${style.accent}`}
-              >
-                {teacher.name?.[0]?.toUpperCase()}
-              </span>
-            </div>
-          )}
-
-          {/* Small academic marker */}
-          <div
-            className={`absolute -bottom-2 -right-2 flex h-7 w-7 items-center justify-center rounded-xl border border-white/[0.08] bg-[#071321] shadow-lg`}
-          >
-            {/* <FaChalkboardTeacher
-              className={style.accent}
-              size={10}
-            /> */}
-          </div>
-        </div>
-
+      <div className="relative z-10 flex flex-col px-5 pb-5 pt-7">
         {/* =================================================
-            NAME
+            PROFILE
         ================================================== */}
-        <h3 className="max-w-[220px] font-display text-sm font-semibold leading-5 text-slate-100 transition-colors duration-300 group-hover:text-white">
-          {teacher.name}
-        </h3>
-
-        {/* Designation */}
-        {teacher.designation && (
-          <p
-            className={`mt-1.5 line-clamp-2 text-[10px] font-medium leading-4 ${style.accent}`}
-          >
-            {teacher.designation}
-          </p>
-        )}
-
-        {/* =================================================
-            DEPARTMENT
-        ================================================== */}
-        {teacher.department && (
-          <div
-            className={`mt-4 inline-flex max-w-full items-center gap-2 rounded-lg border ${style.border} ${style.accentSoft} px-2.5 py-1.5`}
-          >
-            <span
-              className={`h-1 w-1 shrink-0 rounded-full ${style.dot}`}
+        <div className="flex flex-col items-center text-center">
+          <div className="relative mb-5">
+            {/* Avatar glow */}
+            <div
+              className={`absolute -inset-3 rounded-[26px] ${style.accentSoft} opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100`}
             />
 
-            <span
-              className={`truncate text-[9px] font-medium uppercase tracking-[0.08em] ${style.accent}`}
+            {teacher.photo ? (
+              <div
+                className={`relative h-[92px] w-[92px] overflow-hidden rounded-[24px] border ${style.border} bg-[#F0FAFC] shadow-[0_12px_30px_rgba(8,126,164,0.10)] transition-transform duration-500 group-hover:scale-[1.035]`}
+              >
+                <Image
+                  src={teacher.photo}
+                  alt={teacher.name}
+                  fill
+                  sizes="92px"
+                  className="object-cover"
+                />
+
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#075985]/10 via-transparent to-white/10" />
+              </div>
+            ) : (
+              <div
+                className={`relative flex h-[92px] w-[92px] items-center justify-center rounded-[24px] border ${style.border} ${style.accentSoft} shadow-[0_12px_30px_rgba(8,126,164,0.08)]`}
+              >
+                <span
+                  className={`font-display text-3xl font-semibold ${style.accent}`}
+                >
+                  {teacher.name?.[0]?.toUpperCase()}
+                </span>
+              </div>
+            )}
+
+            {/* Academic badge */}
+            <div
+              className={`absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-xl border ${style.border} bg-white shadow-[0_6px_18px_rgba(8,126,164,0.12)]`}
             >
-              {teacher.department}
-            </span>
-
-            <span className="max-w-[130px] truncate text-[9px] text-slate-600">
-              {DEPARTMENTS[teacher.department as Department]}
-            </span>
-          </div>
-        )}
-
-        {/* =================================================
-            RESEARCH
-        ================================================== */}
-        {teacher.researchAreas && teacher.researchAreas.length > 0 && (
-          <div className="mt-4 w-full border-t border-white/[0.05] pt-4">
-            <p className="mb-2 text-left text-[8px] font-medium uppercase tracking-[0.18em] text-slate-700">
-              Research interests
-            </p>
-
-            <p className="line-clamp-2 text-left text-[10px] leading-5 text-slate-500">
-              {teacher.researchAreas.join(" · ")}
-            </p>
-          </div>
-        )}
-
-        {/* =================================================
-            FOOTER
-        ================================================== */}
-        <div className="mt-4 flex w-full items-center justify-between border-t border-white/[0.05] pt-3">
-          {/* Publications */}
-          {teacher.publications ? (
-            <div className="flex items-center gap-1.5 text-[9px] text-slate-600">
-              <FaBook size={9} className="text-slate-700" />
-              <span>
-                {teacher.publications} paper
-                {teacher.publications !== 1 ? "s" : ""}
-              </span>
+              <FaGraduationCap
+                size={11}
+                className={style.accent}
+              />
             </div>
-          ) : (
-            <span />
+          </div>
+
+          {/* =================================================
+              NAME
+          ================================================== */}
+          <h3 className="max-w-[230px] font-display text-[15px] font-bold leading-5 text-[#123B4A] transition-colors duration-300 group-hover:text-[#075985]">
+            {teacher.name}
+          </h3>
+
+          {/* =================================================
+              DESIGNATION
+          ================================================== */}
+          {teacher.designation && (
+            <p
+              className={`mt-1.5 line-clamp-2 text-[10px] font-semibold leading-4 ${style.accent}`}
+            >
+              {teacher.designation}
+            </p>
           )}
 
-          {/* Contact */}
-          <div className="flex items-center gap-1">
+          {/* =================================================
+              DEPARTMENT
+          ================================================== */}
+          {teacher.department && (
+            <div
+              className={`mt-4 inline-flex max-w-full items-center gap-2 rounded-xl border ${style.border} ${style.accentSoft} px-3 py-1.5`}
+            >
+              <span
+                className={`h-1.5 w-1.5 shrink-0 rounded-full ${style.dot}`}
+              />
+
+              <span
+                className={`text-[9px] font-bold uppercase tracking-[0.08em] ${style.accent}`}
+              >
+                {teacher.department}
+              </span>
+
+              {departmentName && (
+                <>
+                  <span className="h-3 w-px bg-[#087EA4]/10" />
+
+                  <span className="max-w-[125px] truncate text-[9px] font-medium text-[#55727D]">
+                    {departmentName}
+                  </span>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* =====================================================
+            RESEARCH
+        ====================================================== */}
+        {teacher.researchAreas &&
+          teacher.researchAreas.length > 0 && (
+            <div className="mt-5 border-t border-[#087EA4]/10 pt-4">
+              <div className="mb-2 flex items-center gap-2">
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${style.dot}`}
+                />
+
+                <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-[#55727D]/70">
+                  Research Interests
+                </p>
+              </div>
+
+              <p className="line-clamp-2 text-left text-[10px] leading-5 text-[#55727D]">
+                {teacher.researchAreas.join(" · ")}
+              </p>
+            </div>
+          )}
+
+        {/* =====================================================
+            FOOTER
+        ====================================================== */}
+        <div className="mt-5 flex items-center justify-between border-t border-[#087EA4]/10 pt-3.5">
+          {/* Publications */}
+          <div>
+            {teacher.publications ? (
+              <div className="flex items-center gap-1.5 text-[9px] font-medium text-[#55727D]">
+                <FaBook
+                  size={9}
+                  className={style.accent}
+                />
+
+                <span>
+                  {teacher.publications} paper
+                  {teacher.publications !== 1 ? "s" : ""}
+                </span>
+              </div>
+            ) : (
+              <span className="text-[9px] text-[#55727D]/40">
+                Faculty Profile
+              </span>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-1.5">
             {teacher.email && (
               <a
                 href={`mailto:${teacher.email}`}
                 onClick={(e) => e.stopPropagation()}
                 aria-label={`Email ${teacher.name}`}
-                className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.05] bg-white/[0.02] text-slate-600 transition-all duration-300 hover:border-cyan-300/20 hover:bg-cyan-400/[0.07] hover:text-cyan-300"
+                className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#087EA4]/10 bg-white text-[#55727D] shadow-sm transition-all duration-300 hover:border-[#0891B2]/25 hover:bg-[#0891B2]/[0.06] hover:text-[#087EA4]"
               >
-                <FaEnvelope size={9} />
+                <FaEnvelope size={10} />
               </a>
             )}
 
@@ -277,9 +313,9 @@ export default function TeacherCard({
                 href={`tel:${teacher.phone}`}
                 onClick={(e) => e.stopPropagation()}
                 aria-label={`Call ${teacher.name}`}
-                className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.05] bg-white/[0.02] text-slate-600 transition-all duration-300 hover:border-cyan-300/20 hover:bg-cyan-400/[0.07] hover:text-cyan-300"
+                className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#087EA4]/10 bg-white text-[#55727D] shadow-sm transition-all duration-300 hover:border-[#0891B2]/25 hover:bg-[#0891B2]/[0.06] hover:text-[#087EA4]"
               >
-                <FaPhone size={9} />
+                <FaPhone size={10} />
               </a>
             )}
 
@@ -290,20 +326,21 @@ export default function TeacherCard({
                 onClick?.();
               }}
               aria-label={`View ${teacher.name}'s profile`}
-              className={`flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.05] bg-white/[0.02] text-slate-600 transition-all duration-300 hover:${style.accent} hover:border-white/[0.1]`}
+              className={`flex h-8 w-8 items-center justify-center rounded-xl border ${style.border} ${style.accentSoft} ${style.accent} shadow-sm transition-all duration-300 hover:-translate-y-0.5`}
             >
-              <FaArrowUpRightFromSquare size={9} />
+              <FaArrowUpRightFromSquare size={10} />
             </button>
           </div>
         </div>
       </div>
 
       {/* =====================================================
-          HOVER LINE
+          BOTTOM HOVER LINE
       ====================================================== */}
       <div
-        className={`absolute inset-x-5 bottom-0 h-px origin-center scale-x-0 bg-current ${style.accent} opacity-50 transition-transform duration-500 group-hover:scale-x-100`}
+        className={`absolute inset-x-6 bottom-0 h-[2px] origin-center scale-x-0 bg-gradient-to-r from-transparent via-current to-transparent ${style.accent} opacity-70 transition-transform duration-500 group-hover:scale-x-100`}
       />
     </motion.article>
   );
 }
+

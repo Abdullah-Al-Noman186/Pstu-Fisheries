@@ -24,29 +24,38 @@ export default function DeptPageContent({
   style,
 }: Props) {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#020b18] pt-20 text-white">
-      {/* Atmospheric background */}
+    <main className="relative min-h-screen overflow-hidden bg-[#F0FAFC] pt-20 text-[#123B4A]">
+      {/* =========================================================
+          ATMOSPHERIC OCEAN BACKGROUND
+      ========================================================= */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Left ocean glow */}
         <div
           className={`absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full ${style.glow} blur-[130px]`}
         />
 
-        <div className="absolute -right-40 top-[35%] h-[520px] w-[520px] rounded-full bg-cyan-400/[0.025] blur-[140px]" />
+        {/* Right aqua glow */}
+        <div className="absolute -right-40 top-[35%] h-[520px] w-[520px] rounded-full bg-[#2DD4BF]/[0.07] blur-[140px]" />
 
+        {/* Bottom ocean glow */}
+        <div className="absolute -bottom-60 left-1/3 h-[500px] w-[500px] rounded-full bg-[#087EA4]/[0.04] blur-[150px]" />
+
+        {/* Subtle grid */}
         <div
-          className="absolute inset-0 opacity-[0.025]"
+          className="absolute inset-0 opacity-[0.035]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+              "linear-gradient(rgba(8,126,164,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(8,126,164,0.5) 1px, transparent 1px)",
             backgroundSize: "48px 48px",
           }}
         />
       </div>
 
-      {/* Header */}
+      {/* =========================================================
+          HEADER
+      ========================================================= */}
       <section className="relative px-4 pb-16 pt-12 sm:px-6 md:pb-20 md:pt-16">
         <div className="mx-auto max-w-6xl">
-
           {/* Back navigation */}
           <motion.div
             initial={{ opacity: 0, x: -10 }}
@@ -55,7 +64,7 @@ export default function DeptPageContent({
           >
             <Link
               href="/departments"
-              className="group mb-10 inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-slate-500 transition-colors hover:text-slate-200"
+              className="group mb-10 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.16em] text-[#55727D] transition-colors hover:text-[#087EA4]"
             >
               <FaArrowLeft
                 size={10}
@@ -73,13 +82,12 @@ export default function DeptPageContent({
             transition={{ duration: 0.55 }}
             className="relative"
           >
-            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
               <div className="max-w-4xl">
-
                 {/* Department code */}
                 <div className="mb-5 flex items-center gap-3">
                   <span
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.06] ${style.soft}`}
+                    className={`flex h-11 w-11 items-center justify-center rounded-xl border border-[#087EA4]/10 ${style.soft} shadow-sm`}
                   >
                     <span
                       className={`font-mono text-xs font-bold ${style.accent}`}
@@ -88,16 +96,18 @@ export default function DeptPageContent({
                     </span>
                   </span>
 
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-slate-600">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#55727D]">
                     Academic Department
                   </span>
                 </div>
 
-                <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+                {/* Department title */}
+                <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-[#123B4A] sm:text-5xl md:text-6xl">
                   {deptName}
                 </h1>
 
-                <p className="mt-5 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
+                {/* Description */}
+                <p className="mt-5 max-w-2xl text-sm leading-relaxed text-[#55727D] sm:text-base">
                   {style.description}
                 </p>
               </div>
@@ -105,10 +115,13 @@ export default function DeptPageContent({
               {/* Department marker */}
               <div className="hidden shrink-0 md:block">
                 <div
-                  className={`flex h-24 w-24 items-center justify-center rounded-2xl border border-white/[0.06] ${style.soft}`}
+                  className={`relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-3xl border border-[#087EA4]/10 ${style.soft} shadow-[0_15px_40px_rgba(8,126,164,0.08)]`}
                 >
+                  {/* Decorative circle */}
+                  <div className="absolute -right-6 -top-6 h-16 w-16 rounded-full bg-[#2DD4BF]/20 blur-xl" />
+
                   <span
-                    className={`font-mono text-2xl font-bold tracking-wider ${style.accent}`}
+                    className={`relative font-mono text-2xl font-bold tracking-wider ${style.accent}`}
                   >
                     {deptKey}
                   </span>
@@ -116,72 +129,85 @@ export default function DeptPageContent({
               </div>
             </div>
 
-            <div className="mt-10 h-px bg-gradient-to-r from-white/[0.10] via-white/[0.05] to-transparent" />
+            {/* Divider */}
+            <div className="mt-10 h-px bg-gradient-to-r from-[#087EA4]/20 via-[#0891B2]/10 to-transparent" />
           </motion.div>
         </div>
       </section>
 
-      {/* Faculty */}
+      {/* =========================================================
+          FACULTY
+      ========================================================= */}
       <section className="relative px-4 pb-24 sm:px-6">
         <div className="mx-auto max-w-6xl">
-
+          {/* Section heading */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
+            className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
           >
             <div>
               <p
-                className={`mb-2 text-[10px] uppercase tracking-[0.24em] ${style.accent} opacity-70`}
+                className={`mb-2 text-[10px] font-semibold uppercase tracking-[0.24em] ${style.accent} opacity-80`}
               >
                 Academic community
               </p>
 
-              <h2 className="font-display text-2xl font-bold text-white sm:text-3xl">
-                Faculty & teachers
+              <h2 className="font-display text-2xl font-bold text-[#123B4A] sm:text-3xl">
+                Faculty & Teachers
               </h2>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-slate-600">
+            {/* Faculty indicator */}
+            <div className="flex items-center gap-2 text-xs font-medium text-[#55727D]">
               <span
-                className={`h-1.5 w-1.5 rounded-full ${style.soft.replace(
-                  "/[0.08]",
-                  "/50"
-                )}`}
+                className={`h-2 w-2 rounded-full ${style.accent.replace(
+                  "text-",
+                  "bg-"
+                )} opacity-70`}
               />
 
               Department faculty
             </div>
           </motion.div>
 
-          <DeptTeachers deptKey={deptKey} />
+          {/* Faculty cards */}
+          <div className="rounded-3xl border border-[#087EA4]/10 bg-white/70 p-3 shadow-[0_20px_60px_rgba(8,126,164,0.06)] backdrop-blur-sm sm:p-5">
+            <DeptTeachers deptKey={deptKey} />
+          </div>
         </div>
       </section>
 
-      {/* Bottom navigation */}
-      <section className="relative border-t border-white/[0.05] px-4 py-10 sm:px-6">
+      {/* =========================================================
+          BOTTOM NAVIGATION
+      ========================================================= */}
+      <section className="relative border-t border-[#087EA4]/10 bg-white/40 px-4 py-10 sm:px-6">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-
+          {/* Departments */}
           <Link
             href="/departments"
-            className="group inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-slate-600 transition-colors hover:text-slate-300"
+            className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#55727D] transition-colors hover:text-[#087EA4]"
           >
             <FaArrowLeft
               size={9}
-              className="transition-transform group-hover:-translate-x-1"
+              className="transition-transform duration-300 group-hover:-translate-x-1"
             />
 
             Departments
           </Link>
 
+          {/* Current department */}
           <div
-            className={`flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] ${style.accent} opacity-50`}
+            className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] ${style.accent} opacity-70`}
           >
             {deptKey}
-            <FaArrowRight size={8} />
-          </div>
 
+            <FaArrowRight
+              size={8}
+              className="transition-transform duration-300"
+            />
+          </div>
         </div>
       </section>
     </main>

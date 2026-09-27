@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -32,22 +33,22 @@ const statStyles = [
   {
     icon: <FaIdCard />,
     color:
-      "border-blue-400/10 bg-blue-400/[0.06] text-blue-300",
+      "border-[#0891B2]/20 bg-[#0891B2]/[0.08] text-[#087EA4]",
   },
   {
     icon: <FaLayerGroup />,
     color:
-      "border-violet-400/10 bg-violet-400/[0.06] text-violet-300",
+      "border-[#8B7ED8]/20 bg-[#8B7ED8]/[0.08] text-[#6D5CC6]",
   },
   {
     icon: <FaGraduationCap />,
     color:
-      "border-teal-400/10 bg-teal-400/[0.06] text-teal-300",
+      "border-[#2DD4BF]/20 bg-[#2DD4BF]/[0.10] text-[#087A68]",
   },
   {
     icon: <FaChartLine />,
     color:
-      "border-cyan-400/10 bg-cyan-400/[0.06] text-cyan-300",
+      "border-[#087EA4]/20 bg-[#087EA4]/[0.08] text-[#075985]",
   },
 ];
 
@@ -95,22 +96,29 @@ export default function StudentPage() {
     : [];
 
   return (
-    <main className="relative min-h-screen text-white">
+    <main className="relative min-h-screen text-[#123B4A]">
       {/* =========================================================
           ATMOSPHERIC BACKGROUND
       ========================================================= */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full bg-cyan-400/[0.025] blur-[130px]" />
+        {/* Top-left ocean glow */}
+        <div className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full bg-[#0891B2]/[0.07] blur-[130px]" />
 
-        <div className="absolute -right-40 top-[30%] h-[500px] w-[500px] rounded-full bg-sky-400/[0.025] blur-[150px]" />
+        {/* Right ocean glow */}
+        <div className="absolute -right-40 top-[30%] h-[500px] w-[500px] rounded-full bg-[#087EA4]/[0.045] blur-[150px]" />
 
-        <div className="absolute bottom-[-220px] left-[35%] h-[450px] w-[450px] rounded-full bg-cyan-500/[0.018] blur-[140px]" />
+        {/* Bottom seafoam glow */}
+        <div className="absolute bottom-[-220px] left-[35%] h-[450px] w-[450px] rounded-full bg-[#2DD4BF]/[0.055] blur-[140px]" />
 
+        {/* Soft center glow */}
+        <div className="absolute left-[45%] top-[10%] h-[260px] w-[260px] rounded-full bg-[#075985]/[0.025] blur-[120px]" />
+
+        {/* Ocean grid */}
         <div
-          className="absolute inset-0 opacity-[0.018]"
+          className="absolute inset-0 opacity-[0.035]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+              "linear-gradient(rgba(8,126,164,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(8,126,164,0.8) 1px, transparent 1px)",
             backgroundSize: "48px 48px",
           }}
         />
@@ -126,26 +134,29 @@ export default function StudentPage() {
         className="mb-8"
       >
         <div className="flex items-start gap-4">
-          <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.05]">
-            <FaGraduationCap className="text-sm text-cyan-300" />
+          {/* Header icon */}
+          <div className="relative mt-1 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border border-[#087EA4]/12 bg-white/75 text-[#087EA4] shadow-[0_8px_25px_rgba(8,126,164,0.055)] backdrop-blur-xl">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0891B2]/50 to-transparent" />
+
+            <FaGraduationCap className="text-sm" />
           </div>
 
           <div>
-            <p className="mb-1 text-[10px] uppercase tracking-[0.24em] text-cyan-300/50">
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#087EA4]/65">
               Student portal
             </p>
 
-            <h1 className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            <h1 className="font-display bg-gradient-to-r from-[#075985] via-[#087EA4] to-[#0891B2] bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
               My Academic Record
             </h1>
 
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-500">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#55727D]">
               View your academic information and student records.
             </p>
           </div>
         </div>
 
-        <div className="mt-7 h-px bg-gradient-to-r from-white/[0.08] via-white/[0.04] to-transparent" />
+        <div className="mt-7 h-px bg-gradient-to-r from-[#087EA4]/15 via-[#087EA4]/[0.06] to-transparent" />
       </motion.section>
 
       {/* =========================================================
@@ -157,12 +168,12 @@ export default function StudentPage() {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="h-32 animate-pulse rounded-2xl border border-white/[0.05] bg-white/[0.025]"
+                className="h-32 animate-pulse rounded-[22px] border border-[#087EA4]/10 bg-white/65 shadow-[0_8px_30px_rgba(8,126,164,0.035)]"
               />
             ))}
           </div>
 
-          <div className="h-72 animate-pulse rounded-2xl border border-white/[0.05] bg-white/[0.025]" />
+          <div className="h-72 animate-pulse rounded-[24px] border border-[#087EA4]/10 bg-white/65 shadow-[0_8px_30px_rgba(8,126,164,0.035)]" />
         </div>
       )}
 
@@ -181,16 +192,16 @@ export default function StudentPage() {
           >
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.22em] text-cyan-300/50">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#087EA4]/65">
                   Academic overview
                 </p>
 
-                <h2 className="mt-1 font-display text-lg font-bold text-white">
+                <h2 className="mt-1 font-display text-lg font-bold text-[#123B4A]">
                   Current Record
                 </h2>
               </div>
 
-              <span className="hidden text-[9px] uppercase tracking-[0.16em] text-slate-700 sm:block">
+              <span className="hidden text-[9px] font-semibold uppercase tracking-[0.16em] text-[#55727D]/60 sm:block">
                 PSTU · Fisheries
               </span>
             </div>
@@ -208,19 +219,25 @@ export default function StudentPage() {
                       duration: 0.3,
                       delay: i * 0.06,
                     }}
-                    className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.025] p-5 text-center backdrop-blur-sm transition-all duration-300 hover:border-white/[0.10] hover:bg-white/[0.035]"
+                    className="group relative overflow-hidden rounded-[22px] border border-[#087EA4]/10 bg-white/80 p-5 text-center shadow-[0_10px_35px_rgba(8,126,164,0.05)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#087EA4]/15 hover:shadow-[0_18px_45px_rgba(8,126,164,0.09)]"
                   >
+                    {/* Top accent */}
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#087EA4]/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                    {/* Icon */}
                     <div
                       className={`mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl border ${style.color} text-sm`}
                     >
                       {style.icon}
                     </div>
 
-                    <p className="truncate font-display text-xl font-bold text-white sm:text-2xl">
+                    {/* Value */}
+                    <p className="truncate font-display text-xl font-bold text-[#123B4A] sm:text-2xl">
                       {s.value}
                     </p>
 
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-slate-600">
+                    {/* Label */}
+                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#55727D]/70">
                       {s.label}
                     </p>
                   </motion.div>
@@ -239,39 +256,44 @@ export default function StudentPage() {
               duration: 0.4,
               delay: 0.15,
             }}
-            className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.025] backdrop-blur-sm"
+            className="relative overflow-hidden rounded-[24px] border border-[#087EA4]/10 bg-white/80 shadow-[0_15px_45px_rgba(8,126,164,0.055)] backdrop-blur-xl"
           >
             {/* Top accent */}
-            <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent" />
+            <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-[#087EA4]/35 to-transparent" />
+
+            {/* Bottom accent */}
+            <div className="absolute bottom-0 left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-[#2DD4BF]/25 to-transparent" />
 
             {/* Glow */}
-            <div className="pointer-events-none absolute -right-32 -top-32 h-64 w-64 rounded-full bg-cyan-400/[0.025] blur-[90px]" />
+            <div className="pointer-events-none absolute -right-32 -top-32 h-64 w-64 rounded-full bg-[#0891B2]/[0.045] blur-[90px]" />
 
             {/* Header */}
-            <div className="relative flex items-center justify-between border-b border-white/[0.05] px-5 py-5 sm:px-6">
+            <div className="relative flex items-center justify-between border-b border-[#087EA4]/10 px-5 py-5 sm:px-6">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.05] text-cyan-300">
+                <div className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-[#0891B2]/15 bg-[#0891B2]/[0.08] text-[#087EA4]">
+                  <div className="absolute inset-x-0 top-0 h-px bg-[#0891B2]/30" />
+
                   <FaUser className="text-sm" />
                 </div>
 
                 <div>
-                  <p className="text-[9px] uppercase tracking-[0.2em] text-cyan-300/50">
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#087EA4]/65">
                     Personal details
                   </p>
 
-                  <h3 className="mt-0.5 font-display text-sm font-bold text-white">
+                  <h3 className="mt-0.5 font-display text-sm font-bold text-[#123B4A]">
                     Student Information
                   </h3>
                 </div>
               </div>
 
-              <span className="hidden text-[9px] uppercase tracking-[0.16em] text-slate-700 sm:block">
+              <span className="hidden text-[9px] font-semibold uppercase tracking-[0.16em] text-[#55727D]/55 sm:block">
                 Profile
               </span>
             </div>
 
             {/* Information rows */}
-            <div className="relative divide-y divide-white/[0.04] px-5 sm:px-6">
+            <div className="relative divide-y divide-[#087EA4]/[0.07] px-5 sm:px-6">
               {[
                 {
                   label: "Full Name",
@@ -305,17 +327,19 @@ export default function StudentPage() {
                   key={item.label}
                   className="group flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
                 >
+                  {/* Label */}
                   <div className="flex shrink-0 items-center gap-3">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.05] bg-white/[0.02] text-[10px] text-slate-600 transition-colors group-hover:border-cyan-400/10 group-hover:text-cyan-300/70">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#087EA4]/10 bg-[#F0FAFC]/70 text-[10px] text-[#55727D] transition-all duration-200 group-hover:border-[#0891B2]/20 group-hover:bg-[#0891B2]/[0.07] group-hover:text-[#087EA4]">
                       {item.icon}
                     </span>
 
-                    <span className="text-xs uppercase tracking-[0.08em] text-slate-600">
+                    <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#55727D]/75">
                       {item.label}
                     </span>
                   </div>
 
-                  <span className="break-words text-sm font-medium text-slate-300 sm:max-w-[65%] sm:text-right">
+                  {/* Value */}
+                  <span className="break-words text-sm font-medium text-[#123B4A] sm:max-w-[65%] sm:text-right">
                     {item.value}
                   </span>
                 </div>
@@ -332,14 +356,14 @@ export default function StudentPage() {
             transition={{ duration: 0.4, delay: 0.25 }}
             className="flex items-center gap-3 pt-2"
           >
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#087EA4]/10 to-transparent" />
 
-            <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.22em] text-slate-700">
-              <span className="h-1 w-1 rounded-full bg-cyan-400/40" />
+            <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.22em] text-[#55727D]/60">
+              <span className="h-1 w-1 rounded-full bg-[#0891B2]/65" />
               Academic Record · PSTU
             </div>
 
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#087EA4]/10 to-transparent" />
           </motion.div>
         </div>
       )}
@@ -352,17 +376,23 @@ export default function StudentPage() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="rounded-2xl border border-white/[0.06] bg-white/[0.025] px-6 py-16 text-center backdrop-blur-sm"
+          className="relative overflow-hidden rounded-[24px] border border-[#087EA4]/10 bg-white/80 px-6 py-16 text-center shadow-[0_15px_45px_rgba(8,126,164,0.05)] backdrop-blur-xl"
         >
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.05] text-cyan-300">
+          {/* Top accent */}
+          <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-[#087EA4]/30 to-transparent" />
+
+          {/* Glow */}
+          <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-40 -translate-x-1/2 rounded-full bg-[#0891B2]/[0.045] blur-[70px]" />
+
+          <div className="relative mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-[#0891B2]/15 bg-[#0891B2]/[0.08] text-[#087EA4]">
             <FaUser />
           </div>
 
-          <h2 className="mt-5 font-display text-lg font-bold text-white">
+          <h2 className="relative mt-5 font-display text-lg font-bold text-[#123B4A]">
             No academic record found
           </h2>
 
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500">
+          <p className="relative mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#55727D]">
             Your student profile information could not be loaded. Please
             update your profile and try again.
           </p>
@@ -371,3 +401,4 @@ export default function StudentPage() {
     </main>
   );
 }
+

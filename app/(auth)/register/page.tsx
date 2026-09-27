@@ -171,68 +171,66 @@ export default function RegisterPage() {
   const passwordStrength = form.password.length;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#020b18] px-4 pb-12 pt-28 sm:px-6">
+    <main className="relative min-h-screen overflow-hidden bg-[#F0FAFC] px-4 pb-12 pt-28 sm:px-6">
       {/* =========================================================
           BACKGROUND ATMOSPHERE
       ========================================================== */}
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Main glow */}
-
+        {/* Main ocean glow */}
         <div
           className="
-            absolute left-1/2 top-20
-            h-[500px] w-[500px]
+            absolute left-1/2 top-10
+            h-[520px] w-[520px]
             -translate-x-1/2
             rounded-full
-            bg-cyan-400/[0.05]
+            bg-[#087EA4]/[0.06]
             blur-[140px]
           "
         />
 
-        {/* Left glow */}
-
+        {/* Left aqua glow */}
         <div
           className="
             absolute -left-44 top-1/3
-            h-[400px] w-[400px]
+            h-[420px] w-[420px]
             rounded-full
-            bg-sky-500/[0.04]
+            bg-[#0891B2]/[0.055]
             blur-[130px]
           "
         />
 
-        {/* Right glow */}
-
+        {/* Right seafoam glow */}
         <div
           className="
             absolute -right-44 bottom-0
-            h-[420px] w-[420px]
+            h-[450px] w-[450px]
             rounded-full
-            bg-teal-400/[0.035]
+            bg-[#2DD4BF]/[0.08]
             blur-[130px]
           "
         />
 
-        {/* Radial atmosphere */}
-
+        {/* Soft radial atmosphere */}
         <div
           className="
             absolute inset-0
-            bg-[radial-gradient(circle_at_50%_15%,rgba(34,211,238,0.035),transparent_38%)]
+            bg-[radial-gradient(circle_at_50%_15%,rgba(8,126,164,0.06),transparent_38%)]
           "
         />
 
         {/* Subtle grid */}
-
         <div
           className="
             absolute inset-0
-            opacity-[0.025]
-            [background-image:linear-gradient(rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.5)_1px,transparent_1px)]
+            opacity-[0.035]
+            [background-image:linear-gradient(rgba(8,126,164,0.35)_1px,transparent_1px),linear-gradient(90deg,rgba(8,126,164,0.35)_1px,transparent_1px)]
             [background-size:70px_70px]
           "
         />
+
+        {/* Bottom fade */}
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-white/30 to-transparent" />
       </div>
 
       {/* =========================================================
@@ -263,17 +261,16 @@ export default function RegisterPage() {
             className="relative mx-auto mb-5 h-16 w-16"
           >
             {/* Logo glow */}
-
-            <div className="absolute inset-0 rounded-full bg-cyan-400/[0.12] blur-xl" />
+            <div className="absolute inset-0 rounded-full bg-[#2DD4BF]/20 blur-xl" />
 
             <div
               className="
                 relative flex h-16 w-16
                 items-center justify-center
                 overflow-hidden rounded-2xl
-                border border-white/[0.10]
-                bg-white/[0.035]
-                shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_15px_40px_rgba(0,0,0,0.25)]
+                border border-[#087EA4]/15
+                bg-white
+                shadow-[0_15px_40px_rgba(8,126,164,0.12)]
               "
             >
               <img
@@ -286,36 +283,36 @@ export default function RegisterPage() {
             </div>
           </motion.div>
 
-          <p className="mb-1 text-[9px] font-medium uppercase tracking-[0.3em] text-cyan-300/50">
+          <p className="mb-1 text-[9px] font-medium uppercase tracking-[0.3em] text-[#0891B2]">
             PSTU • Bangladesh
           </p>
 
-          <h1 className="font-display text-2xl font-bold tracking-tight text-white sm:text-[26px]">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[#123B4A] sm:text-[26px]">
             Faculty of Fisheries
           </h1>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-[#55727D]">
             Create your account and join the community
           </p>
         </div>
 
         {/* =======================================================
-            GLASS CARD
+            REGISTER CARD
         ======================================================== */}
 
         <div
           className="
             relative overflow-hidden
             rounded-3xl
-            border border-white/[0.08]
-            bg-[#061522]/90
+            border border-[#087EA4]/10
+            bg-white/95
             p-6
-            shadow-[0_30px_90px_rgba(0,0,0,0.45)]
+            shadow-[0_30px_90px_rgba(8,126,164,0.10)]
             backdrop-blur-2xl
             sm:p-8
           "
         >
-          {/* Card glows */}
+          {/* Card atmosphere */}
 
           <div
             className="
@@ -323,7 +320,7 @@ export default function RegisterPage() {
               absolute -right-24 -top-24
               h-48 w-48
               rounded-full
-              bg-cyan-400/[0.055]
+              bg-[#2DD4BF]/10
               blur-[80px]
             "
           />
@@ -334,7 +331,7 @@ export default function RegisterPage() {
               absolute -bottom-24 -left-24
               h-48 w-48
               rounded-full
-              bg-sky-400/[0.035]
+              bg-[#087EA4]/[0.06]
               blur-[80px]
             "
           />
@@ -348,7 +345,7 @@ export default function RegisterPage() {
               h-px
               bg-gradient-to-r
               from-transparent
-              via-cyan-300/20
+              via-[#2DD4BF]/50
               to-transparent
             "
           />
@@ -364,26 +361,26 @@ export default function RegisterPage() {
                   flex h-8 w-8
                   items-center justify-center
                   rounded-xl
-                  border border-cyan-400/10
-                  bg-cyan-400/[0.055]
-                  text-cyan-300/80
+                  border border-[#087EA4]/10
+                  bg-[#087EA4]/[0.06]
+                  text-[#087EA4]
                 "
               >
                 <FaFish size={12} />
               </div>
 
               <div>
-                <p className="text-[9px] uppercase tracking-[0.2em] text-cyan-300/40">
+                <p className="text-[9px] uppercase tracking-[0.2em] text-[#0891B2]">
                   Create Account
                 </p>
 
-                <h2 className="mt-0.5 text-lg font-semibold text-white">
+                <h2 className="mt-0.5 text-lg font-semibold text-[#123B4A]">
                   Join Faculty of Fisheries
                 </h2>
               </div>
             </div>
 
-            <p className="text-xs leading-relaxed text-slate-600">
+            <p className="text-xs leading-relaxed text-[#55727D]">
               Create an account to access the Faculty of Fisheries portal.
             </p>
           </div>
@@ -405,7 +402,7 @@ export default function RegisterPage() {
                   font-semibold
                   uppercase
                   tracking-[0.12em]
-                  text-slate-500
+                  text-[#55727D]
                 "
               >
                 I am a
@@ -432,8 +429,8 @@ export default function RegisterPage() {
                           transition-all duration-200
                           ${
                             active
-                              ? "border-cyan-300/20 bg-cyan-400/[0.09] text-cyan-100"
-                              : "border-white/[0.06] bg-white/[0.02] text-slate-600 hover:border-white/[0.10] hover:bg-white/[0.04] hover:text-slate-300"
+                              ? "border-[#087EA4]/20 bg-[#087EA4]/[0.08] text-[#075985]"
+                              : "border-[#087EA4]/10 bg-[#F0FAFC]/70 text-[#55727D] hover:border-[#0891B2]/20 hover:bg-[#F0FAFC] hover:text-[#123B4A]"
                           }
                         `}
                       >
@@ -442,7 +439,7 @@ export default function RegisterPage() {
                             className="
                               absolute inset-0
                               bg-gradient-to-br
-                              from-cyan-400/[0.05]
+                              from-[#2DD4BF]/10
                               to-transparent
                             "
                           />
@@ -454,8 +451,8 @@ export default function RegisterPage() {
                               text-sm
                               ${
                                 active
-                                  ? "text-cyan-300"
-                                  : "text-slate-700 group-hover:text-slate-400"
+                                  ? "text-[#087EA4]"
+                                  : "text-[#55727D] group-hover:text-[#0891B2]"
                               }
                             `}
                           />
@@ -470,13 +467,13 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              <p className="mt-2 text-center text-[10px] leading-relaxed text-slate-700">
+              <p className="mt-2 text-center text-[10px] leading-relaxed text-[#55727D]">
                 {roleInfo[form.role].description}
               </p>
             </div>
 
             {/* ===================================================
-                FULL NAME
+                INPUT HELPERS
             ==================================================== */}
 
             <div>
@@ -488,7 +485,7 @@ export default function RegisterPage() {
                   font-semibold
                   uppercase
                   tracking-[0.12em]
-                  text-slate-500
+                  text-[#55727D]
                 "
               >
                 Full Name
@@ -501,7 +498,7 @@ export default function RegisterPage() {
                     absolute left-4 top-1/2
                     -translate-y-1/2
                     text-[11px]
-                    text-slate-700
+                    text-[#087EA4]/60
                   "
                 />
 
@@ -516,28 +513,24 @@ export default function RegisterPage() {
                   className="
                     w-full
                     rounded-xl
-                    border border-white/[0.07]
-                    bg-white/[0.025]
+                    border border-[#087EA4]/10
+                    bg-[#F0FAFC]/50
                     py-3
                     pl-10
                     pr-4
                     text-sm
-                    text-slate-200
+                    text-[#123B4A]
                     outline-none
-                    placeholder:text-slate-700
+                    placeholder:text-[#55727D]/60
                     transition-all duration-200
-                    focus:border-cyan-300/20
-                    focus:bg-white/[0.04]
+                    focus:border-[#087EA4]/30
+                    focus:bg-white
                     focus:ring-2
-                    focus:ring-cyan-400/[0.06]
+                    focus:ring-[#0891B2]/[0.08]
                   "
                 />
               </div>
             </div>
-
-            {/* ===================================================
-                EMAIL
-            ==================================================== */}
 
             <div>
               <label
@@ -548,7 +541,7 @@ export default function RegisterPage() {
                   font-semibold
                   uppercase
                   tracking-[0.12em]
-                  text-slate-500
+                  text-[#55727D]
                 "
               >
                 Email Address
@@ -561,7 +554,7 @@ export default function RegisterPage() {
                     absolute left-4 top-1/2
                     -translate-y-1/2
                     text-[11px]
-                    text-slate-700
+                    text-[#087EA4]/60
                   "
                 />
 
@@ -576,20 +569,20 @@ export default function RegisterPage() {
                   className="
                     w-full
                     rounded-xl
-                    border border-white/[0.07]
-                    bg-white/[0.025]
+                    border border-[#087EA4]/10
+                    bg-[#F0FAFC]/50
                     py-3
                     pl-10
                     pr-4
                     text-sm
-                    text-slate-200
+                    text-[#123B4A]
                     outline-none
-                    placeholder:text-slate-700
+                    placeholder:text-[#55727D]/60
                     transition-all duration-200
-                    focus:border-cyan-300/20
-                    focus:bg-white/[0.04]
+                    focus:border-[#087EA4]/30
+                    focus:bg-white
                     focus:ring-2
-                    focus:ring-cyan-400/[0.06]
+                    focus:ring-[#0891B2]/[0.08]
                   "
                 />
               </div>
@@ -612,8 +605,6 @@ export default function RegisterPage() {
                   className="overflow-hidden"
                 >
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {/* Student ID */}
-
                     <div>
                       <label
                         htmlFor="studentId"
@@ -623,7 +614,7 @@ export default function RegisterPage() {
                           font-semibold
                           uppercase
                           tracking-[0.12em]
-                          text-slate-500
+                          text-[#55727D]
                         "
                       >
                         Student ID
@@ -636,7 +627,7 @@ export default function RegisterPage() {
                             absolute left-4 top-1/2
                             -translate-y-1/2
                             text-[11px]
-                            text-slate-700
+                            text-[#087EA4]/60
                           "
                         />
 
@@ -652,26 +643,24 @@ export default function RegisterPage() {
                           className="
                             w-full
                             rounded-xl
-                            border border-white/[0.07]
-                            bg-white/[0.025]
+                            border border-[#087EA4]/10
+                            bg-[#F0FAFC]/50
                             py-3
                             pl-10
                             pr-3
                             text-sm
-                            text-slate-200
+                            text-[#123B4A]
                             outline-none
-                            placeholder:text-slate-700
+                            placeholder:text-[#55727D]/60
                             transition-all duration-200
-                            focus:border-cyan-300/20
-                            focus:bg-white/[0.04]
+                            focus:border-[#087EA4]/30
+                            focus:bg-white
                             focus:ring-2
-                            focus:ring-cyan-400/[0.06]
+                            focus:ring-[#0891B2]/[0.08]
                           "
                         />
                       </div>
                     </div>
-
-                    {/* Batch */}
 
                     <div>
                       <label
@@ -682,7 +671,7 @@ export default function RegisterPage() {
                           font-semibold
                           uppercase
                           tracking-[0.12em]
-                          text-slate-500
+                          text-[#55727D]
                         "
                       >
                         Batch Year
@@ -695,7 +684,7 @@ export default function RegisterPage() {
                             absolute left-4 top-1/2
                             -translate-y-1/2
                             text-[11px]
-                            text-slate-700
+                            text-[#087EA4]/60
                           "
                         />
 
@@ -713,20 +702,20 @@ export default function RegisterPage() {
                           className="
                             w-full
                             rounded-xl
-                            border border-white/[0.07]
-                            bg-white/[0.025]
+                            border border-[#087EA4]/10
+                            bg-[#F0FAFC]/50
                             py-3
                             pl-10
                             pr-3
                             text-sm
-                            text-slate-200
+                            text-[#123B4A]
                             outline-none
-                            placeholder:text-slate-700
+                            placeholder:text-[#55727D]/60
                             transition-all duration-200
-                            focus:border-cyan-300/20
-                            focus:bg-white/[0.04]
+                            focus:border-[#087EA4]/30
+                            focus:bg-white
                             focus:ring-2
-                            focus:ring-cyan-400/[0.06]
+                            focus:ring-[#0891B2]/[0.08]
                           "
                         />
                       </div>
@@ -754,7 +743,7 @@ export default function RegisterPage() {
                       font-semibold
                       uppercase
                       tracking-[0.12em]
-                      text-slate-500
+                      text-[#55727D]
                     "
                   >
                     Department
@@ -768,7 +757,7 @@ export default function RegisterPage() {
                         z-10
                         -translate-y-1/2
                         text-[11px]
-                        text-slate-700
+                        text-[#087EA4]/60
                       "
                     />
 
@@ -783,24 +772,24 @@ export default function RegisterPage() {
                         w-full
                         appearance-none
                         rounded-xl
-                        border border-white/[0.07]
-                        bg-white/[0.025]
+                        border border-[#087EA4]/10
+                        bg-[#F0FAFC]/50
                         py-3
                         pl-10
                         pr-4
                         text-sm
-                        text-slate-300
+                        text-[#123B4A]
                         outline-none
                         transition-all duration-200
-                        focus:border-cyan-300/20
-                        focus:bg-white/[0.04]
+                        focus:border-[#087EA4]/30
+                        focus:bg-white
                         focus:ring-2
-                        focus:ring-cyan-400/[0.06]
+                        focus:ring-[#0891B2]/[0.08]
                       "
                     >
                       <option
                         value=""
-                        className="bg-[#061522] text-slate-500"
+                        className="bg-white text-[#55727D]"
                       >
                         Select your department
                       </option>
@@ -809,7 +798,7 @@ export default function RegisterPage() {
                         <option
                           key={key}
                           value={key}
-                          className="bg-[#061522] text-slate-300"
+                          className="bg-white text-[#123B4A]"
                         >
                           {key} — {DEPARTMENTS[key]}
                         </option>
@@ -838,7 +827,7 @@ export default function RegisterPage() {
                       font-semibold
                       uppercase
                       tracking-[0.12em]
-                      text-slate-500
+                      text-[#55727D]
                     "
                   >
                     Batch Year
@@ -851,7 +840,7 @@ export default function RegisterPage() {
                         absolute left-4 top-1/2
                         -translate-y-1/2
                         text-[11px]
-                        text-slate-700
+                        text-[#087EA4]/60
                       "
                     />
 
@@ -869,25 +858,25 @@ export default function RegisterPage() {
                       className="
                         w-full
                         rounded-xl
-                        border border-white/[0.07]
-                        bg-white/[0.025]
+                        border border-[#087EA4]/10
+                        bg-[#F0FAFC]/50
                         py-3
                         pl-10
                         pr-4
                         text-sm
-                        text-slate-200
+                        text-[#123B4A]
                         outline-none
-                        placeholder:text-slate-700
+                        placeholder:text-[#55727D]/60
                         transition-all duration-200
-                        focus:border-cyan-300/20
-                        focus:bg-white/[0.04]
+                        focus:border-[#087EA4]/30
+                        focus:bg-white
                         focus:ring-2
-                        focus:ring-cyan-400/[0.06]
+                        focus:ring-[#0891B2]/[0.08]
                       "
                     />
                   </div>
 
-                  <p className="mt-2 text-[10px] text-slate-700">
+                  <p className="mt-2 text-[10px] text-[#55727D]">
                     Enter the year of your graduating batch.
                   </p>
                 </motion.div>
@@ -907,7 +896,7 @@ export default function RegisterPage() {
                   font-semibold
                   uppercase
                   tracking-[0.12em]
-                  text-slate-500
+                  text-[#55727D]
                 "
               >
                 Password
@@ -920,7 +909,7 @@ export default function RegisterPage() {
                     absolute left-4 top-1/2
                     -translate-y-1/2
                     text-[11px]
-                    text-slate-700
+                    text-[#087EA4]/60
                   "
                 />
 
@@ -937,20 +926,20 @@ export default function RegisterPage() {
                   className="
                     w-full
                     rounded-xl
-                    border border-white/[0.07]
-                    bg-white/[0.025]
+                    border border-[#087EA4]/10
+                    bg-[#F0FAFC]/50
                     py-3
                     pl-10
                     pr-11
                     text-sm
-                    text-slate-200
+                    text-[#123B4A]
                     outline-none
-                    placeholder:text-slate-700
+                    placeholder:text-[#55727D]/60
                     transition-all duration-200
-                    focus:border-cyan-300/20
-                    focus:bg-white/[0.04]
+                    focus:border-[#087EA4]/30
+                    focus:bg-white
                     focus:ring-2
-                    focus:ring-cyan-400/[0.06]
+                    focus:ring-[#0891B2]/[0.08]
                   "
                 />
 
@@ -966,9 +955,9 @@ export default function RegisterPage() {
                     -translate-y-1/2
                     rounded-lg
                     p-1.5
-                    text-slate-700
+                    text-[#55727D]
                     transition-colors
-                    hover:text-cyan-300/70
+                    hover:text-[#087EA4]
                   "
                 >
                   {showPw ? (
@@ -994,20 +983,20 @@ export default function RegisterPage() {
                           ${
                             passwordStrength >= i * 3
                               ? i <= 1
-                                ? "bg-red-400/70"
+                                ? "bg-red-400"
                                 : i <= 2
-                                ? "bg-amber-400/70"
+                                ? "bg-amber-400"
                                 : i <= 3
-                                ? "bg-yellow-400/70"
-                                : "bg-teal-400/70"
-                              : "bg-white/[0.06]"
+                                ? "bg-[#0891B2]"
+                                : "bg-[#2DD4BF]"
+                              : "bg-[#087EA4]/10"
                           }
                         `}
                       />
                     ))}
                   </div>
 
-                  <p className="mt-1 text-[9px] text-slate-700">
+                  <p className="mt-1 text-[9px] text-[#55727D]">
                     {passwordStrength < 6
                       ? "Too short"
                       : passwordStrength < 9
@@ -1033,7 +1022,7 @@ export default function RegisterPage() {
                   font-semibold
                   uppercase
                   tracking-[0.12em]
-                  text-slate-500
+                  text-[#55727D]
                 "
               >
                 Confirm Password
@@ -1046,7 +1035,7 @@ export default function RegisterPage() {
                     absolute left-4 top-1/2
                     -translate-y-1/2
                     text-[11px]
-                    text-slate-700
+                    text-[#087EA4]/60
                   "
                 />
 
@@ -1064,20 +1053,20 @@ export default function RegisterPage() {
                     w-full
                     rounded-xl
                     border
-                    bg-white/[0.025]
+                    bg-[#F0FAFC]/50
                     py-3
                     pl-10
                     pr-4
                     text-sm
-                    text-slate-200
+                    text-[#123B4A]
                     outline-none
-                    placeholder:text-slate-700
+                    placeholder:text-[#55727D]/60
                     transition-all duration-200
                     ${
                       form.confirmPassword &&
                       form.password !== form.confirmPassword
-                        ? "border-red-400/20 focus:border-red-400/30 focus:ring-2 focus:ring-red-400/[0.05]"
-                        : "border-white/[0.07] focus:border-cyan-300/20 focus:bg-white/[0.04] focus:ring-2 focus:ring-cyan-400/[0.06]"
+                        ? "border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-400/[0.08]"
+                        : "border-[#087EA4]/10 focus:border-[#087EA4]/30 focus:bg-white focus:ring-2 focus:ring-[#0891B2]/[0.08]"
                     }
                   `}
                 />
@@ -1085,14 +1074,14 @@ export default function RegisterPage() {
 
               {form.confirmPassword &&
                 form.password !== form.confirmPassword && (
-                  <p className="mt-1.5 text-[10px] text-red-300/70">
+                  <p className="mt-1.5 text-[10px] text-red-500">
                     Passwords do not match
                   </p>
                 )}
 
               {form.confirmPassword &&
                 form.password === form.confirmPassword && (
-                  <p className="mt-1.5 text-[10px] text-teal-300/60">
+                  <p className="mt-1.5 text-[10px] text-[#0891B2]">
                     Passwords match
                   </p>
                 )}
@@ -1116,17 +1105,16 @@ export default function RegisterPage() {
                 gap-2
                 overflow-hidden
                 rounded-xl
-                border border-cyan-300/15
-                bg-cyan-400/[0.09]
+                border border-[#087EA4]/20
+                bg-[#087EA4]
                 py-3
                 text-sm
                 font-semibold
-                text-cyan-100
-                shadow-[0_10px_30px_rgba(34,211,238,0.06)]
+                text-white
+                shadow-[0_10px_30px_rgba(8,126,164,0.18)]
                 transition-all duration-300
-                hover:border-cyan-300/25
-                hover:bg-cyan-400/[0.13]
-                hover:shadow-[0_12px_35px_rgba(34,211,238,0.10)]
+                hover:bg-[#075985]
+                hover:shadow-[0_12px_35px_rgba(8,126,164,0.24)]
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               "
@@ -1139,7 +1127,7 @@ export default function RegisterPage() {
                   -translate-x-full
                   bg-gradient-to-r
                   from-transparent
-                  via-white/10
+                  via-white/15
                   to-transparent
                   transition-transform
                   duration-700
@@ -1155,7 +1143,7 @@ export default function RegisterPage() {
                     fill="none"
                   >
                     <circle
-                      className="opacity-20"
+                      className="opacity-25"
                       cx="12"
                       cy="12"
                       r="10"
@@ -1164,7 +1152,7 @@ export default function RegisterPage() {
                     />
 
                     <path
-                      className="opacity-80"
+                      className="opacity-90"
                       fill="currentColor"
                       d="M4 12a8 8 0 018-8v3a5 5 0 00-5 5H4z"
                     />
@@ -1198,15 +1186,15 @@ export default function RegisterPage() {
               LOGIN
           ====================================================== */}
 
-          <p className="mt-7 text-center text-xs text-slate-600">
+          <p className="mt-7 text-center text-xs text-[#55727D]">
             Already have an account?{" "}
             <Link
               href="/login"
               className="
-                font-medium
-                text-cyan-300/60
+                font-semibold
+                text-[#087EA4]
                 transition-colors
-                hover:text-cyan-200
+                hover:text-[#075985]
               "
             >
               Sign in
@@ -1220,14 +1208,14 @@ export default function RegisterPage() {
 
         <div className="mt-6 text-center">
           <div className="flex items-center justify-center gap-2">
-            <span className="h-px w-8 bg-white/[0.05]" />
+            <span className="h-px w-8 bg-[#087EA4]/15" />
 
-            <FaFish className="text-[9px] text-cyan-300/20" />
+            <FaFish className="text-[9px] text-[#2DD4BF]" />
 
-            <span className="h-px w-8 bg-white/[0.05]" />
+            <span className="h-px w-8 bg-[#087EA4]/15" />
           </div>
 
-          <p className="mt-3 text-[9px] uppercase tracking-[0.18em] text-slate-700">
+          <p className="mt-3 text-[9px] uppercase tracking-[0.18em] text-[#55727D]">
             Faculty of Fisheries • PSTU
           </p>
         </div>

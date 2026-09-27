@@ -123,6 +123,41 @@ const roleLinks: Record<
   ],
 };
 
+const roleStyles: Record<
+  string,
+  {
+    text: string;
+    bg: string;
+    border: string;
+    dot: string;
+  }
+> = {
+  admin: {
+    text: "text-[#C2415B]",
+    bg: "bg-[#C2415B]/[0.07]",
+    border: "border-[#C2415B]/15",
+    dot: "bg-[#C2415B]",
+  },
+  teacher: {
+    text: "text-[#087EA4]",
+    bg: "bg-[#0891B2]/[0.08]",
+    border: "border-[#0891B2]/18",
+    dot: "bg-[#0891B2]",
+  },
+  student: {
+    text: "text-[#6D5CC6]",
+    bg: "bg-[#8B7ED8]/[0.08]",
+    border: "border-[#8B7ED8]/18",
+    dot: "bg-[#8B7ED8]",
+  },
+  alumni: {
+    text: "text-[#A16207]",
+    bg: "bg-[#F59E0B]/[0.08]",
+    border: "border-[#F59E0B]/18",
+    dot: "bg-[#F59E0B]",
+  },
+};
+
 export default function Sidebar() {
   const { user, signOut, refreshUser } = useAuth();
 
@@ -136,6 +171,14 @@ export default function Sidebar() {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [preview, setPreview] = useState<string | null>(null);
+
+  const currentRoleStyle =
+    roleStyles[user?.role || ""] || {
+      text: "text-[#087EA4]",
+      bg: "bg-[#0891B2]/[0.08]",
+      border: "border-[#0891B2]/15",
+      dot: "bg-[#0891B2]",
+    };
 
   /* =========================================================
      PHOTO UPLOAD
@@ -166,8 +209,9 @@ export default function Sidebar() {
       return;
     }
 
-    // Instant local preview
-    setPreview(URL.createObjectURL(file));
+    const localPreview = URL.createObjectURL(file);
+
+    setPreview(localPreview);
     setUploading(true);
     setProgress(0);
 
@@ -183,12 +227,10 @@ export default function Sidebar() {
       setProgress(100);
       setPreview(url);
 
-      // Save photo
       await axios.put("/api/profile", {
         photo: url,
       });
 
-      // Refresh AuthContext
       await refreshUser();
 
       toast.success("Profile photo updated!");
@@ -203,6 +245,8 @@ export default function Sidebar() {
       setTimeout(() => {
         setProgress(0);
       }, 300);
+
+      URL.revokeObjectURL(localPreview);
     }
 
     e.target.value = "";
@@ -225,24 +269,41 @@ export default function Sidebar() {
         className="
           sticky top-24
           overflow-hidden
-          rounded-2xl
-          border border-white/[0.06]
-          bg-white/[0.025]
-          backdrop-blur-sm
+          rounded-[26px]
+          border border-[#087EA4]/10
+          bg-white/80
+          shadow-[0_18px_55px_rgba(8,126,164,0.07)]
+          backdrop-blur-xl
         "
       >
+        {/* =====================================================
+            ATMOSPHERE
+        ===================================================== */}
+
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-[#0891B2]/[0.07] blur-[80px]" />
+
+          <div className="absolute -bottom-28 -left-20 h-48 w-48 rounded-full bg-[#2DD4BF]/[0.06] blur-[80px]" />
+
+          <div
+            className="absolute inset-0 opacity-[0.025]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(8,126,164,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(8,126,164,0.8) 1px, transparent 1px)",
+              backgroundSize: "32px 32px",
+            }}
+          />
+        </div>
+
         {/* =====================================================
             USER PROFILE
         ===================================================== */}
 
         <div className="relative px-5 pb-5 pt-6">
-          {/* Background glow */}
-          <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-cyan-400/[0.035] blur-[70px]" />
-
           <div className="relative flex flex-col items-center text-center">
             {/* Avatar */}
             <div
-              className={`group relative mb-4 ${
+              className={`group relative mb-3.5 ${
                 uploading
                   ? "cursor-default"
                   : "cursor-pointer"
@@ -255,33 +316,30 @@ export default function Sidebar() {
               }
             >
               {photoSrc ? (
-                <Image
-                  key={photoSrc}
-                  src={photoSrc}
-                  alt={user?.name || "Profile"}
-                  width={80}
-                  height={80}
-                  className="
-                    h-20 w-20
-                    rounded-full
-                    border border-white/[0.08]
-                    object-cover
-                    transition-all duration-300
-                    group-hover:border-cyan-300/30
-                  "
-                />
+                <div className="relative h-20 w-20 overflow-hidden rounded-[22px] border border-[#087EA4]/15 bg-[#F0FAFC] shadow-[0_10px_28px_rgba(8,126,164,0.10)]">
+                  <Image
+                    key={photoSrc}
+                    src={photoSrc}
+                    alt={user?.name || "Profile"}
+                    fill
+                    sizes="80px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
               ) : (
                 <div
                   className="
                     flex h-20 w-20
                     items-center justify-center
-                    rounded-full
-                    border border-cyan-400/10
-                    bg-cyan-400/[0.06]
+                    rounded-[22px]
+                    border border-[#0891B2]/15
+                    bg-[#0891B2]/[0.08]
                     text-2xl font-bold
-                    text-cyan-300
+                    text-[#087EA4]
+                    shadow-[0_10px_28px_rgba(8,126,164,0.07)]
                     transition-all duration-300
-                    group-hover:border-cyan-300/30
+                    group-hover:border-[#087EA4]/30
+                    group-hover:bg-[#0891B2]/[0.11]
                   "
                 >
                   {user?.name?.[0]?.toUpperCase() || "?"}
@@ -294,8 +352,8 @@ export default function Sidebar() {
                   absolute inset-0
                   flex flex-col
                   items-center justify-center
-                  rounded-full
-                  bg-black/65
+                  rounded-[22px]
+                  bg-[#123B4A]/65
                   opacity-0
                   transition-opacity duration-200
                   group-hover:opacity-100
@@ -318,7 +376,7 @@ export default function Sidebar() {
                 )}
               </div>
 
-              {/* Progress ring */}
+              {/* Upload progress */}
               {uploading && (
                 <svg
                   className="
@@ -334,7 +392,7 @@ export default function Sidebar() {
                     cy="40"
                     r="37"
                     fill="none"
-                    stroke="rgba(255,255,255,0.12)"
+                    stroke="rgba(8,126,164,0.12)"
                     strokeWidth="3"
                   />
 
@@ -343,7 +401,7 @@ export default function Sidebar() {
                     cy="40"
                     r="37"
                     fill="none"
-                    stroke="rgba(103,232,249,0.9)"
+                    stroke="rgba(8,126,164,0.9)"
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeDasharray={`${2 * Math.PI * 37}`}
@@ -357,6 +415,13 @@ export default function Sidebar() {
                   />
                 </svg>
               )}
+
+              {/* Camera badge */}
+              {!uploading && (
+                <span className="absolute -bottom-1.5 -right-1.5 flex h-7 w-7 items-center justify-center rounded-lg border-2 border-white bg-[#087EA4] text-white shadow-md">
+                  <FaCamera size={9} />
+                </span>
+              )}
             </div>
 
             {/* Hidden input */}
@@ -369,45 +434,50 @@ export default function Sidebar() {
             />
 
             {/* Upload status */}
-            <p className="mb-2 text-[9px] uppercase tracking-[0.12em] text-slate-700">
+            <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.13em] text-[#55727D]/50">
               {uploading
                 ? `Uploading · ${progress}%`
                 : "Click photo to change"}
             </p>
 
             {/* Name */}
-            <p className="max-w-[190px] truncate font-display text-sm font-bold leading-tight text-white">
+            <p className="max-w-[190px] truncate font-display text-sm font-bold leading-tight text-[#123B4A]">
               {user?.name || "User"}
             </p>
 
             {/* Email */}
-            <p className="mt-1 max-w-[190px] truncate text-[11px] text-slate-600">
+            <p className="mt-1 max-w-[190px] truncate text-[10px] text-[#55727D]/70">
               {user?.email}
             </p>
 
             {/* Role */}
             {user?.role && (
               <span
-                className="
+                className={`
                   mt-3
+                  inline-flex items-center gap-1.5
                   rounded-full
-                  border border-cyan-400/10
-                  bg-cyan-400/[0.05]
+                  border
+                  ${currentRoleStyle.border}
+                  ${currentRoleStyle.bg}
                   px-3 py-1
-                  text-[9px]
-                  font-semibold
+                  text-[8px]
+                  font-bold
                   uppercase
-                  tracking-[0.12em]
-                  text-cyan-300/80
-                "
+                  tracking-[0.14em]
+                  ${currentRoleStyle.text}
+                `}
               >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${currentRoleStyle.dot}`}
+                />
                 {user.role}
               </span>
             )}
 
             {/* Department */}
             {user?.department && (
-              <p className="mt-2 text-[10px] font-medium text-slate-600">
+              <p className="mt-2 text-[9px] font-medium text-[#55727D]/65">
                 {user.department}
               </p>
             )}
@@ -415,14 +485,14 @@ export default function Sidebar() {
         </div>
 
         {/* Divider */}
-        <div className="mx-5 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
+        <div className="mx-5 h-px bg-gradient-to-r from-transparent via-[#087EA4]/10 to-transparent" />
 
         {/* =====================================================
             NAVIGATION
         ===================================================== */}
 
-        <nav className="space-y-1 px-3 py-4">
-          <p className="mb-2 px-3 text-[9px] uppercase tracking-[0.2em] text-slate-700">
+        <nav className="relative space-y-1 px-3 py-4">
+          <p className="mb-2 px-3 text-[8px] font-bold uppercase tracking-[0.2em] text-[#55727D]/55">
             Workspace
           </p>
 
@@ -446,23 +516,24 @@ export default function Sidebar() {
                   ${
                     isActive
                       ? `
-                        border-cyan-400/[0.10]
-                        bg-cyan-400/[0.08]
-                        text-cyan-200
+                        border-[#087EA4]/15
+                        bg-[#087EA4]/[0.07]
+                        text-[#075985]
+                        shadow-[0_6px_18px_rgba(8,126,164,0.05)]
                       `
                       : `
                         border-transparent
-                        text-slate-500
-                        hover:border-white/[0.05]
-                        hover:bg-white/[0.035]
-                        hover:text-slate-200
+                        text-[#55727D]
+                        hover:border-[#087EA4]/10
+                        hover:bg-[#F0FAFC]
+                        hover:text-[#123B4A]
                       `
                   }
                 `}
               >
                 {/* Active indicator */}
                 {isActive && (
-                  <span className="absolute bottom-2 left-0 top-2 w-px rounded-r-full bg-cyan-300" />
+                  <span className="absolute bottom-2 left-0 top-2 w-1 rounded-r-full bg-gradient-to-b from-[#075985] to-[#2DD4BF]" />
                 )}
 
                 {/* Icon */}
@@ -477,8 +548,8 @@ export default function Sidebar() {
 
                     ${
                       isActive
-                        ? "bg-cyan-400/[0.08] text-cyan-300"
-                        : "bg-white/[0.025] text-slate-600 group-hover:text-slate-300"
+                        ? "bg-[#0891B2]/[0.10] text-[#087EA4]"
+                        : "bg-[#F0FAFC] text-[#55727D]/65 group-hover:bg-[#0891B2]/[0.07] group-hover:text-[#087EA4]"
                     }
                   `}
                 >
@@ -489,7 +560,7 @@ export default function Sidebar() {
 
                 {/* Active dot */}
                 {isActive && (
-                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(103,232,249,0.6)]" />
+                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#0891B2] shadow-[0_0_8px_rgba(8,145,178,0.35)]" />
                 )}
               </Link>
             );
@@ -500,10 +571,11 @@ export default function Sidebar() {
             SIGN OUT
         ===================================================== */}
 
-        <div className="px-3 pb-4">
-          <div className="h-px bg-white/[0.05]" />
+        <div className="relative px-3 pb-4">
+          <div className="h-px bg-[#087EA4]/10" />
 
           <button
+            type="button"
             onClick={handleSignOut}
             className="
               group
@@ -514,11 +586,11 @@ export default function Sidebar() {
               border border-transparent
               px-3 py-2.5
               text-sm font-medium
-              text-slate-600
+              text-[#55727D]
               transition-all duration-200
-              hover:border-red-400/[0.08]
-              hover:bg-red-400/[0.04]
-              hover:text-red-300
+              hover:border-[#C2415B]/15
+              hover:bg-[#C2415B]/[0.06]
+              hover:text-[#C2415B]
             "
           >
             <span
@@ -526,11 +598,12 @@ export default function Sidebar() {
                 flex h-7 w-7
                 items-center justify-center
                 rounded-lg
-                bg-white/[0.025]
+                bg-[#F0FAFC]
                 text-xs
+                text-[#55727D]/70
                 transition-colors
-                group-hover:bg-red-400/[0.06]
-                group-hover:text-red-300
+                group-hover:bg-[#C2415B]/[0.07]
+                group-hover:text-[#C2415B]
               "
             >
               <FaSignOutAlt />
@@ -540,14 +613,17 @@ export default function Sidebar() {
           </button>
         </div>
 
-        {/* Bottom identity marker */}
-        <div className="border-t border-white/[0.04] px-5 py-3">
+        {/* =====================================================
+            BOTTOM IDENTITY
+        ===================================================== */}
+
+        <div className="relative border-t border-[#087EA4]/10 bg-[#F0FAFC]/40 px-5 py-3">
           <div className="flex items-center justify-between">
-            <span className="text-[8px] uppercase tracking-[0.18em] text-slate-700">
+            <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-[#55727D]/50">
               Faculty of Fisheries
             </span>
 
-            <span className="font-mono text-[8px] text-cyan-300/30">
+            <span className="font-mono text-[8px] font-semibold text-[#087EA4]/45">
               PSTU
             </span>
           </div>

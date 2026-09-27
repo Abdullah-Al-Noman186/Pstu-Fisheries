@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -58,68 +59,66 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#020b18] px-4 pb-12 pt-28 sm:px-6">
+    <main className="relative min-h-screen overflow-hidden bg-[#F0FAFC] px-4 pb-12 pt-28 sm:px-6">
       {/* =========================================================
           BACKGROUND ATMOSPHERE
       ========================================================== */}
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Main cyan glow */}
-
+        {/* Main ocean glow */}
         <div
           className="
-            absolute left-1/2 top-20
-            h-[420px] w-[420px]
+            absolute left-1/2 top-10
+            h-[460px] w-[460px]
             -translate-x-1/2
             rounded-full
-            bg-cyan-400/[0.055]
-            blur-[130px]
+            bg-[#087EA4]/[0.06]
+            blur-[135px]
           "
         />
 
-        {/* Left glow */}
-
+        {/* Left aqua glow */}
         <div
           className="
             absolute -left-40 top-1/3
-            h-[360px] w-[360px]
+            h-[380px] w-[380px]
             rounded-full
-            bg-sky-500/[0.045]
-            blur-[120px]
+            bg-[#0891B2]/[0.05]
+            blur-[125px]
           "
         />
 
-        {/* Right glow */}
-
+        {/* Right seafoam glow */}
         <div
           className="
             absolute -right-40 bottom-10
-            h-[400px] w-[400px]
+            h-[410px] w-[410px]
             rounded-full
-            bg-teal-400/[0.035]
+            bg-[#2DD4BF]/[0.075]
             blur-[130px]
           "
         />
 
-        {/* Subtle radial background */}
-
+        {/* Soft radial background */}
         <div
           className="
             absolute inset-0
-            bg-[radial-gradient(circle_at_50%_20%,rgba(34,211,238,0.035),transparent_35%)]
+            bg-[radial-gradient(circle_at_50%_20%,rgba(8,126,164,0.055),transparent_36%)]
           "
         />
 
-        {/* Grid */}
-
+        {/* Subtle grid */}
         <div
           className="
             absolute inset-0
-            opacity-[0.025]
-            [background-image:linear-gradient(rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.5)_1px,transparent_1px)]
+            opacity-[0.035]
+            [background-image:linear-gradient(rgba(8,126,164,0.35)_1px,transparent_1px),linear-gradient(90deg,rgba(8,126,164,0.35)_1px,transparent_1px)]
             [background-size:70px_70px]
           "
         />
+
+        {/* Bottom atmosphere */}
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-white/30 to-transparent" />
       </div>
 
       {/* =========================================================
@@ -152,19 +151,17 @@ export default function LoginPage() {
             className="relative mx-auto mb-5 h-16 w-16"
           >
             {/* Glow */}
-
-            <div className="absolute inset-0 rounded-full bg-cyan-400/[0.12] blur-xl" />
+            <div className="absolute inset-0 rounded-full bg-[#2DD4BF]/20 blur-xl" />
 
             {/* Logo container */}
-
             <div
               className="
                 relative flex h-16 w-16
                 items-center justify-center
                 overflow-hidden rounded-2xl
-                border border-white/[0.10]
-                bg-white/[0.035]
-                shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_15px_40px_rgba(0,0,0,0.25)]
+                border border-[#087EA4]/15
+                bg-white
+                shadow-[0_15px_40px_rgba(8,126,164,0.12)]
               "
             >
               <img
@@ -177,31 +174,31 @@ export default function LoginPage() {
             </div>
           </motion.div>
 
-          <p className="mb-1 text-[9px] font-medium uppercase tracking-[0.3em] text-cyan-300/50">
+          <p className="mb-1 text-[9px] font-medium uppercase tracking-[0.3em] text-[#0891B2]">
             PSTU • Bangladesh
           </p>
 
-          <h1 className="font-display text-2xl font-bold tracking-tight text-white sm:text-[26px]">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[#123B4A] sm:text-[26px]">
             Faculty of Fisheries
           </h1>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-[#55727D]">
             Sign in to continue to your account
           </p>
         </div>
 
         {/* =======================================================
-            GLASS CARD
+            LOGIN CARD
         ======================================================== */}
 
         <div
           className="
             relative overflow-hidden
             rounded-3xl
-            border border-white/[0.08]
-            bg-[#061522]/90
+            border border-[#087EA4]/10
+            bg-white/95
             p-6
-            shadow-[0_30px_90px_rgba(0,0,0,0.45)]
+            shadow-[0_30px_90px_rgba(8,126,164,0.10)]
             backdrop-blur-2xl
             sm:p-8
           "
@@ -214,7 +211,7 @@ export default function LoginPage() {
               absolute -right-24 -top-24
               h-48 w-48
               rounded-full
-              bg-cyan-400/[0.055]
+              bg-[#2DD4BF]/10
               blur-[80px]
             "
           />
@@ -225,12 +222,12 @@ export default function LoginPage() {
               absolute -bottom-24 -left-24
               h-48 w-48
               rounded-full
-              bg-sky-400/[0.035]
+              bg-[#087EA4]/[0.06]
               blur-[80px]
             "
           />
 
-          {/* Top glass highlight */}
+          {/* Top highlight */}
 
           <div
             className="
@@ -239,7 +236,7 @@ export default function LoginPage() {
               h-px
               bg-gradient-to-r
               from-transparent
-              via-cyan-300/20
+              via-[#2DD4BF]/50
               to-transparent
             "
           />
@@ -255,26 +252,26 @@ export default function LoginPage() {
                   flex h-8 w-8
                   items-center justify-center
                   rounded-xl
-                  border border-cyan-400/10
-                  bg-cyan-400/[0.055]
-                  text-cyan-300/80
+                  border border-[#087EA4]/10
+                  bg-[#087EA4]/[0.06]
+                  text-[#087EA4]
                 "
               >
                 <FaFish size={12} />
               </div>
 
               <div>
-                <p className="text-[9px] uppercase tracking-[0.2em] text-cyan-300/40">
+                <p className="text-[9px] uppercase tracking-[0.2em] text-[#0891B2]">
                   Account Access
                 </p>
 
-                <h2 className="mt-0.5 text-lg font-semibold text-white">
+                <h2 className="mt-0.5 text-lg font-semibold text-[#123B4A]">
                   Welcome back
                 </h2>
               </div>
             </div>
 
-            <p className="text-xs leading-relaxed text-slate-600">
+            <p className="text-xs leading-relaxed text-[#55727D]">
               Enter your credentials to access the Faculty of Fisheries
               portal.
             </p>
@@ -285,7 +282,7 @@ export default function LoginPage() {
           ====================================================== */}
 
           <form onSubmit={handleLogin} className="relative space-y-5">
-            {/* Email */}
+            {/* EMAIL */}
 
             <div>
               <label
@@ -296,7 +293,7 @@ export default function LoginPage() {
                   font-semibold
                   uppercase
                   tracking-[0.12em]
-                  text-slate-500
+                  text-[#55727D]
                 "
               >
                 Email Address
@@ -309,7 +306,7 @@ export default function LoginPage() {
                     absolute left-4 top-1/2
                     -translate-y-1/2
                     text-[11px]
-                    text-slate-700
+                    text-[#087EA4]/60
                   "
                 />
 
@@ -324,26 +321,26 @@ export default function LoginPage() {
                   className="
                     w-full
                     rounded-xl
-                    border border-white/[0.07]
-                    bg-white/[0.025]
+                    border border-[#087EA4]/10
+                    bg-[#F0FAFC]/50
                     py-3
                     pl-10
                     pr-4
                     text-sm
-                    text-slate-200
+                    text-[#123B4A]
                     outline-none
-                    placeholder:text-slate-700
+                    placeholder:text-[#55727D]/60
                     transition-all duration-200
-                    focus:border-cyan-300/20
-                    focus:bg-white/[0.04]
+                    focus:border-[#087EA4]/30
+                    focus:bg-white
                     focus:ring-2
-                    focus:ring-cyan-400/[0.06]
+                    focus:ring-[#0891B2]/[0.08]
                   "
                 />
               </div>
             </div>
 
-            {/* Password */}
+            {/* PASSWORD */}
 
             <div>
               <div className="mb-2 flex items-center justify-between">
@@ -355,7 +352,7 @@ export default function LoginPage() {
                     font-semibold
                     uppercase
                     tracking-[0.12em]
-                    text-slate-500
+                    text-[#55727D]
                   "
                 >
                   Password
@@ -366,9 +363,9 @@ export default function LoginPage() {
                   className="
                     text-[10px]
                     font-medium
-                    text-cyan-300/50
+                    text-[#087EA4]
                     transition-colors
-                    hover:text-cyan-200
+                    hover:text-[#075985]
                   "
                 >
                   Forgot password?
@@ -382,7 +379,7 @@ export default function LoginPage() {
                     absolute left-4 top-1/2
                     -translate-y-1/2
                     text-[11px]
-                    text-slate-700
+                    text-[#087EA4]/60
                   "
                 />
 
@@ -397,20 +394,20 @@ export default function LoginPage() {
                   className="
                     w-full
                     rounded-xl
-                    border border-white/[0.07]
-                    bg-white/[0.025]
+                    border border-[#087EA4]/10
+                    bg-[#F0FAFC]/50
                     py-3
                     pl-10
                     pr-11
                     text-sm
-                    text-slate-200
+                    text-[#123B4A]
                     outline-none
-                    placeholder:text-slate-700
+                    placeholder:text-[#55727D]/60
                     transition-all duration-200
-                    focus:border-cyan-300/20
-                    focus:bg-white/[0.04]
+                    focus:border-[#087EA4]/30
+                    focus:bg-white
                     focus:ring-2
-                    focus:ring-cyan-400/[0.06]
+                    focus:ring-[#0891B2]/[0.08]
                   "
                 />
 
@@ -426,9 +423,9 @@ export default function LoginPage() {
                     -translate-y-1/2
                     rounded-lg
                     p-1.5
-                    text-slate-700
+                    text-[#55727D]
                     transition-colors
-                    hover:text-cyan-300/70
+                    hover:text-[#087EA4]
                   "
                 >
                   {showPw ? (
@@ -458,17 +455,16 @@ export default function LoginPage() {
                 gap-2
                 overflow-hidden
                 rounded-xl
-                border border-cyan-300/15
-                bg-cyan-400/[0.09]
+                border border-[#087EA4]/20
+                bg-[#087EA4]
                 py-3
                 text-sm
                 font-semibold
-                text-cyan-100
-                shadow-[0_10px_30px_rgba(34,211,238,0.06)]
+                text-white
+                shadow-[0_10px_30px_rgba(8,126,164,0.18)]
                 transition-all duration-300
-                hover:border-cyan-300/25
-                hover:bg-cyan-400/[0.13]
-                hover:shadow-[0_12px_35px_rgba(34,211,238,0.10)]
+                hover:bg-[#075985]
+                hover:shadow-[0_12px_35px_rgba(8,126,164,0.24)]
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               "
@@ -481,7 +477,7 @@ export default function LoginPage() {
                   -translate-x-full
                   bg-gradient-to-r
                   from-transparent
-                  via-white/10
+                  via-white/15
                   to-transparent
                   transition-transform
                   duration-700
@@ -513,18 +509,18 @@ export default function LoginPage() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/[0.06]" />
+              <div className="w-full border-t border-[#087EA4]/10" />
             </div>
 
             <div className="relative flex justify-center">
               <span
                 className="
-                  bg-[#061522]
+                  bg-white
                   px-3
                   text-[9px]
                   uppercase
                   tracking-[0.15em]
-                  text-slate-700
+                  text-[#55727D]
                 "
               >
                 Or continue with
@@ -547,16 +543,17 @@ export default function LoginPage() {
               justify-center
               gap-3
               rounded-xl
-              border border-white/[0.07]
-              bg-white/[0.025]
+              border border-[#087EA4]/10
+              bg-[#F0FAFC]/50
               py-3
               text-sm
               font-medium
-              text-slate-400
+              text-[#55727D]
               transition-all duration-200
-              hover:border-white/[0.12]
-              hover:bg-white/[0.045]
-              hover:text-slate-200
+              hover:border-[#087EA4]/20
+              hover:bg-[#F0FAFC]
+              hover:text-[#123B4A]
+              hover:shadow-sm
             "
           >
             <FcGoogle className="text-lg" />
@@ -568,15 +565,15 @@ export default function LoginPage() {
               REGISTER
           ====================================================== */}
 
-          <p className="mt-7 text-center text-xs text-slate-600">
+          <p className="mt-7 text-center text-xs text-[#55727D]">
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
               className="
-                font-medium
-                text-cyan-300/60
+                font-semibold
+                text-[#087EA4]
                 transition-colors
-                hover:text-cyan-200
+                hover:text-[#075985]
               "
             >
               Register here
@@ -590,14 +587,14 @@ export default function LoginPage() {
 
         <div className="mt-6 text-center">
           <div className="flex items-center justify-center gap-2">
-            <span className="h-px w-8 bg-white/[0.05]" />
+            <span className="h-px w-8 bg-[#087EA4]/15" />
 
-            <FaFish className="text-[9px] text-cyan-300/20" />
+            <FaFish className="text-[9px] text-[#2DD4BF]" />
 
-            <span className="h-px w-8 bg-white/[0.05]" />
+            <span className="h-px w-8 bg-[#087EA4]/15" />
           </div>
 
-          <p className="mt-3 text-[9px] uppercase tracking-[0.18em] text-slate-700">
+          <p className="mt-3 text-[9px] uppercase tracking-[0.18em] text-[#55727D]">
             Faculty of Fisheries • PSTU
           </p>
         </div>
@@ -605,3 +602,4 @@ export default function LoginPage() {
     </main>
   );
 }
+

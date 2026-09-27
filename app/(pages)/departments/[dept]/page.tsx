@@ -1,4 +1,3 @@
-
 import { DEPARTMENTS, Department } from "@/types";
 import { notFound } from "next/navigation";
 import DeptPageContent from "@/components/departments/DeptPageContent";
@@ -27,41 +26,41 @@ export default async function DeptPage({
     }
   > = {
     AQC: {
-      accent: "text-cyan-300",
-      soft: "bg-cyan-400/[0.08]",
-      glow: "bg-cyan-400/[0.04]",
+      accent: "text-[#087EA4]",
+      soft: "bg-[#0891B2]/[0.08]",
+      glow: "bg-[#2DD4BF]/[0.10]",
       description:
         "Aquatic production, culture systems, and sustainable farming.",
     },
 
     FBG: {
-      accent: "text-emerald-300",
-      soft: "bg-emerald-400/[0.08]",
-      glow: "bg-emerald-400/[0.04]",
+      accent: "text-[#075985]",
+      soft: "bg-[#087EA4]/[0.08]",
+      glow: "bg-[#2DD4BF]/[0.10]",
       description:
         "Fish biology, genetics, biodiversity, and aquatic life.",
     },
 
     FMN: {
-      accent: "text-violet-300",
-      soft: "bg-violet-400/[0.08]",
-      glow: "bg-violet-400/[0.04]",
+      accent: "text-[#087EA4]",
+      soft: "bg-[#0891B2]/[0.08]",
+      glow: "bg-[#087EA4]/[0.06]",
       description:
         "Fisheries resources, management, conservation, and policy.",
     },
 
     FST: {
-      accent: "text-amber-300",
-      soft: "bg-amber-400/[0.08]",
-      glow: "bg-amber-400/[0.04]",
+      accent: "text-[#075985]",
+      soft: "bg-[#2DD4BF]/[0.10]",
+      glow: "bg-[#0891B2]/[0.06]",
       description:
         "Fish processing, quality, technology, and value addition.",
     },
 
     MFO: {
-      accent: "text-sky-300",
-      soft: "bg-sky-400/[0.08]",
-      glow: "bg-sky-400/[0.04]",
+      accent: "text-[#087EA4]",
+      soft: "bg-[#0891B2]/[0.08]",
+      glow: "bg-[#075985]/[0.06]",
       description:
         "Marine fisheries, oceanography, and coastal systems.",
     },
@@ -70,11 +69,12 @@ export default async function DeptPage({
   const style = deptStyles[deptKey];
 
   return (
-    <DeptPageContent
-      deptKey={deptKey}
-      deptName={deptName}
-      style={style}
-    />
+    <div className="min-h-screen bg-[#F0FAFC] text-[#123B4A]">
+      <DeptPageContent
+        deptKey={deptKey}
+        deptName={deptName}
+        style={style}
+      />
+    </div>
   );
 }
-

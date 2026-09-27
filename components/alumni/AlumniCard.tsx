@@ -1,3 +1,4 @@
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -9,6 +10,7 @@ import {
   FaBriefcase,
   FaPhone,
   FaEnvelope,
+  FaGraduationCap,
   // FaArrowUpRightFromSquare,
 } from "react-icons/fa";
 
@@ -29,48 +31,48 @@ const departmentStyles: Record<
   }
 > = {
   AQC: {
-    accent: "text-cyan-300",
-    accentSoft: "bg-cyan-400/[0.08]",
-    border: "border-cyan-300/20",
-    glow: "bg-cyan-400/[0.045]",
-    dot: "bg-cyan-300",
+    accent: "text-[#087EA4]",
+    accentSoft: "bg-[#0891B2]/[0.08]",
+    border: "border-[#0891B2]/20",
+    glow: "hover:shadow-[0_20px_55px_rgba(8,145,178,0.11)]",
+    dot: "bg-[#0891B2]",
   },
   FBG: {
-    accent: "text-emerald-300",
-    accentSoft: "bg-emerald-400/[0.08]",
-    border: "border-emerald-300/20",
-    glow: "bg-emerald-400/[0.045]",
-    dot: "bg-emerald-300",
+    accent: "text-[#087A68]",
+    accentSoft: "bg-[#2DD4BF]/[0.10]",
+    border: "border-[#2DD4BF]/25",
+    glow: "hover:shadow-[0_20px_55px_rgba(45,212,191,0.11)]",
+    dot: "bg-[#2DD4BF]",
   },
   FMN: {
-    accent: "text-violet-300",
-    accentSoft: "bg-violet-400/[0.08]",
-    border: "border-violet-300/20",
-    glow: "bg-violet-400/[0.045]",
-    dot: "bg-violet-300",
+    accent: "text-[#6D5CC6]",
+    accentSoft: "bg-[#8B7ED8]/[0.08]",
+    border: "border-[#8B7ED8]/20",
+    glow: "hover:shadow-[0_20px_55px_rgba(139,126,216,0.11)]",
+    dot: "bg-[#8B7ED8]",
   },
   FST: {
-    accent: "text-amber-300",
-    accentSoft: "bg-amber-400/[0.08]",
-    border: "border-amber-300/20",
-    glow: "bg-amber-400/[0.045]",
-    dot: "bg-amber-300",
+    accent: "text-[#A16207]",
+    accentSoft: "bg-[#F59E0B]/[0.09]",
+    border: "border-[#F59E0B]/20",
+    glow: "hover:shadow-[0_20px_55px_rgba(245,158,11,0.11)]",
+    dot: "bg-[#F59E0B]",
   },
   MFO: {
-    accent: "text-sky-300",
-    accentSoft: "bg-sky-400/[0.08]",
-    border: "border-sky-300/20",
-    glow: "bg-sky-400/[0.045]",
-    dot: "bg-sky-300",
+    accent: "text-[#075985]",
+    accentSoft: "bg-[#087EA4]/[0.08]",
+    border: "border-[#087EA4]/20",
+    glow: "hover:shadow-[0_20px_55px_rgba(8,126,164,0.11)]",
+    dot: "bg-[#087EA4]",
   },
 };
 
 const defaultStyle = {
-  accent: "text-cyan-300",
-  accentSoft: "bg-cyan-400/[0.08]",
-  border: "border-cyan-300/20",
-  glow: "bg-cyan-400/[0.045]",
-  dot: "bg-cyan-300",
+  accent: "text-[#087EA4]",
+  accentSoft: "bg-[#0891B2]/[0.08]",
+  border: "border-[#0891B2]/20",
+  glow: "hover:shadow-[0_20px_55px_rgba(8,145,178,0.11)]",
+  dot: "bg-[#0891B2]",
 };
 
 export default function AlumniCard({
@@ -79,7 +81,11 @@ export default function AlumniCard({
   onClick,
 }: Props) {
   const style =
-    departmentStyles[alumni.department || ""] || defaultStyle;
+    departmentStyles[alumni.department || ""] ?? defaultStyle;
+
+  const batchLabel = alumni.batch
+    ? `Batch '${String(alumni.batch).slice(-2)}`
+    : null;
 
   return (
     <motion.article
@@ -91,192 +97,280 @@ export default function AlumniCard({
         delay: Math.min(index * 0.05, 0.3),
         ease: [0.22, 1, 0.36, 1],
       }}
-      whileHover={{ y: -5 }}
+      whileHover={{
+        y: -6,
+        transition: {
+          duration: 0.25,
+          ease: "easeOut",
+        },
+      }}
       onClick={onClick}
       className="group relative cursor-pointer"
     >
-      {/* Soft department glow */}
+      {/* =====================================================
+          OUTER GLOW
+      ====================================================== */}
       <div
-        className={`pointer-events-none absolute -inset-1 rounded-[22px] ${style.glow} opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100`}
+        className={`pointer-events-none absolute -inset-1 rounded-[25px] ${style.accentSoft} opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-80`}
       />
 
-      {/* Card */}
-      <div className="relative isolate overflow-hidden rounded-[20px] border border-white/[0.07] bg-[#06111f]/90 backdrop-blur-xl transition-all duration-500 group-hover:border-white/[0.12] group-hover:bg-[#071525]">
-        {/* Very subtle top accent */}
+      {/* =====================================================
+          CARD
+      ====================================================== */}
+      <div
+        className={`relative isolate overflow-hidden rounded-[24px] border border-[#087EA4]/10 bg-white/80 shadow-[0_10px_35px_rgba(8,126,164,0.055)] backdrop-blur-xl transition-all duration-500 group-hover:border-[#087EA4]/15 ${style.glow}`}
+      >
+        {/* ===================================================
+            TOP ACCENT
+        ==================================================== */}
         <div
-          className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-current to-transparent ${style.accent} opacity-30`}
+          className={`absolute inset-x-6 top-0 h-[2px] bg-gradient-to-r from-transparent via-current to-transparent ${style.accent} opacity-30 transition-opacity duration-500 group-hover:opacity-75`}
         />
 
-        {/* Background atmosphere */}
-        <div className="pointer-events-none absolute -right-20 -top-20 h-44 w-44 rounded-full bg-cyan-400/[0.025] blur-3xl transition-all duration-700 group-hover:bg-cyan-400/[0.045]" />
+        {/* ===================================================
+            BACKGROUND ATMOSPHERE
+        ==================================================== */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div
+            className={`absolute -right-20 -top-20 h-48 w-48 rounded-full ${style.accentSoft} opacity-50 blur-[75px] transition-all duration-700 group-hover:scale-125 group-hover:opacity-90`}
+          />
 
-        <div className="relative p-5">
-          {/* Header */}
+          <div className="absolute -bottom-24 -left-20 h-40 w-40 rounded-full bg-[#2DD4BF]/[0.035] blur-[65px]" />
+
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0891B2]/[0.025] to-transparent" />
+        </div>
+
+        {/* ===================================================
+            CONTENT
+        ==================================================== */}
+        <div className="relative z-10 p-5">
+          {/* =================================================
+              PROFILE HEADER
+          ================================================== */}
           <div className="flex items-start gap-3.5">
             {/* Avatar */}
             <div className="relative shrink-0">
+              {/* Avatar glow */}
+              <div
+                className={`absolute -inset-2.5 rounded-[22px] ${style.accentSoft} opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100`}
+              />
+
               {alumni.photo ? (
-                <div className="relative h-[68px] w-[68px] overflow-hidden rounded-[17px] border border-white/[0.09] bg-white/[0.03]">
+                <div
+                  className={`relative h-[72px] w-[72px] overflow-hidden rounded-[19px] border ${style.border} bg-[#F0FAFC] shadow-[0_10px_25px_rgba(8,126,164,0.10)] transition-transform duration-500 group-hover:scale-[1.035]`}
+                >
                   <Image
                     src={alumni.photo}
                     alt={alumni.name}
                     fill
-                    sizes="68px"
-                    className="object-cover transition duration-500 group-hover:scale-[1.04]"
+                    sizes="72px"
+                    className="object-cover"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#075985]/10 via-transparent to-white/10" />
                 </div>
               ) : (
                 <div
-                  className={`flex h-[68px] w-[68px] items-center justify-center rounded-[17px] border ${style.border} ${style.accentSoft} ${style.accent} text-xl font-semibold`}
+                  className={`relative flex h-[72px] w-[72px] items-center justify-center rounded-[19px] border ${style.border} ${style.accentSoft} shadow-sm`}
                 >
-                  {alumni.name?.[0]?.toUpperCase() || "A"}
+                  <span
+                    className={`font-display text-2xl font-bold ${style.accent}`}
+                  >
+                    {alumni.name?.[0]?.toUpperCase() || "A"}
+                  </span>
                 </div>
               )}
 
-              {/* Online/accent indicator */}
-              <span
-                className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-[#06111f] ${style.dot}`}
-              />
+              {/* Alumni marker */}
+              <div
+                className={`absolute -bottom-2 -right-2 flex h-7 w-7 items-center justify-center rounded-xl border ${style.border} bg-white shadow-[0_5px_15px_rgba(8,126,164,0.10)]`}
+              >
+                <FaGraduationCap
+                  size={10}
+                  className={style.accent}
+                />
+              </div>
             </div>
 
-            {/* Name + position */}
+            {/* Name / Position */}
             <div className="min-w-0 flex-1 pt-0.5">
-              <h3 className="truncate font-display text-[15px] font-semibold tracking-tight text-slate-100 transition-colors group-hover:text-white">
+              <h3 className="truncate font-display text-[15px] font-bold tracking-tight text-[#123B4A] transition-colors duration-300 group-hover:text-[#075985]">
                 {alumni.name}
               </h3>
 
               {alumni.currentPosition && (
-                <p className="mt-1.5 flex items-center gap-1.5 truncate text-[11px] leading-5 text-slate-500">
+                <div className="mt-1.5 flex min-w-0 items-center gap-1.5">
                   <FaBriefcase
                     size={8}
-                    className={`${style.accent} shrink-0 opacity-60`}
+                    className={`${style.accent} shrink-0 opacity-70`}
                   />
-                  <span className="truncate">
+
+                  <p className="truncate text-[10px] font-medium leading-5 text-[#55727D]">
                     {alumni.currentPosition}
-                  </span>
-                </p>
+                  </p>
+                </div>
               )}
             </div>
 
             {/* LinkedIn */}
-            {alumni.linkedin && alumni.linkedin !== "#" && (
-              <a
-                href={alumni.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${alumni.name} LinkedIn profile`}
-                onClick={(event) => event.stopPropagation()}
-                className={`relative z-30 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.025] text-slate-600 transition-all duration-300 hover:border-cyan-300/20 hover:bg-cyan-400/[0.08] hover:text-cyan-300`}
-              >
-                <FaLinkedin size={13} />
-              </a>
-            )}
+            {alumni.linkedin &&
+              alumni.linkedin !== "#" && (
+                <a
+                  href={alumni.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${alumni.name} LinkedIn profile`}
+                  onClick={(event) =>
+                    event.stopPropagation()
+                  }
+                  className="relative z-30 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-[#087EA4]/10 bg-white text-[#55727D] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#087EA4]/20 hover:bg-[#087EA4]/[0.06] hover:text-[#087EA4]"
+                >
+                  <FaLinkedin size={13} />
+                </a>
+              )}
           </div>
 
-          {/* Organization */}
+          {/* =================================================
+              ORGANIZATION
+          ================================================== */}
           {alumni.organization && (
-            <div className="mt-5 flex items-center gap-2.5 border-l border-white/[0.08] pl-3">
-              <div
-                className={`h-1.5 w-1.5 shrink-0 rounded-full ${style.dot} opacity-60`}
+            <div className="mt-5 flex items-center gap-2.5 rounded-xl border border-[#087EA4]/10 bg-[#F0FAFC]/55 px-3 py-2.5">
+              <span
+                className={`h-1.5 w-1.5 shrink-0 rounded-full ${style.dot}`}
               />
 
-              <p className="truncate text-[11px] font-medium tracking-wide text-slate-400">
+              <p className="truncate text-[10px] font-semibold tracking-wide text-[#55727D]">
                 {alumni.organization}
               </p>
             </div>
           )}
 
-          {/* Contact */}
+          {/* =================================================
+              CONTACT
+          ================================================== */}
           {(alumni.phone || alumni.email) && (
-            <div className="mt-4 grid gap-2">
+            <div className="mt-3 grid gap-2">
               {alumni.phone && (
                 <a
                   href={`tel:${alumni.phone}`}
-                  onClick={(event) => event.stopPropagation()}
-                  className="group/contact flex min-w-0 items-center gap-2.5 rounded-xl border border-white/[0.045] bg-white/[0.018] px-3 py-2 transition-all duration-300 hover:border-white/[0.08] hover:bg-white/[0.035]"
+                  onClick={(event) =>
+                    event.stopPropagation()
+                  }
+                  className="group/contact flex min-w-0 items-center gap-2.5 rounded-xl border border-[#087EA4]/10 bg-white/70 px-3 py-2.5 shadow-sm transition-all duration-300 hover:border-[#087EA4]/20 hover:bg-[#0891B2]/[0.035]"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/[0.035] text-slate-600 transition-colors group-hover/contact:text-slate-300">
+                  <span
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${style.accentSoft} ${style.accent}`}
+                  >
                     <FaPhone size={8} />
                   </span>
 
-                  <span className="truncate text-[10px] text-slate-600 transition-colors group-hover/contact:text-slate-400">
-                    {alumni.phone}
-                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[7px] font-bold uppercase tracking-[0.15em] text-[#55727D]/55">
+                      Phone
+                    </p>
+
+                    <p className="mt-0.5 truncate text-[10px] font-medium text-[#55727D] transition-colors group-hover/contact:text-[#123B4A]">
+                      {alumni.phone}
+                    </p>
+                  </div>
                 </a>
               )}
 
               {alumni.email && (
                 <a
                   href={`mailto:${alumni.email}`}
-                  onClick={(event) => event.stopPropagation()}
-                  className="group/contact flex min-w-0 items-center gap-2.5 rounded-xl border border-white/[0.045] bg-white/[0.018] px-3 py-2 transition-all duration-300 hover:border-white/[0.08] hover:bg-white/[0.035]"
+                  onClick={(event) =>
+                    event.stopPropagation()
+                  }
+                  className="group/contact flex min-w-0 items-center gap-2.5 rounded-xl border border-[#087EA4]/10 bg-white/70 px-3 py-2.5 shadow-sm transition-all duration-300 hover:border-[#087EA4]/20 hover:bg-[#0891B2]/[0.035]"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/[0.035] text-slate-600 transition-colors group-hover/contact:text-slate-300">
+                  <span
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${style.accentSoft} ${style.accent}`}
+                  >
                     <FaEnvelope size={8} />
                   </span>
 
-                  <span className="truncate text-[10px] text-slate-600 transition-colors group-hover/contact:text-slate-400">
-                    {alumni.email}
-                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[7px] font-bold uppercase tracking-[0.15em] text-[#55727D]/55">
+                      Email
+                    </p>
+
+                    <p className="mt-0.5 truncate text-[10px] font-medium text-[#55727D] transition-colors group-hover/contact:text-[#123B4A]">
+                      {alumni.email}
+                    </p>
+                  </div>
                 </a>
               )}
             </div>
           )}
 
-          {/* Bottom metadata */}
-          <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/[0.055] pt-4">
+          {/* =================================================
+              BOTTOM METADATA
+          ================================================== */}
+          <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#087EA4]/10 pt-4">
+            {/* Batch */}
             <div className="flex min-w-0 items-center gap-2">
-              {alumni.batch && (
+              {batchLabel ? (
                 <span
-                  className={`inline-flex items-center rounded-lg border ${style.border} ${style.accentSoft} px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] ${style.accent}`}
+                  className={`inline-flex items-center gap-1.5 rounded-lg border ${style.border} ${style.accentSoft} px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.08em] ${style.accent}`}
                 >
-                  Batch &apos;{String(alumni.batch).slice(-2)}
+                  <FaGraduationCap size={8} />
+                  {batchLabel}
                 </span>
-              )}
-
-              {alumni.department && (
-                <span className="text-[9px] font-medium uppercase tracking-[0.14em] text-slate-700">
-                  {alumni.department}
+              ) : (
+                <span className="text-[9px] font-medium text-[#55727D]/45">
+                  Alumni Profile
                 </span>
               )}
             </div>
 
+            {/* Location */}
             {alumni.location && (
-              <span className="flex min-w-0 max-w-[42%] items-center gap-1.5 text-[9px] text-slate-600">
+              <div className="flex min-w-0 max-w-[45%] items-center gap-1.5">
                 <FaMapMarkerAlt
                   size={8}
-                  className="shrink-0 text-slate-700"
+                  className={`${style.accent} shrink-0 opacity-65`}
                 />
-                <span className="truncate">
+
+                <span className="truncate text-[9px] font-medium text-[#55727D]">
                   {alumni.location.split(",")[0]}
                 </span>
-              </span>
+              </div>
             )}
           </div>
 
-          {/* Hover footer */}
-          <div className="mt-4 flex items-center justify-between opacity-0 transition-all duration-300 group-hover:opacity-100">
+          {/* =================================================
+              VIEW PROFILE
+          ================================================== */}
+          <div className="mt-4 flex items-center justify-between border-t border-[#087EA4]/10 pt-3.5">
             <span
-              className={`text-[9px] font-medium uppercase tracking-[0.16em] ${style.accent} opacity-70`}
+              className={`text-[9px] font-bold uppercase tracking-[0.16em] ${style.accent} opacity-65 transition-opacity duration-300 group-hover:opacity-100`}
             >
-              View profile
+              View Alumni Profile
             </span>
 
-            <span
-              className={`flex h-6 w-6 items-center justify-center rounded-lg border ${style.border} ${style.accentSoft} ${style.accent} transition-transform duration-300 group-hover:translate-x-0.5`}
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                onClick?.();
+              }}
+              aria-label={`View ${alumni.name}'s profile`}
+              className={`flex h-7 w-7 items-center justify-center rounded-lg border ${style.border} ${style.accentSoft} ${style.accent} transition-all duration-300 group-hover:translate-x-0.5`}
             >
-              {/* <FaArrowUpRightFromSquare size={8} /> */}
-            </span>
+              {/* <FaArrowUpRightFromSquare size={9} /> */}
+            </button>
           </div>
         </div>
 
-        {/* Bottom hover line */}
+        {/* ===================================================
+            BOTTOM HOVER LINE
+        ==================================================== */}
         <div
-          className={`absolute inset-x-5 bottom-0 h-px origin-left scale-x-0 ${style.accent} bg-current opacity-40 transition-transform duration-500 group-hover:scale-x-100`}
+          className={`absolute inset-x-6 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-current to-transparent ${style.accent} opacity-70 transition-transform duration-500 group-hover:scale-x-100`}
         />
       </div>
     </motion.article>
   );
 }
+

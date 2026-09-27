@@ -18,6 +18,7 @@ import {
   FaPhone,
   FaEnvelope,
   FaFish,
+  FaArrowRight,
 } from "react-icons/fa";
 import { DEPARTMENTS, Department } from "@/types";
 import Image from "next/image";
@@ -41,18 +42,18 @@ const navLinks = [
 ];
 
 const roleColor: Record<string, string> = {
-  admin: "from-red-400 to-rose-600",
-  teacher: "from-teal-400 to-emerald-500",
+  admin: "from-red-500 to-rose-600",
+  teacher: "from-teal-500 to-emerald-500",
   alumni: "from-amber-400 to-orange-500",
-  student: "from-blue-400 to-cyan-500",
+  student: "from-blue-500 to-cyan-500",
 };
 
 const deptColors: Record<string, string> = {
-  AQC: "text-blue-300",
-  FBG: "text-emerald-300",
-  FMN: "text-violet-300",
-  FST: "text-amber-300",
-  MFO: "text-cyan-300",
+  AQC: "text-[#087EA4] bg-[#087EA4]/10 border-[#087EA4]/15",
+  FBG: "text-emerald-600 bg-emerald-500/10 border-emerald-500/15",
+  FMN: "text-violet-600 bg-violet-500/10 border-violet-500/15",
+  FST: "text-amber-600 bg-amber-500/10 border-amber-500/15",
+  MFO: "text-cyan-600 bg-cyan-500/10 border-cyan-500/15",
 };
 
 export default function Navbar() {
@@ -68,9 +69,9 @@ export default function Navbar() {
 
   const deptRef = useRef<HTMLDivElement>(null);
 
-  /* ------------------------------------------------------------
-     Scroll state
-  ------------------------------------------------------------ */
+  /* ============================================================
+     SCROLL
+  ============================================================ */
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,9 +87,9 @@ export default function Navbar() {
     };
   }, []);
 
-  /* ------------------------------------------------------------
-     Outside click
-  ------------------------------------------------------------ */
+  /* ============================================================
+     CLOSE DROPDOWNS ON OUTSIDE CLICK
+  ============================================================ */
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -113,9 +114,20 @@ export default function Navbar() {
     };
   }, []);
 
-  /* ------------------------------------------------------------
-     Sign out
-  ------------------------------------------------------------ */
+  /* ============================================================
+     CLOSE MOBILE MENU WHEN ROUTE CHANGES
+  ============================================================ */
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setDeptOpen(false);
+    setDeptDropdownOpen(false);
+    setDropdownOpen(false);
+  }, [pathname]);
+
+  /* ============================================================
+     SIGN OUT
+  ============================================================ */
 
   const handleSignOut = async () => {
     await signOut();
@@ -130,36 +142,37 @@ export default function Navbar() {
 
   return (
     <>
+      {/* ========================================================
+          NAVBAR
+      ======================================================== */}
+
       <header className="fixed inset-x-0 top-0 z-50 w-full">
         <div
           className={`
             relative w-full
-            overflow-visible
             border-b
             transition-all duration-500
             ${
               scrolled
-                ? "border-white/[0.07] bg-[#020b18]/90 shadow-[0_12px_45px_rgba(0,0,0,0.35)]"
-                : "border-white/[0.08] bg-[#06182a]/85 shadow-[0_8px_30px_rgba(0,0,0,0.20)]"
+                ? "border-[#087EA4]/10 bg-white/95 shadow-[0_8px_35px_rgba(7,89,133,0.10)]"
+                : "border-[#087EA4]/8 bg-[#F0FAFC]/95 shadow-[0_5px_25px_rgba(7,89,133,0.06)]"
             }
             backdrop-blur-2xl
           `}
         >
-          {/* =====================================================
-              ATMOSPHERIC NAVBAR GLOW
-          ====================================================== */}
+          {/* ==================================================
+              BACKGROUND OCEAN GLOW
+          ================================================== */}
 
-          <div className="pointer-events-none absolute -left-24 -top-28 h-56 w-56 rounded-full bg-cyan-400/[0.035] blur-[100px]" />
+          <div className="pointer-events-none absolute -left-20 -top-24 h-48 w-48 rounded-full bg-[#2DD4BF]/10 blur-[80px]" />
 
-          <div className="pointer-events-none absolute -right-24 -top-24 h-52 w-52 rounded-full bg-sky-400/[0.025] blur-[100px]" />
+          <div className="pointer-events-none absolute -right-20 -top-24 h-48 w-48 rounded-full bg-[#087EA4]/10 blur-[80px]" />
 
-          {/* Top glass highlight */}
+          <div className="pointer-events-none absolute inset-x-12 top-0 h-px bg-gradient-to-r from-transparent via-[#2DD4BF]/30 to-transparent" />
 
-          <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/15 to-transparent" />
-
-          {/* =====================================================
+          {/* ==================================================
               TOP INFORMATION BAR
-          ====================================================== */}
+          ================================================== */}
 
           <div
             className={`
@@ -172,20 +185,20 @@ export default function Navbar() {
               }
             `}
           >
-            <div className="flex items-center justify-between border-b border-white/[0.045] px-5 py-2 sm:px-7">
-              <span className="flex items-center gap-2 text-[10px] text-slate-500">
+            <div className="flex items-center justify-between border-b border-[#087EA4]/7 px-5 py-2 sm:px-7 lg:px-10">
+              <span className="flex items-center gap-2 text-[10px] font-medium text-[#55727D]">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-300 opacity-50" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan-300" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2DD4BF] opacity-50" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#2DD4BF]" />
                 </span>
 
                 Patuakhali Science and Technology University
               </span>
 
-              <span className="hidden items-center gap-5 text-[10px] text-slate-600 md:flex">
+              <div className="hidden items-center gap-5 text-[10px] text-[#55727D] md:flex">
                 <a
                   href="tel:+880"
-                  className="flex items-center gap-1.5 transition-colors hover:text-slate-300"
+                  className="flex items-center gap-1.5 transition-colors hover:text-[#087EA4]"
                 >
                   <FaPhone size={8} />
                   +880-0441-XXXXXX
@@ -193,43 +206,43 @@ export default function Navbar() {
 
                 <a
                   href="mailto:fisheries@pstu.ac.bd"
-                  className="flex items-center gap-1.5 transition-colors hover:text-slate-300"
+                  className="flex items-center gap-1.5 transition-colors hover:text-[#087EA4]"
                 >
                   <FaEnvelope size={8} />
                   fisheries@pstu.ac.bd
                 </a>
-              </span>
+              </div>
             </div>
           </div>
 
-          {/* =====================================================
+          {/* ==================================================
               MAIN NAVIGATION
-          ====================================================== */}
+          ================================================== */}
 
           <nav className="w-full px-4 sm:px-6 lg:px-8">
-            <div className="flex h-[68px] items-center justify-between gap-4">
+            <div className="flex h-[72px] items-center justify-between gap-4">
               {/* =================================================
                   LOGO
-              ================================================== */}
+              ================================================= */}
 
               <Link
                 href="/"
                 className="group flex shrink-0 items-center gap-3"
               >
                 <div className="relative">
-                  <div className="absolute inset-0 rounded-full bg-cyan-400/[0.10] blur-lg transition-all duration-500 group-hover:bg-cyan-400/[0.20]" />
+                  <div className="absolute inset-0 rounded-full bg-[#2DD4BF]/20 blur-xl transition-all duration-500 group-hover:bg-[#2DD4BF]/35" />
 
                   <div
                     className="
-                      relative flex h-10 w-10
+                      relative flex h-11 w-11
                       items-center justify-center
                       overflow-hidden rounded-full
-                      border border-white/[0.10]
-                      bg-white/[0.035]
-                      shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]
+                      border border-[#087EA4]/10
+                      bg-white
+                      shadow-[0_5px_18px_rgba(7,89,133,0.10)]
                       transition-all duration-300
                       group-hover:scale-105
-                      group-hover:border-cyan-300/20
+                      group-hover:border-[#087EA4]/25
                     "
                   >
                     <img
@@ -243,18 +256,18 @@ export default function Navbar() {
                 </div>
 
                 <div className="hidden sm:block">
-                  <p className="font-display text-sm font-bold leading-tight tracking-wide text-white">
+                  <p className="text-sm font-bold leading-tight tracking-wide text-[#123B4A]">
                     Faculty of Fisheries
                   </p>
 
-                  <div className="mt-0.5 flex items-center gap-1.5">
-                    <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-cyan-300/65">
+                  <div className="mt-1 flex items-center gap-1.5">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#087EA4]">
                       PSTU
                     </span>
 
-                    <span className="h-0.5 w-0.5 rounded-full bg-white/20" />
+                    <span className="h-1 w-1 rounded-full bg-[#2DD4BF]" />
 
-                    <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-slate-600">
+                    <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#55727D]">
                       Bangladesh
                     </span>
                   </div>
@@ -263,7 +276,7 @@ export default function Navbar() {
 
               {/* =================================================
                   DESKTOP NAVIGATION
-              ================================================== */}
+              ================================================= */}
 
               <div className="hidden items-center gap-1 lg:flex">
                 {navLinks.map((link) =>
@@ -278,33 +291,40 @@ export default function Navbar() {
                         onClick={() =>
                           setDeptDropdownOpen((open) => !open)
                         }
-                        className="
+                        className={`
                           group relative flex items-center gap-2
                           rounded-xl px-3.5 py-2.5
-                          text-sm font-medium
-                          text-slate-500
+                          text-sm font-semibold
                           transition-all duration-200
-                          hover:bg-white/[0.035]
-                          hover:text-slate-200
-                        "
+                          ${
+                            pathname.startsWith("/departments")
+                              ? "bg-[#087EA4]/8 text-[#075985]"
+                              : "text-[#55727D] hover:bg-[#087EA4]/5 hover:text-[#123B4A]"
+                          }
+                        `}
                       >
                         {link.label}
 
                         <FaChevronDown
                           className={`
                             text-[9px]
-                            text-slate-700
                             transition-transform duration-300
                             ${
                               deptDropdownOpen
-                                ? "rotate-180 text-cyan-300/70"
-                                : ""
+                                ? "rotate-180 text-[#087EA4]"
+                                : "text-[#55727D]"
                             }
                           `}
                         />
+
+                        {pathname.startsWith("/departments") && (
+                          <span className="absolute bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-[#2DD4BF]" />
+                        )}
                       </button>
 
-                      {/* Department dropdown */}
+                      {/* =================================================
+                          DEPARTMENT DROPDOWN
+                      ================================================= */}
 
                       <AnimatePresence>
                         {deptDropdownOpen && (
@@ -330,7 +350,7 @@ export default function Navbar() {
                             }}
                             className="
                               absolute left-1/2 top-full
-                              z-[100] mt-3 w-[340px]
+                              z-[100] mt-3 w-[360px]
                               -translate-x-1/2
                             "
                           >
@@ -338,35 +358,41 @@ export default function Navbar() {
                               className="
                                 relative overflow-hidden
                                 rounded-2xl
-                                border border-white/[0.07]
-                                bg-[#061522]/95
-                                shadow-[0_25px_70px_rgba(0,0,0,0.55)]
+                                border border-[#087EA4]/10
+                                bg-white/98
+                                shadow-[0_25px_70px_rgba(7,89,133,0.16)]
                                 backdrop-blur-2xl
                               "
                             >
-                              {/* Glow */}
+                              {/* Decorative glow */}
 
-                              <div className="pointer-events-none absolute -right-20 -top-20 h-44 w-44 rounded-full bg-cyan-400/[0.05] blur-[70px]" />
+                              <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[#2DD4BF]/10 blur-[65px]" />
 
-                              <div className="pointer-events-none absolute -bottom-20 -left-20 h-44 w-44 rounded-full bg-sky-400/[0.035] blur-[70px]" />
+                              <div className="pointer-events-none absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-[#087EA4]/8 blur-[65px]" />
 
                               {/* Header */}
 
-                              <div className="relative border-b border-white/[0.05] px-5 pb-4 pt-5">
-                                <div className="flex items-center gap-3">
-                                  <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.05] text-cyan-300">
-                                    <FaFish size={12} />
+                              <div className="relative border-b border-[#087EA4]/8 px-5 pb-4 pt-5">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#087EA4]/10 bg-[#087EA4]/8 text-[#087EA4]">
+                                      <FaFish size={13} />
+                                    </div>
+
+                                    <div>
+                                      <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#0891B2]">
+                                        Explore
+                                      </p>
+
+                                      <p className="mt-0.5 text-sm font-bold text-[#123B4A]">
+                                        Fisheries Departments
+                                      </p>
+                                    </div>
                                   </div>
 
-                                  <div>
-                                    <p className="text-[9px] uppercase tracking-[0.22em] text-cyan-300/45">
-                                      Explore
-                                    </p>
-
-                                    <p className="mt-0.5 text-sm font-semibold text-white">
-                                      Departments
-                                    </p>
-                                  </div>
+                                  <span className="rounded-full bg-[#F0FAFC] px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-[#55727D]">
+                                    {deptKeys.length} Departments
+                                  </span>
                                 </div>
                               </div>
 
@@ -391,47 +417,52 @@ export default function Navbar() {
                                       flex items-center gap-3
                                       rounded-xl px-3 py-3
                                       transition-all duration-200
-                                      hover:bg-white/[0.04]
+                                      hover:bg-[#F0FAFC]
                                     "
                                   >
                                     <div
                                       className={`
-                                        flex h-9 w-9 shrink-0
+                                        flex h-10 w-10 shrink-0
                                         items-center justify-center
                                         rounded-xl
-                                        border border-white/[0.06]
-                                        bg-white/[0.025]
+                                        border
                                         font-mono text-[10px]
                                         font-bold
                                         transition-all duration-200
-                                        group-hover/item:border-white/[0.10]
-                                        group-hover/item:bg-white/[0.05]
-                                        ${deptColors[child.code] || "text-cyan-300"}
+                                        group-hover/item:scale-105
+                                        ${deptColors[child.code] || "text-[#087EA4] bg-[#087EA4]/10 border-[#087EA4]/15"}
                                       `}
                                     >
                                       {child.code}
                                     </div>
 
                                     <div className="min-w-0 flex-1">
-                                      <p className="truncate text-sm font-medium text-slate-400 transition-colors group-hover/item:text-white">
+                                      <p className="truncate text-sm font-semibold text-[#55727D] transition-colors group-hover/item:text-[#123B4A]">
                                         {child.label}
                                       </p>
 
-                                      <p className="mt-0.5 text-[9px] uppercase tracking-[0.08em] text-slate-700">
+                                      <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.08em] text-[#55727D]/55">
                                         Academic department
                                       </p>
                                     </div>
 
-                                    <span className="translate-x-[-4px] text-transparent transition-all duration-200 group-hover/item:translate-x-0 group-hover/item:text-cyan-300/70">
-                                      →
-                                    </span>
+                                    <FaArrowRight
+                                      size={10}
+                                      className="
+                                        -translate-x-1
+                                        text-transparent
+                                        transition-all duration-200
+                                        group-hover/item:translate-x-0
+                                        group-hover/item:text-[#087EA4]
+                                      "
+                                    />
                                   </Link>
                                 ))}
                               </div>
 
                               {/* Footer */}
 
-                              <div className="border-t border-white/[0.05] p-2">
+                              <div className="border-t border-[#087EA4]/8 p-2">
                                 <Link
                                   href="/departments"
                                   onClick={() =>
@@ -441,18 +472,19 @@ export default function Navbar() {
                                     group flex items-center
                                     justify-center gap-2
                                     rounded-xl px-3 py-2.5
-                                    text-xs font-medium
-                                    text-slate-600
+                                    text-xs font-semibold
+                                    text-[#55727D]
                                     transition-all
-                                    hover:bg-white/[0.035]
-                                    hover:text-slate-300
+                                    hover:bg-[#F0FAFC]
+                                    hover:text-[#087EA4]
                                   "
                                 >
                                   View all departments
 
-                                  <span className="transition-transform duration-200 group-hover:translate-x-1">
-                                    →
-                                  </span>
+                                  <FaArrowRight
+                                    size={9}
+                                    className="transition-transform duration-200 group-hover:translate-x-1"
+                                  />
                                 </Link>
                               </div>
                             </div>
@@ -464,7 +496,7 @@ export default function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="group relative rounded-xl px-3.5 py-2.5 text-sm font-medium"
+                      className="group relative rounded-xl px-3.5 py-2.5 text-sm font-semibold"
                     >
                       {pathname === link.href && (
                         <motion.div
@@ -472,9 +504,8 @@ export default function Navbar() {
                           className="
                             absolute inset-0
                             rounded-xl
-                            border border-cyan-300/[0.08]
-                            bg-cyan-400/[0.06]
-                            shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]
+                            border border-[#087EA4]/10
+                            bg-[#087EA4]/8
                           "
                           transition={{
                             type: "spring",
@@ -485,7 +516,7 @@ export default function Navbar() {
                       )}
 
                       {pathname !== link.href && (
-                        <span className="absolute inset-0 -z-10 rounded-xl bg-white/0 transition-all duration-200 group-hover:bg-white/[0.035]" />
+                        <span className="absolute inset-0 -z-10 rounded-xl bg-[#087EA4]/0 transition-all duration-200 group-hover:bg-[#087EA4]/5" />
                       )}
 
                       <span
@@ -493,8 +524,8 @@ export default function Navbar() {
                           relative z-10 transition-colors duration-200
                           ${
                             pathname === link.href
-                              ? "text-cyan-200"
-                              : "text-slate-500 group-hover:text-slate-200"
+                              ? "text-[#075985]"
+                              : "text-[#55727D] group-hover:text-[#123B4A]"
                           }
                         `}
                       >
@@ -509,8 +540,8 @@ export default function Navbar() {
                             h-0.5 w-4
                             -translate-x-1/2
                             rounded-full
-                            bg-cyan-300
-                            shadow-[0_0_10px_rgba(103,232,249,0.55)]
+                            bg-[#2DD4BF]
+                            shadow-[0_0_10px_rgba(45,212,191,0.45)]
                           "
                         />
                       )}
@@ -521,11 +552,11 @@ export default function Navbar() {
 
               {/* =================================================
                   AUTH AREA
-              ================================================== */}
+              ================================================= */}
 
               <div className="hidden items-center gap-3 lg:flex">
                 {loading ? (
-                  <div className="h-10 w-32 animate-pulse rounded-full border border-white/[0.06] bg-white/[0.025]" />
+                  <div className="h-10 w-32 animate-pulse rounded-full bg-[#087EA4]/5" />
                 ) : user ? (
                   <div id="user-dropdown" className="relative">
                     <button
@@ -536,14 +567,13 @@ export default function Navbar() {
                       className="
                         group flex items-center gap-2.5
                         rounded-full
-                        border border-white/[0.07]
-                        bg-white/[0.025]
+                        border border-[#087EA4]/10
+                        bg-white
                         py-1.5 pl-1.5 pr-3
-                        text-white
-                        shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]
+                        shadow-[0_4px_16px_rgba(7,89,133,0.07)]
                         transition-all duration-200
-                        hover:border-white/[0.12]
-                        hover:bg-white/[0.05]
+                        hover:border-[#087EA4]/20
+                        hover:shadow-[0_6px_22px_rgba(7,89,133,0.12)]
                       "
                     >
                       {user.photo ? (
@@ -553,7 +583,7 @@ export default function Navbar() {
                           alt={user.name}
                           width={30}
                           height={30}
-                          className="h-7 w-7 rounded-full object-cover ring-1 ring-white/10"
+                          className="h-7 w-7 rounded-full object-cover ring-1 ring-[#087EA4]/10"
                         />
                       ) : (
                         <div
@@ -570,29 +600,31 @@ export default function Navbar() {
                       )}
 
                       <div className="max-w-[90px] text-left">
-                        <p className="truncate text-xs font-semibold leading-tight text-slate-200">
+                        <p className="truncate text-xs font-bold leading-tight text-[#123B4A]">
                           {firstName}
                         </p>
 
-                        <p className="mt-0.5 truncate text-[9px] capitalize text-slate-600">
+                        <p className="mt-0.5 truncate text-[9px] capitalize text-[#55727D]">
                           {user.role}
                         </p>
                       </div>
 
                       <FaChevronDown
                         className={`
-                          ml-0.5 text-[9px] text-slate-700
+                          ml-0.5 text-[9px] text-[#55727D]
                           transition-transform duration-300
                           ${
                             dropdownOpen
-                              ? "rotate-180 text-cyan-300/70"
+                              ? "rotate-180 text-[#087EA4]"
                               : ""
                           }
                         `}
                       />
                     </button>
 
-                    {/* User dropdown */}
+                    {/* =================================================
+                        USER DROPDOWN
+                    ================================================= */}
 
                     <AnimatePresence>
                       {dropdownOpen && (
@@ -615,26 +647,24 @@ export default function Navbar() {
                           transition={{ duration: 0.16 }}
                           className="
                             absolute right-0 top-full
-                            z-[100] mt-3 w-[270px]
+                            z-[100] mt-3 w-[280px]
                           "
                         >
                           <div
                             className="
                               relative overflow-hidden
                               rounded-2xl
-                              border border-white/[0.07]
-                              bg-[#061522]/95
-                              shadow-[0_25px_70px_rgba(0,0,0,0.55)]
+                              border border-[#087EA4]/10
+                              bg-white
+                              shadow-[0_25px_70px_rgba(7,89,133,0.16)]
                               backdrop-blur-2xl
                             "
                           >
-                            {/* Glow */}
-
-                            <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-cyan-400/[0.05] blur-[60px]" />
+                            <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-[#2DD4BF]/10 blur-[60px]" />
 
                             {/* Profile */}
 
-                            <div className="relative border-b border-white/[0.05] p-4">
+                            <div className="relative border-b border-[#087EA4]/8 p-4">
                               <div className="flex items-center gap-3">
                                 {user.photo ? (
                                   <Image
@@ -643,7 +673,7 @@ export default function Navbar() {
                                     alt={user.name}
                                     width={44}
                                     height={44}
-                                    className="h-11 w-11 rounded-xl object-cover ring-1 ring-white/10"
+                                    className="h-11 w-11 rounded-xl object-cover ring-1 ring-[#087EA4]/10"
                                   />
                                 ) : (
                                   <div
@@ -661,7 +691,7 @@ export default function Navbar() {
                                 )}
 
                                 <div className="min-w-0">
-                                  <p className="truncate text-sm font-semibold text-white">
+                                  <p className="truncate text-sm font-bold text-[#123B4A]">
                                     {user.name}
                                   </p>
 
@@ -681,9 +711,9 @@ export default function Navbar() {
                               </div>
 
                               {user.department && (
-                                <div className="mt-3 flex items-center gap-2 rounded-xl border border-white/[0.05] bg-white/[0.025] px-3 py-2 text-[10px] text-slate-600">
+                                <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#087EA4]/8 bg-[#F0FAFC] px-3 py-2 text-[10px] font-medium text-[#55727D]">
                                   <FaGraduationCap
-                                    className="text-cyan-300/50"
+                                    className="text-[#087EA4]"
                                     size={11}
                                   />
 
@@ -698,7 +728,7 @@ export default function Navbar() {
 
                             {/* Links */}
 
-                            <div className="border-b border-white/[0.05] p-2">
+                            <div className="border-b border-[#087EA4]/8 p-2">
                               {[
                                 {
                                   href: "/dashboard",
@@ -731,11 +761,12 @@ export default function Navbar() {
                                   className={`
                                     group flex items-center gap-3
                                     rounded-xl px-3 py-2.5
-                                    text-sm transition-all duration-150
+                                    text-sm font-medium
+                                    transition-all duration-150
                                     ${
                                       pathname === item.href
-                                        ? "bg-cyan-400/[0.06] text-cyan-200"
-                                        : "text-slate-500 hover:bg-white/[0.035] hover:text-slate-200"
+                                        ? "bg-[#087EA4]/8 text-[#075985]"
+                                        : "text-[#55727D] hover:bg-[#F0FAFC] hover:text-[#123B4A]"
                                     }
                                   `}
                                 >
@@ -744,8 +775,8 @@ export default function Navbar() {
                                       transition-colors
                                       ${
                                         pathname === item.href
-                                          ? "text-cyan-300"
-                                          : "text-slate-700 group-hover:text-cyan-300/70"
+                                          ? "text-[#087EA4]"
+                                          : "text-[#55727D] group-hover:text-[#087EA4]"
                                       }
                                     `}
                                   >
@@ -766,10 +797,11 @@ export default function Navbar() {
                                 className="
                                   group flex w-full items-center
                                   gap-3 rounded-xl px-3 py-2.5
-                                  text-sm text-red-300/60
+                                  text-sm font-medium
+                                  text-red-500/70
                                   transition-all
-                                  hover:bg-red-400/[0.05]
-                                  hover:text-red-300
+                                  hover:bg-red-50
+                                  hover:text-red-600
                                 "
                               >
                                 <FaSignOutAlt
@@ -791,11 +823,11 @@ export default function Navbar() {
                       href="/login"
                       className="
                         rounded-xl px-4 py-2.5
-                        text-sm font-medium
-                        text-slate-500
+                        text-sm font-semibold
+                        text-[#55727D]
                         transition-all
-                        hover:bg-white/[0.035]
-                        hover:text-slate-200
+                        hover:bg-[#087EA4]/5
+                        hover:text-[#123B4A]
                       "
                     >
                       Sign In
@@ -806,20 +838,18 @@ export default function Navbar() {
                       className="
                         group relative overflow-hidden
                         rounded-xl
-                        border border-cyan-300/15
-                        bg-cyan-400/[0.08]
+                        bg-[#087EA4]
                         px-5 py-2.5
-                        text-sm font-semibold
-                        text-cyan-100
-                        shadow-[0_8px_25px_rgba(34,211,238,0.06)]
+                        text-sm font-bold
+                        text-white
+                        shadow-[0_7px_20px_rgba(8,126,164,0.20)]
                         transition-all duration-300
                         hover:-translate-y-0.5
-                        hover:border-cyan-300/25
-                        hover:bg-cyan-400/[0.13]
-                        hover:shadow-[0_10px_30px_rgba(34,211,238,0.10)]
+                        hover:bg-[#075985]
+                        hover:shadow-[0_10px_28px_rgba(8,126,164,0.28)]
                       "
                     >
-                      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
                       <span className="relative">
                         Register
@@ -831,7 +861,7 @@ export default function Navbar() {
 
               {/* =================================================
                   MOBILE BUTTON
-              ================================================== */}
+              ================================================= */}
 
               <button
                 type="button"
@@ -839,17 +869,18 @@ export default function Navbar() {
                   relative flex h-10 w-10
                   items-center justify-center
                   rounded-xl
-                  border border-white/[0.07]
-                  bg-white/[0.025]
-                  text-slate-300
-                  shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]
+                  border border-[#087EA4]/10
+                  bg-white
+                  text-[#075985]
+                  shadow-[0_4px_14px_rgba(7,89,133,0.07)]
                   transition-all
-                  hover:border-cyan-300/15
-                  hover:bg-white/[0.05]
-                  hover:text-white
+                  hover:border-[#087EA4]/20
+                  hover:bg-[#F0FAFC]
                   lg:hidden
                 "
-                onClick={() => setMobileOpen((open) => !open)}
+                onClick={() =>
+                  setMobileOpen((open) => !open)
+                }
                 aria-label="Toggle navigation"
                 aria-expanded={mobileOpen}
               >
@@ -898,9 +929,9 @@ export default function Navbar() {
             </div>
           </nav>
 
-          {/* =====================================================
+          {/* ====================================================
               MOBILE MENU
-          ====================================================== */}
+          ===================================================== */}
 
           <AnimatePresence>
             {mobileOpen && (
@@ -921,9 +952,9 @@ export default function Navbar() {
                   duration: 0.25,
                   ease: "easeOut",
                 }}
-                className="overflow-hidden lg:hidden"
+                className="overflow-hidden bg-white lg:hidden"
               >
-                <div className="border-t border-white/[0.05] px-4 pb-4 pt-3">
+                <div className="border-t border-[#087EA4]/8 px-4 pb-5 pt-3">
                   {/* Mobile user */}
 
                   {user && (
@@ -931,8 +962,8 @@ export default function Navbar() {
                       className="
                         mb-3 flex items-center gap-3
                         rounded-2xl
-                        border border-white/[0.06]
-                        bg-white/[0.025]
+                        border border-[#087EA4]/10
+                        bg-[#F0FAFC]
                         px-4 py-3
                       "
                     >
@@ -943,7 +974,7 @@ export default function Navbar() {
                           alt={user.name}
                           width={40}
                           height={40}
-                          className="h-10 w-10 rounded-xl object-cover ring-1 ring-white/10"
+                          className="h-10 w-10 rounded-xl object-cover ring-1 ring-[#087EA4]/10"
                         />
                       ) : (
                         <div
@@ -961,29 +992,28 @@ export default function Navbar() {
                       )}
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-white">
+                        <p className="truncate text-sm font-bold text-[#123B4A]">
                           {user.name}
                         </p>
 
-                        <p className="mt-0.5 text-[10px] capitalize text-slate-600">
+                        <p className="mt-0.5 text-[10px] capitalize text-[#55727D]">
                           {user.role}
                         </p>
                       </div>
 
                       <Link
                         href="/dashboard"
-                        onClick={() => setMobileOpen(false)}
+                        onClick={() =>
+                          setMobileOpen(false)
+                        }
                         className="
                           shrink-0 rounded-lg
-                          border border-white/[0.07]
-                          bg-white/[0.025]
+                          bg-[#087EA4]/8
                           px-3 py-1.5
-                          text-[10px] font-medium
-                          text-slate-400
+                          text-[10px] font-bold
+                          text-[#087EA4]
                           transition-colors
-                          hover:border-cyan-300/10
-                          hover:bg-cyan-400/[0.05]
-                          hover:text-cyan-200
+                          hover:bg-[#087EA4]/15
                         "
                       >
                         Dashboard
@@ -1002,27 +1032,31 @@ export default function Navbar() {
                             onClick={() =>
                               setDeptOpen((open) => !open)
                             }
-                            className="
+                            className={`
                               flex w-full items-center
                               justify-between
                               rounded-xl px-3 py-3
-                              text-sm font-medium
-                              text-slate-500
+                              text-sm font-semibold
                               transition-all
-                              hover:bg-white/[0.035]
-                              hover:text-slate-200
-                            "
+                              ${
+                                pathname.startsWith(
+                                  "/departments"
+                                )
+                                  ? "bg-[#087EA4]/8 text-[#075985]"
+                                  : "text-[#55727D] hover:bg-[#F0FAFC] hover:text-[#123B4A]"
+                              }
+                            `}
                           >
                             {link.label}
 
                             <FaChevronDown
                               className={`
-                                text-[9px] text-slate-700
+                                text-[9px]
                                 transition-transform duration-300
                                 ${
                                   deptOpen
-                                    ? "rotate-180 text-cyan-300/70"
-                                    : ""
+                                    ? "rotate-180 text-[#087EA4]"
+                                    : "text-[#55727D]"
                                 }
                               `}
                             />
@@ -1043,10 +1077,12 @@ export default function Navbar() {
                                   height: 0,
                                   opacity: 0,
                                 }}
-                                transition={{ duration: 0.2 }}
+                                transition={{
+                                  duration: 0.2,
+                                }}
                                 className="overflow-hidden"
                               >
-                                <div className="ml-3 space-y-1 border-l border-white/[0.07] py-1 pl-3">
+                                <div className="ml-3 space-y-1 border-l border-[#087EA4]/15 py-1 pl-3">
                                   {(
                                     link.children as {
                                       label: string;
@@ -1064,20 +1100,26 @@ export default function Navbar() {
                                         flex items-center gap-3
                                         rounded-lg px-3 py-2.5
                                         transition-colors
-                                        hover:bg-white/[0.035]
+                                        hover:bg-[#F0FAFC]
                                       "
                                     >
                                       <span
                                         className={`
-                                          font-mono text-[10px]
+                                          rounded-md px-1.5 py-1
+                                          font-mono text-[9px]
                                           font-bold
-                                          ${deptColors[child.code] || "text-cyan-300"}
+                                          ${
+                                            deptColors[
+                                              child.code
+                                            ] ||
+                                            "text-[#087EA4] bg-[#087EA4]/10 border-[#087EA4]/15"
+                                          }
                                         `}
                                       >
                                         {child.code}
                                       </span>
 
-                                      <span className="text-xs text-slate-500">
+                                      <span className="text-xs font-medium text-[#55727D]">
                                         {child.label}
                                       </span>
                                     </Link>
@@ -1091,16 +1133,18 @@ export default function Navbar() {
                         <Link
                           key={link.href}
                           href={link.href}
-                          onClick={() => setMobileOpen(false)}
+                          onClick={() =>
+                            setMobileOpen(false)
+                          }
                           className={`
                             flex items-center
                             rounded-xl px-3 py-3
-                            text-sm font-medium
+                            text-sm font-semibold
                             transition-all
                             ${
                               pathname === link.href
-                                ? "border border-cyan-300/[0.08] bg-cyan-400/[0.06] text-cyan-200"
-                                : "text-slate-500 hover:bg-white/[0.035] hover:text-slate-200"
+                                ? "border border-[#087EA4]/10 bg-[#087EA4]/8 text-[#075985]"
+                                : "text-[#55727D] hover:bg-[#F0FAFC] hover:text-[#123B4A]"
                             }
                           `}
                         >
@@ -1112,39 +1156,51 @@ export default function Navbar() {
 
                   {/* Mobile account */}
 
-                  <div className="mt-3 border-t border-white/[0.05] pt-3">
+                  <div className="mt-3 border-t border-[#087EA4]/8 pt-3">
                     {user ? (
                       <div className="space-y-1">
                         <Link
                           href="/profile"
-                          onClick={() => setMobileOpen(false)}
+                          onClick={() =>
+                            setMobileOpen(false)
+                          }
                           className="
                             flex items-center gap-3
                             rounded-xl px-3 py-3
-                            text-sm text-slate-500
+                            text-sm font-medium
+                            text-[#55727D]
                             transition-all
-                            hover:bg-white/[0.035]
-                            hover:text-slate-200
+                            hover:bg-[#F0FAFC]
+                            hover:text-[#123B4A]
                           "
                         >
-                          <FaUser size={13} />
+                          <FaUser
+                            size={13}
+                            className="text-[#087EA4]"
+                          />
                           My Profile
                         </Link>
 
                         {user.role === "admin" && (
                           <Link
                             href="/admin"
-                            onClick={() => setMobileOpen(false)}
+                            onClick={() =>
+                              setMobileOpen(false)
+                            }
                             className="
                               flex items-center gap-3
                               rounded-xl px-3 py-3
-                              text-sm text-slate-500
+                              text-sm font-medium
+                              text-[#55727D]
                               transition-all
-                              hover:bg-white/[0.035]
-                              hover:text-slate-200
+                              hover:bg-[#F0FAFC]
+                              hover:text-[#123B4A]
                             "
                           >
-                            <FaCog size={13} />
+                            <FaCog
+                              size={13}
+                              className="text-[#087EA4]"
+                            />
                             Admin Panel
                           </Link>
                         )}
@@ -1155,10 +1211,11 @@ export default function Navbar() {
                           className="
                             flex w-full items-center gap-3
                             rounded-xl px-3 py-3
-                            text-sm text-red-300/60
+                            text-sm font-medium
+                            text-red-500/70
                             transition-all
-                            hover:bg-red-400/[0.05]
-                            hover:text-red-300
+                            hover:bg-red-50
+                            hover:text-red-600
                           "
                         >
                           <FaSignOutAlt size={13} />
@@ -1169,18 +1226,21 @@ export default function Navbar() {
                       <div className="grid grid-cols-2 gap-2">
                         <Link
                           href="/login"
-                          onClick={() => setMobileOpen(false)}
+                          onClick={() =>
+                            setMobileOpen(false)
+                          }
                           className="
                             rounded-xl
-                            border border-white/[0.07]
-                            bg-white/[0.025]
+                            border border-[#087EA4]/10
+                            bg-white
                             py-3
                             text-center
-                            text-sm font-medium
-                            text-slate-500
+                            text-sm font-semibold
+                            text-[#55727D]
+                            shadow-sm
                             transition-all
-                            hover:bg-white/[0.05]
-                            hover:text-slate-200
+                            hover:bg-[#F0FAFC]
+                            hover:text-[#123B4A]
                           "
                         >
                           Sign In
@@ -1188,17 +1248,19 @@ export default function Navbar() {
 
                         <Link
                           href="/register"
-                          onClick={() => setMobileOpen(false)}
+                          onClick={() =>
+                            setMobileOpen(false)
+                          }
                           className="
                             rounded-xl
-                            border border-cyan-300/15
-                            bg-cyan-400/[0.08]
+                            bg-[#087EA4]
                             py-3
                             text-center
-                            text-sm font-semibold
-                            text-cyan-100
+                            text-sm font-bold
+                            text-white
+                            shadow-[0_6px_18px_rgba(8,126,164,0.18)]
                             transition-all
-                            hover:bg-cyan-400/[0.13]
+                            hover:bg-[#075985]
                           "
                         >
                           Register
@@ -1213,10 +1275,11 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Navbar spacer */}
+      {/* ========================================================
+          NAVBAR SPACER
+      ======================================================== */}
 
-      <div className="h-24" />
+      <div className="h-[108px]" />
     </>
   );
 }
-

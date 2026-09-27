@@ -1,25 +1,58 @@
+
 "use client";
+
 import { useTeachers } from "@/hooks/useTeachers";
 import TeacherCard from "@/components/teachers/TeacherCard";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { Department } from "@/types";
 
-export default function DeptTeachers({ deptKey }: { deptKey: Department }) {
+export default function DeptTeachers({
+  deptKey,
+}: {
+  deptKey: Department;
+}) {
   const { teachers, loading } = useTeachers(deptKey);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h2 className="font-display font-bold text-ocean-900 text-2xl mb-8">Faculty Members</h2>
-      {loading ? <LoadingSpinner /> : (
+    <div className="w-full">
+      {/* Loading state */}
+      {loading ? (
+        <div className="flex min-h-[280px] items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      ) : (
         <>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {teachers.map((t, i) => <TeacherCard key={t._id} teacher={t} index={i} />)}
-          </div>
-          {teachers.length === 0 && (
-            <p className="text-center py-20 text-gray-400">No faculty members listed yet.</p>
+          {/* Faculty grid */}
+          {teachers.length > 0 ? (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {teachers.map((teacher, index) => (
+                <TeacherCard
+                  key={teacher._id}
+                  teacher={teacher}
+                  index={index}
+                />
+              ))}
+            </div>
+          ) : (
+            /* Empty state */
+            <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl border border-[#087EA4]/10 bg-[#F0FAFC]/60 px-6 text-center">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#0891B2]/[0.08]">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#0891B2]/50" />
+              </div>
+
+              <h3 className="text-base font-semibold text-[#123B4A]">
+                No Faculty Members Yet
+              </h3>
+
+              <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#55727D]">
+                Faculty information for this department has not been listed
+                yet. Please check back later.
+              </p>
+            </div>
           )}
         </>
       )}
     </div>
   );
 }
+
