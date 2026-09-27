@@ -14,26 +14,65 @@ import {
   FaGraduationCap,
   FaQuoteLeft,
   FaEye,
+  FaCompass,
 } from "react-icons/fa";
 
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import AlumniModal from "@/components/alumni/AlumniModal";
 import { Alumni } from "@/types";
 
-const deptGradients: Record<string, string> = {
-  AQC: "from-blue-600 to-cyan-500",
-  FBG: "from-emerald-600 to-teal-500",
-  FMN: "from-violet-600 to-purple-500",
-  FST: "from-amber-600 to-orange-500",
-  MFO: "from-cyan-600 to-blue-500",
+/* =========================================================
+   DEPARTMENT ACCENTS
+========================================================= */
+
+const deptStyles: Record<
+  string,
+  {
+    accent: string;
+    soft: string;
+    label: string;
+  }
+> = {
+  AQC: {
+    accent: "bg-cyan-400",
+    soft: "bg-cyan-400/10",
+    label: "Aquaculture",
+  },
+  FBG: {
+    accent: "bg-emerald-400",
+    soft: "bg-emerald-400/10",
+    label: "Fisheries Biology & Genetics",
+  },
+  FMN: {
+    accent: "bg-violet-400",
+    soft: "bg-violet-400/10",
+    label: "Fisheries Management",
+  },
+  FST: {
+    accent: "bg-amber-400",
+    soft: "bg-amber-400/10",
+    label: "Fisheries Science & Technology",
+  },
+  MFO: {
+    accent: "bg-sky-400",
+    soft: "bg-sky-400/10",
+    label: "Marine Fisheries & Oceanography",
+  },
 };
+
+/* =========================================================
+   MAIN COMPONENT
+========================================================= */
 
 export default function FeaturedAlumni() {
   const [alumni, setAlumni] = useState<Alumni[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Selected alumni for modal
   const [selectedAlumni, setSelectedAlumni] = useState<Alumni | null>(null);
+
+  /* =========================================================
+     FETCH ALUMNI
+  ========================================================= */
 
   useEffect(() => {
     axios
@@ -57,36 +96,39 @@ export default function FeaturedAlumni() {
           ALUMNI SECTION
       ========================================================= */}
 
-      <section className="relative overflow-hidden py-24 fish-scale-bg">
-        {/* =========================================================
-            BACKGROUND DECORATION
-        ========================================================= */}
+      <section className="relative overflow-hidden bg-[#020b18] py-24">
+        {/* =======================================================
+            ATMOSPHERE
+        ======================================================= */}
 
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {/* Ocean glow */}
-          <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-ocean-400/10 blur-3xl" />
+          {/* Top-left ocean light */}
+          <div className="absolute -left-48 -top-48 h-[520px] w-[520px] rounded-full bg-cyan-500/[0.055] blur-[120px]" />
 
-          {/* Teal glow */}
-          <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-teal-400/10 blur-3xl" />
+          {/* Bottom-right teal light */}
+          <div className="absolute -bottom-56 -right-48 h-[520px] w-[520px] rounded-full bg-teal-400/[0.045] blur-[120px]" />
 
-          {/* Middle ocean glow */}
-          <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ocean-500/5 blur-3xl" />
+          {/* Center atmospheric glow */}
+          <div className="absolute left-1/2 top-[45%] h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-ocean-500/[0.025] blur-[120px]" />
 
-          {/* Subtle grid */}
+          {/* Fine grid */}
           <div
-            className="absolute inset-0 opacity-[0.025]"
+            className="absolute inset-0 opacity-[0.018]"
             style={{
               backgroundImage:
-                "linear-gradient(rgba(0,80,120,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(0,80,120,0.7) 1px, transparent 1px)",
-              backgroundSize: "70px 70px",
+                "linear-gradient(rgba(125,211,252,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(125,211,252,0.8) 1px, transparent 1px)",
+              backgroundSize: "80px 80px",
             }}
           />
+
+          {/* Very subtle top fade */}
+          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ocean-950/50 to-transparent" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* =========================================================
+          {/* =====================================================
               SECTION HEADER
-          ========================================================= */}
+          ===================================================== */}
 
           <motion.div
             initial={{
@@ -98,74 +140,95 @@ export default function FeaturedAlumni() {
               y: 0,
             }}
             transition={{
-              duration: 0.6,
+              duration: 0.7,
             }}
             viewport={{
               once: true,
             }}
-            className="mx-auto mb-14 max-w-2xl text-center"
+            className="mx-auto mb-16 max-w-3xl"
           >
-            {/* Small label */}
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-ocean-200/70 bg-white/50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-ocean-600 shadow-sm backdrop-blur-md">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal-500" />
+            {/* Eyebrow */}
+            <div className="mb-6 flex items-center gap-3">
+              <span className="h-px w-8 bg-cyan-400/60" />
 
-              Our Community
+              <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-300/70">
+                Our Community
+              </span>
+
+              <span className="h-px w-8 bg-cyan-400/60" />
             </div>
 
-            {/* Title */}
-            <h2 className="section-title">Alumni Network</h2>
+            {/* Heading */}
+            <div className="relative">
+              <h2 className="font-display text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                People who carry{" "}
+                <span className="text-cyan-300">PSTU</span> forward.
+              </h2>
 
-            {/* Divider */}
-            <div className="wave-divider mx-auto mt-4" />
+              {/* Small decorative line */}
+              <div className="mt-5 h-px w-24 bg-gradient-to-r from-cyan-400/80 to-transparent" />
+            </div>
 
             {/* Description */}
-            <p className="section-sub mx-auto mt-4">
-              Our graduates making waves in fisheries, research, academia,
-              government, and industry worldwide.
+            <p className="mt-6 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
+              From fisheries and marine research to government, academia, and
+              industry — our alumni continue to extend the reach of the Faculty
+              far beyond graduation.
             </p>
           </motion.div>
 
-          {/* =========================================================
+          {/* =====================================================
               LOADING
-          ========================================================= */}
+          ===================================================== */}
 
           {loading ? (
-            <div className="flex min-h-[280px] items-center justify-center">
-              <LoadingSpinner />
+            <div className="flex min-h-[320px] items-center justify-center">
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.025] px-10 py-10 backdrop-blur-xl">
+                <LoadingSpinner />
+              </div>
             </div>
           ) : alumni.length === 0 ? (
-            /* =======================================================
+            /* ===================================================
                EMPTY STATE
-            ======================================================= */
+            =================================================== */
 
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mx-auto max-w-lg rounded-3xl border border-white/70 bg-white/50 p-10 text-center shadow-xl backdrop-blur-xl"
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              className="mx-auto max-w-xl rounded-[2rem] border border-white/[0.08] bg-white/[0.025] p-12 text-center shadow-2xl backdrop-blur-2xl"
             >
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-ocean-gradient text-white shadow-lg">
-                <FaGraduationCap size={25} />
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-300/10 bg-cyan-400/[0.07] text-cyan-300">
+                <FaGraduationCap size={24} />
               </div>
 
-              <p className="mb-2 font-display text-lg font-bold text-gray-900">
+              <h3 className="font-display text-lg font-semibold text-white">
                 No alumni profiles yet
-              </p>
+              </h3>
 
-              <p className="text-sm leading-6 text-gray-500">
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-500">
                 Alumni profiles will appear here once graduates register and
                 complete their profiles.
               </p>
             </motion.div>
           ) : (
-            /* =======================================================
+            /* ===================================================
                ALUMNI GRID
-            ======================================================= */
+            =================================================== */
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {alumni.map((person, i) => {
-                const grad =
-                  deptGradients[person.department || ""] ||
-                  "from-ocean-700 to-ocean-500";
+                const dept =
+                  deptStyles[person.department || ""] || {
+                    accent: "bg-cyan-400",
+                    soft: "bg-cyan-400/10",
+                    label: "Faculty of Fisheries",
+                  };
 
                 return (
                   <motion.article
@@ -179,18 +242,18 @@ export default function FeaturedAlumni() {
                       y: 0,
                     }}
                     whileHover={{
-                      y: -8,
+                      y: -6,
                     }}
                     transition={{
-                      duration: 0.5,
-                      delay: i * 0.08,
+                      duration: 0.55,
+                      delay: i * 0.07,
                     }}
                     viewport={{
                       once: true,
                       margin: "-50px",
                     }}
                     onClick={() => setSelectedAlumni(person)}
-                    className="group relative isolate cursor-pointer overflow-hidden rounded-3xl shadow-xl transition-all duration-500 hover:shadow-2xl"
+                    className="group relative isolate min-h-[410px] cursor-pointer overflow-hidden rounded-[1.75rem] border border-white/[0.075] bg-white/[0.025] shadow-[0_20px_60px_rgba(0,0,0,0.18)] backdrop-blur-2xl transition-all duration-500 hover:border-white/[0.14] hover:bg-white/[0.04] hover:shadow-[0_28px_80px_rgba(0,0,0,0.3)]"
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
@@ -202,81 +265,86 @@ export default function FeaturedAlumni() {
                     aria-label={`View profile of ${person.name}`}
                   >
                     {/* =================================================
-                        DEPARTMENT GRADIENT
+                        GLASS REFLECTION
+                    ================================================= */}
+
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/[0.045] to-transparent" />
+
+                    {/* =================================================
+                        DEPARTMENT ATMOSPHERE
                     ================================================= */}
 
                     <div
-                      className={`absolute inset-0 bg-gradient-to-br ${grad}`}
+                      className={`pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full ${dept.soft} blur-[70px] transition-transform duration-700 group-hover:scale-125`}
+                    />
+
+                    <div
+                      className={`pointer-events-none absolute -bottom-28 -left-24 h-56 w-56 rounded-full ${dept.soft} blur-[70px]`}
                     />
 
                     {/* =================================================
-                        DECORATIVE CIRCLES
+                        TOP ACCENT
                     ================================================= */}
 
-                    <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-white/10 transition-transform duration-700 group-hover:scale-125" />
-
-                    <div className="absolute -bottom-8 -left-8 h-28 w-28 rounded-full bg-white/10 transition-transform duration-700 group-hover:scale-125" />
-
-                    {/* Additional decorative glow */}
-                    <div className="pointer-events-none absolute right-5 top-24 h-20 w-20 rounded-full bg-white/5 blur-xl transition-all duration-700 group-hover:scale-150 group-hover:bg-white/10" />
-
-                    <div className="pointer-events-none absolute left-1/2 top-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5 blur-3xl" />
+                    <div
+                      className={`absolute left-6 right-6 top-0 h-px opacity-50 ${dept.accent}`}
+                    />
 
                     {/* =================================================
-                        GLASS OVERLAY
+                        CARD CONTENT
                     ================================================= */}
 
-                    <div className="absolute inset-0 bg-black/5 backdrop-blur-[1px]" />
-
-                    {/* Glass highlight */}
-                    <div className="pointer-events-none absolute left-6 right-6 top-0 h-px bg-white/30" />
-
-                    {/* =================================================
-                        CONTENT
-                    ================================================= */}
-
-                    <div className="relative z-10 flex min-h-[350px] flex-col p-5 text-white">
+                    <div className="relative z-10 flex min-h-[410px] flex-col p-6">
                       {/* =================================================
                           HEADER
                       ================================================= */}
 
-                      <div className="mb-5 flex items-start gap-3">
+                      <div className="flex items-start gap-4">
                         {/* Avatar */}
                         <div className="relative shrink-0">
                           {person.photo ? (
-                            <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-white/30 bg-white/10 shadow-xl ring-2 ring-white/30 transition-transform duration-500 group-hover:scale-105">
+                            <div className="relative h-[72px] w-[72px] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-xl ring-1 ring-white/[0.05] transition-transform duration-500 group-hover:scale-[1.03]">
                               <Image
                                 src={person.photo}
                                 alt={person.name}
                                 fill
+                                sizes="72px"
                                 className="object-cover"
                               />
+
+                              {/* Image glass */}
+                              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                             </div>
                           ) : (
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/30 bg-white/20 text-2xl font-bold shadow-xl backdrop-blur-md ring-2 ring-white/30 transition-transform duration-500 group-hover:scale-105">
+                            <div className="flex h-[72px] w-[72px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.045] text-2xl font-semibold text-white shadow-xl ring-1 ring-white/[0.05]">
                               {person.name?.[0]?.toUpperCase() || "A"}
                             </div>
                           )}
 
-                          {/* Online/profile indicator */}
-                          <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white/70 bg-teal-400 shadow-lg" />
+                          {/* Small status marker */}
+                          <span
+                            className={`absolute -bottom-1.5 -right-1.5 h-4 w-4 rounded-full border-[3px] border-[#071321] ${dept.accent}`}
+                          />
                         </div>
 
-                        {/* Name / position */}
-                        <div className="min-w-0 flex-1">
-                          <h3 className="truncate font-display text-base font-bold">
+                        {/* Name */}
+                        <div className="min-w-0 flex-1 pt-1">
+                          <h3 className="truncate font-display text-base font-semibold text-white">
                             {person.name}
                           </h3>
 
                           {person.currentPosition && (
-                            <p className="mt-1 flex items-center gap-1.5 truncate text-xs text-white/80">
-                              <FaBriefcase size={9} />
+                            <p className="mt-1.5 flex items-center gap-1.5 truncate text-xs text-slate-400">
+                              <FaBriefcase
+                                size={9}
+                                className="shrink-0 text-cyan-400/70"
+                              />
                               {person.currentPosition}
                             </p>
                           )}
 
                           {person.organization && (
-                            <p className="mt-1 truncate text-xs text-white/65">
+                            <p className="mt-1 truncate text-[11px] text-slate-500">
                               {person.organization}
                             </p>
                           )}
@@ -289,11 +357,33 @@ export default function FeaturedAlumni() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="relative z-30 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/15 text-white backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/25"
+                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.035] text-slate-400 backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/20 hover:bg-white/[0.08] hover:text-cyan-300"
                             aria-label={`${person.name} LinkedIn profile`}
                           >
-                            <FaLinkedin size={14} />
+                            <FaLinkedin size={13} />
                           </a>
+                        )}
+                      </div>
+
+                      {/* =================================================
+                          DEPARTMENT / BATCH
+                      ================================================= */}
+
+                      <div className="mt-6 flex items-center gap-2">
+                        {/* {person.department && (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.07] bg-white/[0.035] px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${dept.accent}`}
+                            />
+
+                            {person.department}
+                          </span>
+                        )} */}
+
+                        {person.batch && (
+                          <span className="rounded-full border border-white/[0.07] bg-white/[0.035] px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                            Batch &apos;{String(person.batch).slice(-2)}
+                          </span>
                         )}
                       </div>
 
@@ -302,54 +392,14 @@ export default function FeaturedAlumni() {
                       ================================================= */}
 
                       {person.organization && (
-                        <div className="mb-3 rounded-xl border border-white/10 bg-white/10 px-3 py-2.5 backdrop-blur-md transition-all duration-300 group-hover:bg-white/15">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/10">
-                              <FaBriefcase size={10} />
-                            </div>
+                        <div className="mt-4 border-l border-white/[0.08] pl-3">
+                          <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-slate-600">
+                            Currently with
+                          </p>
 
-                            <div className="min-w-0">
-                              <p className="truncate text-xs font-medium text-white/90">
-                                {person.organization}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* =================================================
-                          CONTACT
-                      ================================================= */}
-
-                      {(person.phone || person.email) && (
-                        <div className="mb-3 space-y-1.5 rounded-xl border border-white/10 bg-white/10 px-3 py-2.5 backdrop-blur-md">
-                          {person.email && (
-                            <a
-                              href={`mailto:${person.email}`}
-                              onClick={(e) => e.stopPropagation()}
-                              className="flex min-w-0 items-center gap-2 text-xs text-white/75 transition-colors hover:text-white"
-                            >
-                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white/10">
-                                ✉
-                              </span>
-
-                              <span className="truncate">{person.email}</span>
-                            </a>
-                          )}
-
-                          {person.phone && (
-                            <a
-                              href={`tel:${person.phone}`}
-                              onClick={(e) => e.stopPropagation()}
-                              className="flex min-w-0 items-center gap-2 text-xs text-white/75 transition-colors hover:text-white"
-                            >
-                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white/10">
-                                ☎
-                              </span>
-
-                              <span className="truncate">{person.phone}</span>
-                            </a>
-                          )}
+                          <p className="mt-1 truncate text-xs text-slate-300">
+                            {person.organization}
+                          </p>
                         </div>
                       )}
 
@@ -357,70 +407,58 @@ export default function FeaturedAlumni() {
                           TESTIMONIAL
                       ================================================= */}
 
-                      {person.testimonial && (
-                        <div className="mb-4 mt-auto rounded-xl border border-white/10 bg-white/10 p-3.5 backdrop-blur-md transition-all duration-300 group-hover:bg-white/15">
-                          <FaQuoteLeft
-                            className="mb-2 text-white/40"
-                            size={13}
-                          />
+                      {person.testimonial ? (
+                        <div className="mt-auto pt-7">
+                          <div className="relative rounded-2xl border border-white/[0.06] bg-white/[0.025] p-4 transition-all duration-300 group-hover:bg-white/[0.04]">
+                            <FaQuoteLeft
+                              size={12}
+                              className="mb-3 text-cyan-400/30"
+                            />
 
-                          <p className="line-clamp-3 text-xs italic leading-5 text-white/80">
-                            {person.testimonial}
-                          </p>
+                            <p className="line-clamp-3 text-xs italic leading-5 text-slate-400">
+                              {person.testimonial}
+                            </p>
+                          </div>
                         </div>
+                      ) : (
+                        <div className="mt-auto" />
                       )}
 
-                      {/* If there is no testimonial, push bottom content down */}
-                      {!person.testimonial && <div className="mt-auto" />}
-
                       {/* =================================================
-                          BOTTOM META
+                          FOOTER
                       ================================================= */}
 
-                      <div className="flex items-center justify-between gap-2 border-t border-white/20 pt-3">
-                        <div className="flex flex-wrap gap-2">
-                          {/* {person.department && (
-                            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/15 px-2.5 py-1 text-[10px] font-bold backdrop-blur-md">
-                              <FaGraduationCap size={9} />
-
-                              {person.department}
-                            </span>
-                          )} */}
-
-                          {person.batch && (
-                            <span className="rounded-full border border-white/10 bg-white/10 px-2.5 py-1 text-[10px] font-semibold text-white/85">
-                              Batch &apos;
-                              {String(person.batch).slice(-2)}
-                            </span>
-                          )}
-                        </div>
-
-                        {person.location && (
-                          <span className="flex max-w-[42%] items-center gap-1 truncate text-[10px] text-white/70">
-                            <FaMapMarkerAlt size={9} />
+                      <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-4">
+                        {/* Location */}
+                        {person.location ? (
+                          <span className="flex max-w-[55%] items-center gap-1.5 truncate text-[10px] text-slate-500">
+                            <FaMapMarkerAlt
+                              size={9}
+                              className="shrink-0 text-cyan-400/50"
+                            />
 
                             {person.location.split(",")[0]}
                           </span>
+                        ) : (
+                          <span />
                         )}
-                      </div>
 
-                      {/* =================================================
-                          VIEW PROFILE HOVER
-                      ================================================= */}
+                        {/* View */}
+                        <span className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-slate-600 transition-colors duration-300 group-hover:text-cyan-300/80">
+                          <FaEye size={9} />
 
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full justify-center pb-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/20 px-4 py-2 text-xs font-semibold text-white shadow-lg backdrop-blur-md">
-                          <FaEye size={11} />
-                          View Profile
+                          View profile
                         </span>
                       </div>
                     </div>
 
                     {/* =================================================
-                        HOVER BOTTOM LINE
+                        HOVER EDGE
                     ================================================= */}
 
-                    <div className="absolute bottom-0 left-0 h-1 w-0 bg-white/70 transition-all duration-500 group-hover:w-full" />
+                    <div
+                      className={`absolute bottom-0 left-0 h-px w-0 ${dept.accent} opacity-70 transition-all duration-500 group-hover:w-full`}
+                    />
                   </motion.article>
                 );
               })}
@@ -442,30 +480,33 @@ export default function FeaturedAlumni() {
                 y: 0,
               }}
               transition={{
-                duration: 0.5,
-                delay: 0.3,
+                duration: 0.6,
+                delay: 0.25,
               }}
               viewport={{
                 once: true,
               }}
-              className="mt-12 text-center"
+              className="mt-14 flex justify-center"
             >
               <Link
                 href="/alumni"
                 onClick={(e) => e.stopPropagation()}
-                className="group inline-flex items-center gap-3 rounded-xl border border-ocean-200 bg-white/60 px-6 py-3.5 text-sm font-semibold text-ocean-700 shadow-lg backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-ocean-300 hover:bg-white hover:shadow-xl"
+                className="group inline-flex items-center gap-4 rounded-xl border border-white/[0.09] bg-white/[0.035] px-5 py-3 text-xs font-semibold text-slate-300 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300/20 hover:bg-white/[0.06] hover:text-white"
               >
-                View All Alumni
+                <span>Explore the alumni network</span>
 
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean-100 transition-transform duration-300 group-hover:translate-x-1">
-                  <FaArrowRight className="text-[10px] text-ocean-600" />
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.04] transition-all duration-300 group-hover:border-cyan-300/20 group-hover:bg-cyan-400/10">
+                  <FaArrowRight
+                    size={10}
+                    className="text-cyan-300 transition-transform duration-300 group-hover:translate-x-0.5"
+                  />
                 </span>
               </Link>
             </motion.div>
           )}
 
           {/* =========================================================
-              FOOTER LABEL
+              FOOTER STATEMENT
           ========================================================= */}
 
           <motion.div
@@ -476,19 +517,23 @@ export default function FeaturedAlumni() {
               opacity: 1,
             }}
             transition={{
-              duration: 0.7,
+              duration: 0.8,
               delay: 0.4,
             }}
             viewport={{
               once: true,
             }}
-            className="mt-14 flex items-center justify-center gap-4 text-xs uppercase tracking-[0.2em] text-ocean-400"
+            className="mt-16 flex items-center justify-center gap-4"
           >
-            <span className="h-px w-12 bg-ocean-200" />
+            <span className="h-px w-10 bg-white/[0.08]" />
 
-            Connected Beyond Graduation
+            <div className="flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.25em] text-slate-600">
+              <FaCompass size={9} className="text-cyan-400/40" />
 
-            <span className="h-px w-12 bg-ocean-200" />
+              Connected beyond graduation
+            </div>
+
+            <span className="h-px w-10 bg-white/[0.08]" />
           </motion.div>
         </div>
       </section>

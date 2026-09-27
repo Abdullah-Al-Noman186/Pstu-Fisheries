@@ -1,219 +1,479 @@
 "use client";
+
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Teacher, Department, DEPARTMENTS } from "@/types";
 import {
-  FaTimes, FaEnvelope, FaPhone, FaBook,
-  FaFlask, FaGraduationCap, FaCalendarAlt,
-  FaChalkboardTeacher, FaUniversity
+  FaTimes,
+  FaEnvelope,
+  FaPhone,
+  FaBook,
+  FaFlask,
+  FaGraduationCap,
+  FaCalendarAlt,
+  FaChalkboardTeacher,
+  FaUniversity,
 } from "react-icons/fa";
-import { useEffect } from "react";
-
-const deptGradients: Record<string, string> = {
-  AQC: "from-blue-700 via-blue-600 to-cyan-600",
-  FBG: "from-emerald-700 via-emerald-600 to-teal-500",
-  FMN: "from-violet-700 via-violet-600 to-purple-500",
-  FST: "from-amber-700 via-amber-600 to-orange-500",
-  MFO: "from-cyan-700 via-cyan-600 to-blue-500",
-};
 
 interface Props {
   teacher: Teacher | null;
   onClose: () => void;
 }
 
+const deptStyles: Record<
+  string,
+  {
+    accent: string;
+    soft: string;
+    border: string;
+    glow: string;
+    dot: string;
+  }
+> = {
+  AQC: {
+    accent: "text-cyan-300",
+    soft: "bg-cyan-400/[0.08]",
+    border: "border-cyan-300/20",
+    glow: "rgba(34,211,238,0.10)",
+    dot: "bg-cyan-300",
+  },
+  FBG: {
+    accent: "text-emerald-300",
+    soft: "bg-emerald-400/[0.08]",
+    border: "border-emerald-300/20",
+    glow: "rgba(52,211,153,0.10)",
+    dot: "bg-emerald-300",
+  },
+  FMN: {
+    accent: "text-violet-300",
+    soft: "bg-violet-400/[0.08]",
+    border: "border-violet-300/20",
+    glow: "rgba(167,139,250,0.10)",
+    dot: "bg-violet-300",
+  },
+  FST: {
+    accent: "text-amber-300",
+    soft: "bg-amber-400/[0.08]",
+    border: "border-amber-300/20",
+    glow: "rgba(251,191,36,0.10)",
+    dot: "bg-amber-300",
+  },
+  MFO: {
+    accent: "text-sky-300",
+    soft: "bg-sky-400/[0.08]",
+    border: "border-sky-300/20",
+    glow: "rgba(56,189,248,0.10)",
+    dot: "bg-sky-300",
+  },
+};
+
+const fallbackStyle = {
+  accent: "text-cyan-300",
+  soft: "bg-cyan-400/[0.08]",
+  border: "border-cyan-300/20",
+  glow: "rgba(34,211,238,0.10)",
+  dot: "bg-cyan-300",
+};
+
 export default function TeacherModal({ teacher, onClose }: Props) {
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
     document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+
+    return () => {
+      document.removeEventListener("keydown", handler);
+    };
   }, [onClose]);
 
   useEffect(() => {
     document.body.style.overflow = teacher ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [teacher]);
 
-  const grad = deptGradients[teacher?.department || ""] || "from-blue-700 via-blue-600 to-cyan-600";
+  const style =
+    deptStyles[teacher?.department || ""] ?? fallbackStyle;
 
   return (
     <AnimatePresence>
       {teacher && (
         <>
-          {/* Backdrop */}
+          {/* =====================================================
+              BACKDROP
+          ====================================================== */}
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/65 backdrop-blur-sm z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-50 bg-[#000611]/80 backdrop-blur-md"
             onClick={onClose}
           />
 
-          {/* Modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          {/* =====================================================
+              MODAL WRAPPER
+          ====================================================== */}
+          <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5">
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 24 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 24 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl pointer-events-auto"
-              onClick={e => e.stopPropagation()}>
+              initial={{
+                opacity: 0,
+                scale: 0.96,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.96,
+                y: 20,
+              }}
+              transition={{
+                duration: 0.28,
+                ease: "easeOut",
+              }}
+              className="pointer-events-auto relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/[0.08] bg-[#06111f] shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
+              style={{
+                boxShadow: `0 30px 100px rgba(0,0,0,0.55), 0 0 80px ${style.glow}`,
+              }}
+            >
+              {/* =================================================
+                  MODAL ATMOSPHERE
+              ================================================== */}
+              <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                <div
+                  className={`absolute -right-32 -top-32 h-[380px] w-[380px] rounded-full ${style.soft} opacity-50 blur-[110px]`}
+                />
 
-              {/* ── Header ── */}
-              <div className={`relative bg-gradient-to-br ${grad} p-6 overflow-hidden`}>
-                <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 blur-sm" />
-                <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-white/10 blur-sm" />
+                <div className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-cyan-400/[0.025] blur-[120px]" />
 
-                {/* Close */}
-                <button onClick={onClose}
-                  className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-all hover:scale-110">
-                  <FaTimes size={13} />
-                </button>
+                <div
+                  className="absolute inset-0 opacity-[0.015]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(rgba(125,211,252,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(125,211,252,0.8) 1px, transparent 1px)",
+                    backgroundSize: "70px 70px",
+                  }}
+                />
+              </div>
 
-                {/* HOD badge */}
-                {teacher.isHOD && (
-                  <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm text-white text-[9px] font-bold px-2.5 py-1 rounded-full border border-white/30 tracking-widest">
-                    HEAD OF DEPARTMENT
-                  </div>
-                )}
+              {/* =================================================
+                  HEADER
+              ================================================== */}
+              <div className="relative shrink-0 border-b border-white/[0.06]">
+                {/* Top accent */}
+                <div
+                  className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-current to-transparent ${style.accent} opacity-60`}
+                />
 
-                {/* Avatar + name */}
-                <div className="relative z-10 flex items-end gap-4 mt-6">
-                  <div className="relative flex-shrink-0">
-                    {teacher.photo ? (
-                      <div className="relative w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-white/30 shadow-xl">
-                        <Image src={teacher.photo} alt={teacher.name} fill className="object-cover" />
-                      </div>
-                    ) : (
-                      <div className="w-20 h-20 rounded-2xl bg-white/15 backdrop-blur-sm ring-4 ring-white/30 flex items-center justify-center shadow-xl">
-                        <span className="text-white font-display font-bold text-3xl">
-                          {teacher.name?.[0]?.toUpperCase()}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 pb-1">
-                    <h2 className="font-display font-bold text-white text-xl leading-tight mb-1">
-                      {teacher.name}
-                    </h2>
-                    {teacher.designation && (
-                      <p className="text-white/75 text-sm font-medium">{teacher.designation}</p>
-                    )}
-                    {teacher.department && (
-                      <span className="inline-flex items-center gap-1.5 mt-2 bg-white/15 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20">
-                        <FaGraduationCap size={9} />
-                        {teacher.department} — {DEPARTMENTS[teacher.department as Department]}
+                <div className="relative px-5 pb-6 pt-7 sm:px-7">
+                  {/* Close */}
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Close profile"
+                    className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.035] text-slate-500 transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.07] hover:text-white sm:right-5 sm:top-5"
+                  >
+                    <FaTimes size={11} />
+                  </button>
+
+                  {/* HOD */}
+                  {teacher.isHOD && (
+                    <div
+                      className={`mb-5 inline-flex items-center gap-2 rounded-full border ${style.border} ${style.soft} px-3 py-1.5`}
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${style.dot} shadow-[0_0_9px_currentColor]`}
+                      />
+
+                      <span
+                        className={`text-[8px] font-semibold uppercase tracking-[0.2em] ${style.accent}`}
+                      >
+                        Head of Department
                       </span>
-                    )}
+                    </div>
+                  )}
+
+                  {/* Profile */}
+                  <div className="flex items-center gap-4 pr-8 sm:gap-5">
+                    {/* Avatar */}
+                    <div className="relative shrink-0">
+                      <div
+                        className={`absolute -inset-2 rounded-[25px] ${style.soft} opacity-70 blur-xl`}
+                      />
+
+                      {teacher.photo ? (
+                        <div
+                          className={`relative h-20 w-20 overflow-hidden rounded-[20px] border ${style.border} bg-slate-900 shadow-xl sm:h-24 sm:w-24`}
+                        >
+                          <Image
+                            src={teacher.photo}
+                            alt={teacher.name}
+                            fill
+                            sizes="96px"
+                            className="object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          className={`relative flex h-20 w-20 items-center justify-center rounded-[20px] border ${style.border} ${style.soft} sm:h-24 sm:w-24`}
+                        >
+                          <span
+                            className={`font-display text-3xl font-semibold ${style.accent}`}
+                          >
+                            {teacher.name?.[0]?.toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Identity */}
+                    <div className="min-w-0">
+                      <h2 className="font-display text-lg font-semibold leading-tight text-white sm:text-2xl">
+                        {teacher.name}
+                      </h2>
+
+                      {teacher.designation && (
+                        <p
+                          className={`mt-1.5 text-xs font-medium sm:text-sm ${style.accent}`}
+                        >
+                          {teacher.designation}
+                        </p>
+                      )}
+
+                      {teacher.department && (
+                        <div
+                          className={`mt-3 inline-flex max-w-full items-center gap-2 rounded-lg border ${style.border} ${style.soft} px-2.5 py-1.5`}
+                        >
+                          <FaGraduationCap
+                            size={9}
+                            className={style.accent}
+                          />
+
+                          <span
+                            className={`truncate text-[9px] font-medium uppercase tracking-[0.08em] ${style.accent}`}
+                          >
+                            {teacher.department}
+                          </span>
+
+                          <span className="max-w-[180px] truncate text-[9px] text-slate-500">
+                            {
+                              DEPARTMENTS[
+                                teacher.department as Department
+                              ]
+                            }
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* ── Body ── */}
-              <div className="bg-white rounded-b-3xl">
+              {/* =================================================
+                  SCROLLABLE BODY
+              ================================================== */}
+              <div className="relative min-h-0 flex-1 overflow-y-auto">
+                <div className="px-5 py-5 sm:px-7">
+                  {/* =================================================
+                      QUICK STATS
+                  ================================================== */}
+                  <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02]">
+                    <StatItem
+                      icon={<FaBook size={11} />}
+                      value={teacher.publications || "—"}
+                      label="Papers"
+                      accent={style.accent}
+                    />
 
-                {/* Quick stats */}
-                <div className="grid grid-cols-3 divide-x divide-gray-100 border-b border-gray-100">
-                  {[
-                    { icon: <FaBook className="text-ocean-500" size={14} />, value: teacher.publications || "—", label: "Papers" },
-                    { icon: <FaCalendarAlt className="text-teal-500" size={14} />, value: teacher.joinYear || "—", label: "Joined" },
-                    { icon: <FaFlask className="text-violet-500" size={14} />, value: teacher.researchAreas?.length || "—", label: "Research Areas" },
-                  ].map((s, i) => (
-                    <div key={i} className="flex flex-col items-center py-4 px-3">
-                      {s.icon}
-                      <p className="font-display font-bold text-gray-900 text-lg mt-1 leading-none">{s.value}</p>
-                      <p className="text-gray-400 text-[10px] mt-0.5">{s.label}</p>
-                    </div>
-                  ))}
-                </div>
+                    <StatItem
+                      icon={<FaCalendarAlt size={11} />}
+                      value={teacher.joinYear || "—"}
+                      label="Joined"
+                      accent={style.accent}
+                      border
+                    />
 
-                <div className="px-6 py-5 space-y-4">
+                    <StatItem
+                      icon={<FaFlask size={11} />}
+                      value={teacher.researchAreas?.length || "—"}
+                      label="Research Areas"
+                      accent={style.accent}
+                      border
+                    />
+                  </div>
 
-                  {/* Contact */}
+                  {/* =================================================
+                      CONTACT
+                  ================================================== */}
                   {(teacher.email || teacher.phone) && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {teacher.email && (
-                        <a href={`mailto:${teacher.email}`}
-                          className="flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors group">
-                          <div className="w-8 h-8 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center flex-shrink-0 transition-colors">
-                            <FaEnvelope className="text-blue-600" size={13} />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[10px] text-blue-400 font-medium">Email</p>
-                            <p className="text-xs font-semibold text-gray-900 truncate">{teacher.email}</p>
-                          </div>
-                        </a>
-                      )}
-                      {teacher.phone && (
-                        <a href={`tel:${teacher.phone}`}
-                          className="flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 rounded-xl transition-colors group">
-                          <div className="w-8 h-8 rounded-lg bg-green-100 group-hover:bg-green-200 flex items-center justify-center flex-shrink-0 transition-colors">
-                            <FaPhone className="text-green-600" size={13} />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[10px] text-green-400 font-medium">Phone</p>
-                            <p className="text-xs font-semibold text-gray-900 truncate">{teacher.phone}</p>
-                          </div>
-                        </a>
-                      )}
-                    </div>
+                    <section className="mt-6">
+                      <SectionLabel
+                        icon={<FaChalkboardTeacher size={9} />}
+                        label="Contact"
+                      />
+
+                      <div className="grid gap-2.5 sm:grid-cols-2">
+                        {teacher.email && (
+                          <a
+                            href={`mailto:${teacher.email}`}
+                            className="group flex min-w-0 items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-300 hover:border-cyan-300/15 hover:bg-cyan-400/[0.04]"
+                          >
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-cyan-300/10 bg-cyan-400/[0.06]">
+                              <FaEnvelope
+                                className="text-cyan-300/70"
+                                size={11}
+                              />
+                            </div>
+
+                            <div className="min-w-0">
+                              <p className="text-[8px] font-medium uppercase tracking-[0.16em] text-slate-600">
+                                Email
+                              </p>
+
+                              <p className="mt-1 truncate text-[11px] font-medium text-slate-300 transition-colors group-hover:text-white">
+                                {teacher.email}
+                              </p>
+                            </div>
+                          </a>
+                        )}
+
+                        {teacher.phone && (
+                          <a
+                            href={`tel:${teacher.phone}`}
+                            className="group flex min-w-0 items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-300 hover:border-emerald-300/15 hover:bg-emerald-400/[0.04]"
+                          >
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-emerald-300/10 bg-emerald-400/[0.06]">
+                              <FaPhone
+                                className="text-emerald-300/70"
+                                size={11}
+                              />
+                            </div>
+
+                            <div className="min-w-0">
+                              <p className="text-[8px] font-medium uppercase tracking-[0.16em] text-slate-600">
+                                Phone
+                              </p>
+
+                              <p className="mt-1 truncate text-[11px] font-medium text-slate-300 transition-colors group-hover:text-white">
+                                {teacher.phone}
+                              </p>
+                            </div>
+                          </a>
+                        )}
+                      </div>
+                    </section>
                   )}
 
-                  {/* Bio */}
+                  {/* =================================================
+                      ABOUT
+                  ================================================== */}
                   {teacher.bio && (
-                    <div className="p-4 bg-gray-50 rounded-xl border-l-4 border-ocean-400">
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                        <FaChalkboardTeacher size={10} /> About
-                      </p>
-                      <p className="text-gray-600 text-sm leading-relaxed">{teacher.bio}</p>
-                    </div>
+                    <section className="mt-6">
+                      <SectionLabel
+                        icon={<FaChalkboardTeacher size={9} />}
+                        label="About"
+                      />
+
+                      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
+                        <p className="text-xs leading-6 text-slate-400">
+                          {teacher.bio}
+                        </p>
+                      </div>
+                    </section>
                   )}
 
-                  {/* Research areas */}
-                  {teacher.researchAreas && teacher.researchAreas.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <FaFlask size={10} className="text-violet-400" /> Research Areas
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {teacher.researchAreas.map((area, i) => (
-                          <span key={i}
-                            className="text-xs bg-violet-50 text-violet-700 font-medium px-3 py-1.5 rounded-full border border-violet-100">
-                            {area}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  {/* =================================================
+                      RESEARCH
+                  ================================================== */}
+                  {teacher.researchAreas &&
+                    teacher.researchAreas.length > 0 && (
+                      <section className="mt-6">
+                        <SectionLabel
+                          icon={<FaFlask size={9} />}
+                          label="Research Areas"
+                        />
 
-                  {/* Education */}
-                  {teacher.education && teacher.education.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                        <FaUniversity size={10} className="text-ocean-400" /> Education
-                      </p>
-                      <div className="space-y-3">
-                        {teacher.education.map((edu, i) => (
-                          <div key={i} className="flex gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-ocean-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <FaGraduationCap className="text-ocean-500" size={12} />
+                        <div className="flex flex-wrap gap-2">
+                          {teacher.researchAreas.map((area, index) => (
+                            <span
+                              key={index}
+                              className={`rounded-lg border ${style.border} ${style.soft} px-3 py-2 text-[10px] font-medium ${style.accent}`}
+                            >
+                              {area}
+                            </span>
+                          ))}
+                        </div>
+                      </section>
+                    )}
+
+                  {/* =================================================
+                      EDUCATION
+                  ================================================== */}
+                  {teacher.education &&
+                    teacher.education.length > 0 && (
+                      <section className="mt-6">
+                        <SectionLabel
+                          icon={<FaUniversity size={9} />}
+                          label="Education"
+                        />
+
+                        <div className="space-y-2.5">
+                          {teacher.education.map((edu, index) => (
+                            <div
+                              key={index}
+                              className="flex gap-3 rounded-xl border border-white/[0.05] bg-white/[0.018] p-3"
+                            >
+                              <div
+                                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${style.border} ${style.soft}`}
+                              >
+                                <FaGraduationCap
+                                  className={style.accent}
+                                  size={11}
+                                />
+                              </div>
+
+                              <div className="min-w-0">
+                                <p className="text-xs font-semibold leading-5 text-slate-200">
+                                  {edu.degree}
+                                </p>
+
+                                <p className="mt-0.5 text-[11px] text-slate-500">
+                                  {edu.institution}
+                                </p>
+
+                                <p className="mt-1 text-[9px] uppercase tracking-[0.12em] text-slate-700">
+                                  {edu.year}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-sm font-semibold text-gray-900 leading-tight">{edu.degree}</p>
-                              <p className="text-xs text-gray-500">{edu.institution}</p>
-                              <p className="text-[10px] text-gray-400 mt-0.5">{edu.year}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                          ))}
+                        </div>
+                      </section>
+                    )}
                 </div>
 
-                {/* Footer */}
-                <div className="px-6 pb-5">
-                  <button onClick={onClose}
-                    className="w-full py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium transition-colors">
-                    Close
+                {/* =================================================
+                    FOOTER
+                ================================================== */}
+                <div className="sticky bottom-0 border-t border-white/[0.06] bg-[#06111f]/95 px-5 py-4 backdrop-blur-xl sm:px-7">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="w-full rounded-xl border border-white/[0.07] bg-white/[0.025] py-3 text-xs font-medium text-slate-500 transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.05] hover:text-slate-200"
+                  >
+                    Close Profile
                   </button>
                 </div>
               </div>
@@ -222,5 +482,65 @@ export default function TeacherModal({ teacher, onClose }: Props) {
         </>
       )}
     </AnimatePresence>
+  );
+}
+
+/* ===============================================================
+   STAT ITEM
+================================================================ */
+
+function StatItem({
+  icon,
+  value,
+  label,
+  accent,
+  border = false,
+}: {
+  icon: React.ReactNode;
+  value: string | number;
+  label: string;
+  accent: string;
+  border?: boolean;
+}) {
+  return (
+    <div
+      className={`flex flex-col items-center px-3 py-4 ${
+        border ? "border-l border-white/[0.06]" : ""
+      }`}
+    >
+      <span className={accent}>{icon}</span>
+
+      <p className="mt-1.5 font-display text-base font-semibold leading-none text-slate-200">
+        {value}
+      </p>
+
+      <p className="mt-1 text-[8px] uppercase tracking-[0.14em] text-slate-700">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+/* ===============================================================
+   SECTION LABEL
+================================================================ */
+
+function SectionLabel({
+  icon,
+  label,
+}: {
+  icon: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <div className="mb-3 flex items-center gap-2">
+      <span className="text-cyan-400/50">{icon}</span>
+
+      <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+        {label}
+      </span>
+
+      <span className="h-px flex-1 bg-white/[0.05]" />
+    </div>
   );
 }

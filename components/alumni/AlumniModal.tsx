@@ -1,43 +1,111 @@
 "use client";
+
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Alumni, DEPARTMENTS, Department } from "@/types";
+import { Alumni } from "@/types";
 import {
-  FaLinkedin, FaMapMarkerAlt, FaBriefcase,
-  FaGraduationCap, FaPhone, FaEnvelope,
-  FaTimes, FaTrophy, FaQuoteLeft, FaCalendarAlt
+  FaLinkedin,
+  FaMapMarkerAlt,
+  FaBriefcase,
+  FaPhone,
+  FaEnvelope,
+  FaTimes,
+  FaTrophy,
+  FaQuoteLeft,
+  FaCalendarAlt,
+  // FaArrowUpRightFromSquare,
 } from "react-icons/fa";
 import { useEffect } from "react";
-
-const deptGradients: Record<string, string> = {
-  AQC: "from-blue-600 to-cyan-500",
-  FBG: "from-emerald-600 to-teal-500",
-  FMN: "from-violet-600 to-purple-500",
-  FST: "from-amber-600 to-orange-500",
-  MFO: "from-cyan-600 to-blue-500",
-};
 
 interface Props {
   alumni: Alumni | null;
   onClose: () => void;
 }
 
+const departmentStyles: Record<
+  string,
+  {
+    accent: string;
+    accentSoft: string;
+    border: string;
+    glow: string;
+    dot: string;
+  }
+> = {
+  AQC: {
+    accent: "text-cyan-300",
+    accentSoft: "bg-cyan-400/[0.08]",
+    border: "border-cyan-300/20",
+    glow: "bg-cyan-400/[0.05]",
+    dot: "bg-cyan-300",
+  },
+  FBG: {
+    accent: "text-emerald-300",
+    accentSoft: "bg-emerald-400/[0.08]",
+    border: "border-emerald-300/20",
+    glow: "bg-emerald-400/[0.05]",
+    dot: "bg-emerald-300",
+  },
+  FMN: {
+    accent: "text-violet-300",
+    accentSoft: "bg-violet-400/[0.08]",
+    border: "border-violet-300/20",
+    glow: "bg-violet-400/[0.05]",
+    dot: "bg-violet-300",
+  },
+  FST: {
+    accent: "text-amber-300",
+    accentSoft: "bg-amber-400/[0.08]",
+    border: "border-amber-300/20",
+    glow: "bg-amber-400/[0.05]",
+    dot: "bg-amber-300",
+  },
+  MFO: {
+    accent: "text-sky-300",
+    accentSoft: "bg-sky-400/[0.08]",
+    border: "border-sky-300/20",
+    glow: "bg-sky-400/[0.05]",
+    dot: "bg-sky-300",
+  },
+};
+
+const defaultStyle = {
+  accent: "text-cyan-300",
+  accentSoft: "bg-cyan-400/[0.08]",
+  border: "border-cyan-300/20",
+  glow: "bg-cyan-400/[0.05]",
+  dot: "bg-cyan-300",
+};
+
 export default function AlumniModal({ alumni, onClose }: Props) {
-  // Close on Escape key
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
     document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+
+    return () => {
+      document.removeEventListener("keydown", handler);
+    };
   }, [onClose]);
 
-  // Prevent body scroll when modal open
   useEffect(() => {
-    if (alumni) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
-    return () => { document.body.style.overflow = ""; };
+    if (alumni) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [alumni]);
 
-  const grad = deptGradients[alumni?.department || ""] || "from-ocean-700 to-ocean-500";
+  const style =
+    departmentStyles[alumni?.department || ""] || defaultStyle;
 
   return (
     <AnimatePresence>
@@ -45,136 +113,223 @@ export default function AlumniModal({ alumni, onClose }: Props) {
         <>
           {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-50 bg-[#000611]/80 backdrop-blur-md"
             onClick={onClose}
           />
 
-          {/* Modal */}
+          {/* Modal wrapper */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 18 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 20 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+            exit={{ opacity: 0, scale: 0.96, y: 18 }}
+            transition={{
+              duration: 0.3,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5"
+          >
+            <div
+              onClick={(event) => event.stopPropagation()}
+              className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#06111f] shadow-[0_30px_100px_rgba(0,0,0,0.55)]"
+            >
+              {/* Ambient glow */}
+              <div
+                className={`pointer-events-none absolute -right-32 -top-32 h-72 w-72 rounded-full ${style.glow} blur-[90px]`}
+              />
 
-            <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl pointer-events-auto"
-              onClick={e => e.stopPropagation()}>
+              <div className="pointer-events-none absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-cyan-400/[0.018] blur-[100px]" />
 
-              {/* ── Header with gradient ── */}
-              <div className={`relative bg-gradient-to-br ${grad} p-6 overflow-hidden`}>
-                {/* Decorative circles */}
-                <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/10" />
-                <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-white/10" />
+              {/* Top accent */}
+              <div
+                className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-current to-transparent ${style.accent} opacity-40`}
+              />
 
-                {/* Close button */}
-                <button onClick={onClose}
-                  className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-all hover:scale-110">
-                  <FaTimes size={14} />
+              {/* Header */}
+              <div className="relative shrink-0 border-b border-white/[0.06] px-5 pb-6 pt-5 sm:px-7 sm:pb-7">
+                {/* Close */}
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close alumni profile"
+                  className="absolute right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.025] text-slate-600 transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-slate-300 sm:right-5 sm:top-5"
+                >
+                  <FaTimes size={12} />
                 </button>
 
-                {/* Avatar + name */}
-                <div className="relative z-10 flex items-end gap-4">
-                  <div className="relative flex-shrink-0">
+                <div className="flex items-start gap-4 pr-10 sm:gap-5">
+                  {/* Avatar */}
+                  <div className="relative shrink-0">
                     {alumni.photo ? (
-                      <div className="relative w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-white/40 shadow-xl">
-                        <Image src={alumni.photo} alt={alumni.name} fill className="object-cover" />
+                      <div className="relative h-[82px] w-[82px] overflow-hidden rounded-[20px] border border-white/[0.1] bg-white/[0.03] shadow-xl sm:h-[92px] sm:w-[92px]">
+                        <Image
+                          src={alumni.photo}
+                          alt={alumni.name}
+                          fill
+                          sizes="92px"
+                          className="object-cover"
+                        />
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
                       </div>
                     ) : (
-                      <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm ring-4 ring-white/40 flex items-center justify-center shadow-xl">
-                        <span className="text-white font-display font-bold text-3xl">
-                          {alumni.name?.[0]?.toUpperCase()}
-                        </span>
+                      <div
+                        className={`flex h-[82px] w-[82px] items-center justify-center rounded-[20px] border ${style.border} ${style.accentSoft} ${style.accent} text-3xl font-semibold sm:h-[92px] sm:w-[92px]`}
+                      >
+                        {alumni.name?.[0]?.toUpperCase() || "A"}
                       </div>
                     )}
+
+                    <span
+                      className={`absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-[#06111f] ${style.dot}`}
+                    />
                   </div>
-                  <div className="flex-1 min-w-0 pb-1">
-                    <h2 className="font-display font-bold text-white text-xl leading-tight mb-1">
+
+                  {/* Identity */}
+                  <div className="min-w-0 flex-1 pt-1">
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      {alumni.department && (
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-lg border ${style.border} ${style.accentSoft} px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] ${style.accent}`}
+                        >
+                          {alumni.department}
+                        </span>
+                      )}
+
+                      {alumni.batch && (
+                        <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.025] px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.12em] text-slate-600">
+                          <FaCalendarAlt size={8} />
+                          Batch &apos;{String(alumni.batch).slice(-2)}
+                        </span>
+                      )}
+                    </div>
+
+                    <h2 className="font-display text-xl font-semibold leading-tight tracking-tight text-slate-100 sm:text-2xl">
                       {alumni.name}
                     </h2>
+
                     {alumni.currentPosition && (
-                      <p className="text-white/80 text-sm flex items-center gap-1.5">
-                        <FaBriefcase size={11} className="flex-shrink-0" />
-                        {alumni.currentPosition}
+                      <p className="mt-2 flex items-center gap-2 text-xs leading-5 text-slate-500 sm:text-sm">
+                        <FaBriefcase
+                          size={9}
+                          className={`shrink-0 ${style.accent} opacity-60`}
+                        />
+                        <span>{alumni.currentPosition}</span>
                       </p>
                     )}
-                    {alumni.linkedin && alumni.linkedin !== "#" && (
-                      <a href={alumni.linkedin} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 mt-2 text-white/70 hover:text-white text-xs transition-colors">
-                        <FaLinkedin size={12} /> LinkedIn Profile
-                      </a>
-                    )}
+
+                    {alumni.linkedin &&
+                      alumni.linkedin !== "#" && (
+                        <a
+                          href={alumni.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(event) =>
+                            event.stopPropagation()
+                          }
+                          className={`mt-3 inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] ${style.accent} opacity-60 transition-opacity hover:opacity-100`}
+                        >
+                          <FaLinkedin size={11} />
+                          LinkedIn Profile
+                          {/* <FaArrowUpRightFromSquare size={8} /> */}
+                        </a>
+                      )}
                   </div>
                 </div>
               </div>
 
-              {/* ── Body ── */}
-              <div className="bg-white rounded-b-3xl">
-
-                {/* Tags row */}
-                <div className="flex flex-wrap gap-2 px-6 py-4 border-b border-gray-100">
-                  {/* {alumni.department && (
-                    <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full text-white bg-gradient-to-r ${grad}`}>
-                      <FaGraduationCap size={10} />
-                      {alumni.department} — {DEPARTMENTS[alumni.department as Department]}
-                    </span>
-                  )} */}
-                  {alumni.batch && (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-ocean-100 text-ocean-700">
-                      <FaCalendarAlt size={10} />
-                      Batch {alumni.batch}
-                    </span>
-                  )}
+              {/* Scrollable body */}
+              <div className="relative min-h-0 flex-1 overflow-y-auto">
+                <div className="px-5 py-5 sm:px-7 sm:py-6">
+                  {/* Location */}
                   {alumni.location && (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-gray-100 text-gray-600">
-                      <FaMapMarkerAlt size={10} />
-                      {alumni.location}
-                    </span>
+                    <div className="mb-5 flex items-center gap-2 text-[10px] uppercase tracking-[0.13em] text-slate-600">
+                      <FaMapMarkerAlt
+                        size={9}
+                        className={`${style.accent} opacity-60`}
+                      />
+                      <span>{alumni.location}</span>
+                    </div>
                   )}
-                </div>
-
-                {/* Info grid */}
-                <div className="px-6 py-4 space-y-3">
 
                   {/* Organization */}
                   {alumni.organization && (
-                    <div className="flex items-start gap-3 p-3 bg-ocean-50 rounded-xl">
-                      <div className="w-8 h-8 rounded-lg bg-ocean-100 flex items-center justify-center flex-shrink-0">
-                        <FaBriefcase className="text-ocean-600" size={13} />
-                      </div>
-                      <div>
-                        <p className="text-xs text-ocean-400 font-medium mb-0.5">Organization</p>
-                        <p className="text-sm font-semibold text-gray-900">{alumni.organization}</p>
+                    <div
+                      className={`mb-4 rounded-2xl border ${style.border} ${style.accentSoft} p-4`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/[0.05] bg-white/[0.025] ${style.accent}`}
+                        >
+                          <FaBriefcase size={12} />
+                        </div>
+
+                        <div className="min-w-0">
+                          <p
+                            className={`text-[9px] font-semibold uppercase tracking-[0.16em] ${style.accent} opacity-60`}
+                          >
+                            Current organization
+                          </p>
+
+                          <p className="mt-1 text-sm font-medium text-slate-200">
+                            {alumni.organization}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}
 
-                  {/* Contact row */}
+                  {/* Contact */}
                   {(alumni.email || alumni.phone) && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="mb-5 grid gap-2 sm:grid-cols-2">
                       {alumni.email && (
-                        <a href={`mailto:${alumni.email}`}
-                          className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors group">
-                          <div className="w-8 h-8 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center flex-shrink-0 transition-colors">
-                            <FaEnvelope className="text-blue-600" size={13} />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-xs text-blue-400 font-medium mb-0.5">Email</p>
-                            <p className="text-xs font-semibold text-gray-900 truncate">{alumni.email}</p>
-                          </div>
+                        <a
+                          href={`mailto:${alumni.email}`}
+                          onClick={(event) =>
+                            event.stopPropagation()
+                          }
+                          className="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/[0.055] bg-white/[0.018] p-3.5 transition-all duration-300 hover:border-white/[0.1] hover:bg-white/[0.035]"
+                        >
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/[0.05] bg-white/[0.025] text-slate-600 transition-colors group-hover:text-slate-300">
+                            <FaEnvelope size={11} />
+                          </span>
+
+                          <span className="min-w-0">
+                            <span className="block text-[9px] uppercase tracking-[0.14em] text-slate-700">
+                              Email
+                            </span>
+
+                            <span className="mt-0.5 block truncate text-[11px] font-medium text-slate-500 transition-colors group-hover:text-slate-300">
+                              {alumni.email}
+                            </span>
+                          </span>
                         </a>
                       )}
+
                       {alumni.phone && (
-                        <a href={`tel:${alumni.phone}`}
-                          className="flex items-center gap-3 p-3 bg-green-50 rounded-xl hover:bg-green-100 transition-colors group">
-                          <div className="w-8 h-8 rounded-lg bg-green-100 group-hover:bg-green-200 flex items-center justify-center flex-shrink-0 transition-colors">
-                            <FaPhone className="text-green-600" size={13} />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-xs text-green-400 font-medium mb-0.5">Phone</p>
-                            <p className="text-xs font-semibold text-gray-900 truncate">{alumni.phone}</p>
-                          </div>
+                        <a
+                          href={`tel:${alumni.phone}`}
+                          onClick={(event) =>
+                            event.stopPropagation()
+                          }
+                          className="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/[0.055] bg-white/[0.018] p-3.5 transition-all duration-300 hover:border-white/[0.1] hover:bg-white/[0.035]"
+                        >
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/[0.05] bg-white/[0.025] text-slate-600 transition-colors group-hover:text-slate-300">
+                            <FaPhone size={10} />
+                          </span>
+
+                          <span className="min-w-0">
+                            <span className="block text-[9px] uppercase tracking-[0.14em] text-slate-700">
+                              Phone
+                            </span>
+
+                            <span className="mt-0.5 block truncate text-[11px] font-medium text-slate-500 transition-colors group-hover:text-slate-300">
+                              {alumni.phone}
+                            </span>
+                          </span>
                         </a>
                       )}
                     </div>
@@ -182,44 +337,111 @@ export default function AlumniModal({ alumni, onClose }: Props) {
 
                   {/* Testimonial */}
                   {alumni.testimonial && (
-                    <div className="p-4 bg-gray-50 rounded-xl border-l-4 border-ocean-400">
-                      <FaQuoteLeft className="text-ocean-300 mb-2" size={16} />
-                      <p className="text-gray-600 text-sm italic leading-relaxed">
-                        {alumni.testimonial}
-                      </p>
-                    </div>
+                    <section className="mb-5">
+                      <SectionLabel
+                        icon={<FaQuoteLeft size={9} />}
+                        label="Alumni perspective"
+                        accent={style.accent}
+                      />
+
+                      <div className="relative overflow-hidden rounded-2xl border border-white/[0.055] bg-white/[0.018] p-5">
+                        <div
+                          className={`absolute left-0 top-0 h-full w-px ${style.accent} bg-current opacity-50`}
+                        />
+
+                        <FaQuoteLeft
+                          className={`mb-3 ${style.accent} opacity-30`}
+                          size={18}
+                        />
+
+                        <p className="text-sm leading-7 text-slate-400">
+                          {alumni.testimonial}
+                        </p>
+                      </div>
+                    </section>
                   )}
 
                   {/* Achievements */}
-                  {alumni.achievements && alumni.achievements.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <FaTrophy className="text-amber-500" size={11} /> Achievements
-                      </p>
-                      <div className="space-y-2">
-                        {alumni.achievements.map((a, i) => (
-                          <div key={i} className="flex items-center gap-2 p-2.5 bg-amber-50 rounded-lg">
-                            <span className="text-amber-500 flex-shrink-0">🏆</span>
-                            <span className="text-sm text-gray-700">{a}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                  {alumni.achievements &&
+                    alumni.achievements.length > 0 && (
+                      <section>
+                        <SectionLabel
+                          icon={<FaTrophy size={9} />}
+                          label="Achievements"
+                          accent="text-amber-300"
+                        />
 
-                {/* Footer */}
-                <div className="px-6 pb-5">
-                  <button onClick={onClose}
-                    className="w-full py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium transition-colors">
-                    Close
-                  </button>
+                        <div className="space-y-2">
+                          {alumni.achievements.map(
+                            (achievement, index) => (
+                              <motion.div
+                                key={`${achievement}-${index}`}
+                                initial={{
+                                  opacity: 0,
+                                  x: -8,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  x: 0,
+                                }}
+                                transition={{
+                                  delay: index * 0.04,
+                                }}
+                                className="flex items-start gap-3 rounded-xl border border-white/[0.05] bg-white/[0.018] px-3.5 py-3"
+                              >
+                                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-amber-400/[0.07] text-amber-300/70">
+                                  <FaTrophy size={9} />
+                                </span>
+
+                                <span className="text-xs leading-5 text-slate-500">
+                                  {achievement}
+                                </span>
+                              </motion.div>
+                            )
+                          )}
+                        </div>
+                      </section>
+                    )}
                 </div>
+              </div>
+
+              {/* Footer */}
+              <div className="relative shrink-0 border-t border-white/[0.055] bg-[#06111f]/95 px-5 py-4 backdrop-blur-xl sm:px-7">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.025] py-3 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-600 transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.05] hover:text-slate-300"
+                >
+                  <FaTimes
+                    size={9}
+                    className="transition-transform duration-300 group-hover:rotate-90"
+                  />
+                  Close profile
+                </button>
               </div>
             </div>
           </motion.div>
         </>
       )}
     </AnimatePresence>
+  );
+}
+
+function SectionLabel({
+  icon,
+  label,
+  accent,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  accent: string;
+}) {
+  return (
+    <div
+      className={`mb-3 flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.18em] ${accent} opacity-60`}
+    >
+      {icon}
+      <span>{label}</span>
+    </div>
   );
 }

@@ -1,82 +1,394 @@
+
 "use client";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { FaLinkedin, FaMapMarkerAlt, FaBriefcase, FaTrophy } from "react-icons/fa";
+import {
+  FaLinkedin,
+  FaMapMarkerAlt,
+  FaBriefcase,
+  FaTrophy,
+  FaArrowLeft,
+  FaGraduationCap,
+  FaQuoteLeft,
+} from "react-icons/fa";
 import { DEPARTMENTS, Department } from "@/types";
 
+interface AlumniProfile {
+  name: string;
+  currentPosition?: string;
+  organization?: string;
+  location?: string;
+  department?: Department;
+  batch?: string | number;
+  linkedin?: string;
+  bio?: string;
+  achievements?: string[];
+  testimonial?: string;
+}
+
 export default function AlumniProfilePage() {
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<AlumniProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("/api/profile").then(({ data }) => { if (data.success) setProfile(data.data); });
+    const fetchProfile = async () => {
+      try {
+        const { data } = await axios.get("/api/profile");
+
+        if (data.success) {
+          setProfile(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to load alumni profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-      <h1 className="text-2xl font-display font-bold text-ocean-900 mb-6">My Alumni Profile</h1>
+    <main className="relative min-h-screen overflow-hidden bg-[#020b18] text-white">
 
-      {profile && (
-        <div className="space-y-5">
-          {/* Public profile card */}
-          <div className="card-fish p-6 bg-ocean-gradient text-white">
-            <p className="text-ocean-200 text-xs mb-1 uppercase tracking-wider">Alumni — Faculty of Fisheries, PSTU</p>
-            <h2 className="text-xl font-display font-bold mb-1">{profile.name}</h2>
-            {profile.currentPosition && (
-              <p className="flex items-center gap-2 text-ocean-200 text-sm">
-                <FaBriefcase /> {profile.currentPosition} {profile.organization && `at ${profile.organization}`}
+      {/* =====================================================
+          ATMOSPHERIC BACKGROUND
+      ====================================================== */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+
+        {/* Top-left glow */}
+        <div className="absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full bg-cyan-400/[0.045] blur-[130px]" />
+
+        {/* Right glow */}
+        <div className="absolute -right-40 top-[35%] h-[520px] w-[520px] rounded-full bg-cyan-400/[0.025] blur-[140px]" />
+
+        {/* Bottom glow */}
+        <div className="absolute bottom-[-250px] left-[30%] h-[500px] w-[500px] rounded-full bg-sky-500/[0.02] blur-[140px]" />
+
+        {/* Grid */}
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+      </div>
+
+      {/* =====================================================
+          PAGE CONTENT
+      ====================================================== */}
+      <div className="relative mx-auto max-w-5xl px-4 pb-20 pt-28 sm:px-6">
+
+        {/* =================================================
+            BACK / LABEL
+        ================================================== */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <p className="mb-10 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-600">
+            <FaGraduationCap className="text-cyan-400/50" />
+            Alumni community
+          </p>
+        </motion.div>
+
+        {/* =================================================
+            TITLE
+        ================================================== */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55 }}
+          className="mb-10"
+        >
+          <p className="mb-3 text-[10px] uppercase tracking-[0.24em] text-cyan-300 opacity-70">
+            Personal profile
+          </p>
+
+          <h1 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            My Alumni Profile
+          </h1>
+
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-500">
+            Your public profile within the Faculty of Fisheries alumni
+            community.
+          </p>
+
+          <div className="mt-8 h-px bg-gradient-to-r from-white/[0.10] via-white/[0.05] to-transparent" />
+        </motion.div>
+
+        {/* =================================================
+            LOADING
+        ================================================== */}
+        {loading && (
+          <div className="flex min-h-[300px] items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/[0.08] border-t-cyan-300" />
+
+              <p className="text-[10px] uppercase tracking-[0.18em] text-slate-600">
+                Loading profile
               </p>
-            )}
-            {profile.location && (
-              <p className="flex items-center gap-2 text-ocean-200 text-sm mt-1">
-                <FaMapMarkerAlt /> {profile.location}
-              </p>
-            )}
-            <div className="flex items-center gap-3 mt-3">
-              {profile.department && (
-                <span className="bg-white/20 text-white text-xs px-3 py-1 rounded-full">
-                  {DEPARTMENTS[profile.department as Department]}
-                </span>
-              )}
-              {profile.batch && (
-                <span className="bg-white/20 text-white text-xs px-3 py-1 rounded-full">Batch {profile.batch}</span>
-              )}
-              {profile.linkedin && (
-                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer"
-                  className="text-white hover:text-teal-300 transition-colors">
-                  <FaLinkedin size={18} />
-                </a>
-              )}
             </div>
           </div>
+        )}
 
-          {profile.bio && (
-            <div className="card-fish p-6">
-              <h3 className="font-display font-bold text-ocean-900 mb-3">About</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">{profile.bio}</p>
+        {/* =================================================
+            NO PROFILE
+        ================================================== */}
+        {!loading && !profile && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-6 py-20 text-center"
+          >
+            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-white/[0.06] bg-cyan-400/[0.04]">
+              <FaGraduationCap className="text-xl text-cyan-300/50" />
             </div>
-          )}
 
-          {profile.achievements?.length > 0 && (
-            <div className="card-fish p-6">
-              <h3 className="font-display font-bold text-ocean-900 mb-3 flex items-center gap-2"><FaTrophy className="text-amber-500" /> Achievements</h3>
-              <ul className="space-y-2">
-                {profile.achievements.map((a: string, i: number) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-2 flex-shrink-0" />{a}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            <h2 className="font-display text-lg font-semibold text-slate-300">
+              Profile unavailable
+            </h2>
 
-          {profile.testimonial && (
-            <div className="card-fish p-6 border-l-4 border-ocean-500">
-              <p className="text-gray-600 italic text-sm leading-relaxed">&ldquo;{profile.testimonial}&rdquo;</p>
-            </div>
-          )}
+            <p className="mt-2 text-xs text-slate-600">
+              We could not load your alumni profile at this time.
+            </p>
+          </motion.div>
+        )}
+
+        {/* =================================================
+            PROFILE
+        ================================================== */}
+        {!loading && profile && (
+          <div className="space-y-5">
+
+            {/* =================================================
+                MAIN PROFILE CARD
+            ================================================== */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-sm"
+            >
+
+              {/* Accent line */}
+              <div className="h-px w-full bg-gradient-to-r from-cyan-400/60 via-sky-400/20 to-transparent" />
+
+              {/* Background glow */}
+              <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-400/[0.035] blur-[80px]" />
+
+              <div className="relative p-6 sm:p-8">
+
+                {/* Label */}
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.06] bg-cyan-400/[0.07]">
+                    <FaGraduationCap className="text-sm text-cyan-300" />
+                  </div>
+
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-cyan-300/60">
+                      Alumni
+                    </p>
+
+                    <p className="text-[10px] uppercase tracking-[0.16em] text-slate-600">
+                      Faculty of Fisheries · PSTU
+                    </p>
+                  </div>
+                </div>
+
+                {/* Name */}
+                <h2 className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                  {profile.name}
+                </h2>
+
+                {/* Position */}
+                {profile.currentPosition && (
+                  <div className="mt-4 flex items-start gap-3 text-sm text-slate-400">
+                    <FaBriefcase className="mt-0.5 shrink-0 text-cyan-400/50" />
+
+                    <span>
+                      {profile.currentPosition}
+
+                      {profile.organization && (
+                        <>
+                          <span className="mx-1.5 text-slate-700">at</span>
+                          <span className="text-slate-300">
+                            {profile.organization}
+                          </span>
+                        </>
+                      )}
+                    </span>
+                  </div>
+                )}
+
+                {/* Location */}
+                {profile.location && (
+                  <div className="mt-2 flex items-center gap-3 text-sm text-slate-500">
+                    <FaMapMarkerAlt className="shrink-0 text-cyan-400/40" />
+                    {profile.location}
+                  </div>
+                )}
+
+                {/* Meta */}
+                <div className="mt-6 flex flex-wrap items-center gap-2">
+
+                  {profile.department && (
+                    <span className="rounded-md border border-cyan-400/[0.12] bg-cyan-400/[0.06] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-cyan-300">
+                      {DEPARTMENTS[profile.department as Department]}
+                    </span>
+                  )}
+
+                  {profile.batch && (
+                    <span className="rounded-md border border-white/[0.06] bg-white/[0.03] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                      Batch {profile.batch}
+                    </span>
+                  )}
+
+                  {profile.linkedin && (
+                    <a
+                      href={profile.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="LinkedIn profile"
+                      className="flex h-8 w-8 items-center justify-center rounded-md border border-white/[0.06] bg-white/[0.025] text-slate-500 transition-all duration-200 hover:border-cyan-400/[0.15] hover:bg-cyan-400/[0.06] hover:text-cyan-300"
+                    >
+                      <FaLinkedin size={14} />
+                    </a>
+                  )}
+
+                </div>
+
+              </div>
+            </motion.section>
+
+            {/* =================================================
+                ABOUT
+            ================================================== */}
+            {profile.bio && (
+              <motion.section
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.1 }}
+                className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 sm:p-7"
+              >
+                <div className="mb-5">
+                  <p className="mb-2 text-[9px] uppercase tracking-[0.22em] text-cyan-300/60">
+                    Profile
+                  </p>
+
+                  <h3 className="font-display text-xl font-bold text-white">
+                    About
+                  </h3>
+                </div>
+
+                <p className="text-sm leading-7 text-slate-500">
+                  {profile.bio}
+                </p>
+              </motion.section>
+            )}
+
+            {/* =================================================
+                ACHIEVEMENTS
+            ================================================== */}
+            {profile.achievements &&
+              profile.achievements.length > 0 && (
+                <motion.section
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: 0.15 }}
+                  className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 sm:p-7"
+                >
+
+                  <div className="mb-6">
+                    <p className="mb-2 text-[9px] uppercase tracking-[0.22em] text-amber-300/60">
+                      Milestones
+                    </p>
+
+                    <h3 className="flex items-center gap-3 font-display text-xl font-bold text-white">
+                      <FaTrophy className="text-sm text-amber-300/70" />
+                      Achievements
+                    </h3>
+                  </div>
+
+                  <div className="space-y-3">
+                    {profile.achievements.map(
+                      (achievement, index) => (
+                        <motion.div
+                          key={`${achievement}-${index}`}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{
+                            duration: 0.35,
+                            delay: 0.2 + index * 0.05,
+                          }}
+                          className="flex items-start gap-4 rounded-xl border border-white/[0.04] bg-white/[0.015] p-4"
+                        >
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300/50" />
+
+                          <p className="text-sm leading-relaxed text-slate-500">
+                            {achievement}
+                          </p>
+                        </motion.div>
+                      )
+                    )}
+                  </div>
+
+                </motion.section>
+              )}
+
+            {/* =================================================
+                TESTIMONIAL
+            ================================================== */}
+            {profile.testimonial && (
+              <motion.section
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.2 }}
+                className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 sm:p-7"
+              >
+
+                <FaQuoteLeft className="absolute right-7 top-7 text-3xl text-cyan-400/[0.06]" />
+
+                <p className="mb-5 text-[9px] uppercase tracking-[0.22em] text-cyan-300/60">
+                  Alumni voice
+                </p>
+
+                <blockquote className="relative max-w-3xl text-sm italic leading-7 text-slate-500 sm:text-base">
+                  &ldquo;{profile.testimonial}&rdquo;
+                </blockquote>
+
+              </motion.section>
+            )}
+
+          </div>
+        )}
+
+      </div>
+
+      {/* =====================================================
+          BOTTOM
+      ====================================================== */}
+      <section className="relative border-t border-white/[0.05] px-4 py-8 sm:px-6">
+        <div className="mx-auto flex max-w-5xl items-center justify-between">
+
+          <span className="text-[9px] uppercase tracking-[0.18em] text-slate-700">
+            Alumni network
+          </span>
+
+          <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.18em] text-cyan-300/40">
+            PSTU
+            {/* <FaArrowRight size={7} /> */}
+          </div>
+
         </div>
-      )}
-    </motion.div>
+      </section>
+
+    </main>
   );
 }
+

@@ -1,31 +1,80 @@
+
 import { DEPARTMENTS, Department } from "@/types";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
-import DeptTeachers from "@/components/departments/DeptTeachers";
+import DeptPageContent from "@/components/departments/DeptPageContent";
 
-export default async function DeptPage({ params }: { params: Promise<{ dept: string }> }) {
+export default async function DeptPage({
+  params,
+}: {
+  params: Promise<{ dept: string }>;
+}) {
   const { dept } = await params;
-  const deptKey  = dept.toUpperCase() as Department;
+
+  const deptKey = dept.toUpperCase() as Department;
   const deptName = DEPARTMENTS[deptKey];
 
-  if (!deptName) notFound();
+  if (!deptName) {
+    notFound();
+  }
+
+  const deptStyles: Record<
+    Department,
+    {
+      accent: string;
+      soft: string;
+      glow: string;
+      description: string;
+    }
+  > = {
+    AQC: {
+      accent: "text-cyan-300",
+      soft: "bg-cyan-400/[0.08]",
+      glow: "bg-cyan-400/[0.04]",
+      description:
+        "Aquatic production, culture systems, and sustainable farming.",
+    },
+
+    FBG: {
+      accent: "text-emerald-300",
+      soft: "bg-emerald-400/[0.08]",
+      glow: "bg-emerald-400/[0.04]",
+      description:
+        "Fish biology, genetics, biodiversity, and aquatic life.",
+    },
+
+    FMN: {
+      accent: "text-violet-300",
+      soft: "bg-violet-400/[0.08]",
+      glow: "bg-violet-400/[0.04]",
+      description:
+        "Fisheries resources, management, conservation, and policy.",
+    },
+
+    FST: {
+      accent: "text-amber-300",
+      soft: "bg-amber-400/[0.08]",
+      glow: "bg-amber-400/[0.04]",
+      description:
+        "Fish processing, quality, technology, and value addition.",
+    },
+
+    MFO: {
+      accent: "text-sky-300",
+      soft: "bg-sky-400/[0.08]",
+      glow: "bg-sky-400/[0.04]",
+      description:
+        "Marine fisheries, oceanography, and coastal systems.",
+    },
+  };
+
+  const style = deptStyles[deptKey];
 
   return (
-    <div className="pt-20 min-h-screen bg-wave-gradient">
-      <div className="bg-ocean-gradient text-white py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <Link href="/departments"
-            className="inline-flex items-center gap-2 text-ocean-300 hover:text-white text-sm mb-6 transition-colors">
-            <FaArrowLeft /> All Departments
-          </Link>
-          <div>
-            <span className="font-mono font-bold text-teal-400 text-lg">{deptKey}</span>
-            <h1 className="text-3xl md:text-4xl font-display font-bold mt-1">{deptName}</h1>
-          </div>
-        </div>
-      </div>
-      <DeptTeachers deptKey={deptKey} />
-    </div>
+    <DeptPageContent
+      deptKey={deptKey}
+      deptName={deptName}
+      style={style}
+    />
   );
 }
+

@@ -1,9 +1,8 @@
-
 "use client";
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaCompass } from "react-icons/fa";
 import {
   GiShrimp,
   GiFishingHook,
@@ -18,6 +17,7 @@ const deptInfo: Record<
   {
     icon: React.ReactNode;
     desc: string;
+    focus: string;
     color: string;
     iconBg: string;
     glow: string;
@@ -27,46 +27,51 @@ const deptInfo: Record<
   AQC: {
     icon: <GiShrimp size={30} />,
     desc: "Culture techniques for fish, shrimp, prawn & other aquatic organisms.",
-    color: "text-blue-600",
-    iconBg: "bg-blue-50/80 group-hover:bg-blue-100/80",
-    glow: "bg-blue-400/10",
-    border: "group-hover:border-blue-200",
+    focus: "Aquatic production",
+    color: "text-blue-500",
+    iconBg: "bg-blue-400/[0.08]",
+    glow: "bg-blue-400/[0.12]",
+    border: "group-hover:border-blue-300/25",
   },
 
   FBG: {
     icon: <GiFishingHook size={30} />,
     desc: "Study of fish biology, genetics, breeding, and biodiversity conservation.",
-    color: "text-emerald-600",
-    iconBg: "bg-emerald-50/80 group-hover:bg-emerald-100/80",
-    glow: "bg-emerald-400/10",
-    border: "group-hover:border-emerald-200",
+    focus: "Biology & genetics",
+    color: "text-emerald-500",
+    iconBg: "bg-emerald-400/[0.08]",
+    glow: "bg-emerald-400/[0.12]",
+    border: "group-hover:border-emerald-300/25",
   },
 
   FMN: {
     icon: <GiWheat size={30} />,
     desc: "Sustainable management of fisheries resources, policy, and environmental impact.",
-    color: "text-violet-600",
-    iconBg: "bg-violet-50/80 group-hover:bg-violet-100/80",
-    glow: "bg-violet-400/10",
-    border: "group-hover:border-violet-200",
+    focus: "Resources & policy",
+    color: "text-violet-400",
+    iconBg: "bg-violet-400/[0.08]",
+    glow: "bg-violet-400/[0.12]",
+    border: "group-hover:border-violet-300/25",
   },
 
   FST: {
     icon: <GiSharkFin size={30} />,
     desc: "Post-harvest technology, fish processing, quality control, and value-added products.",
-    color: "text-amber-600",
-    iconBg: "bg-amber-50/80 group-hover:bg-amber-100/80",
-    glow: "bg-amber-400/10",
-    border: "group-hover:border-amber-200",
+    focus: "Food & technology",
+    color: "text-amber-400",
+    iconBg: "bg-amber-400/[0.08]",
+    glow: "bg-amber-400/[0.12]",
+    border: "group-hover:border-amber-300/25",
   },
 
   MFO: {
     icon: <GiWaves size={30} />,
     desc: "Marine ecosystem, oceanography, deep-sea fisheries, and coastal resource management.",
-    color: "text-cyan-600",
-    iconBg: "bg-cyan-50/80 group-hover:bg-cyan-100/80",
-    glow: "bg-cyan-400/10",
-    border: "group-hover:border-cyan-200",
+    focus: "Ocean & coasts",
+    color: "text-cyan-400",
+    iconBg: "bg-cyan-400/[0.08]",
+    glow: "bg-cyan-400/[0.12]",
+    border: "group-hover:border-cyan-300/25",
   },
 };
 
@@ -74,36 +79,51 @@ const deptKeys = Object.keys(DEPARTMENTS) as Department[];
 
 export default function DepartmentsSection() {
   return (
-    <section className="relative overflow-hidden bg-wave-gradient py-24">
+    <section className="relative overflow-hidden bg-[#020b18] py-24 sm:py-28">
 
       {/* =========================================================
-          BACKGROUND DECORATION
+          ATMOSPHERIC BACKGROUND
       ========================================================= */}
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
 
-        {/* Top glow */}
-        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-ocean-500/5 blur-3xl" />
+        {/* Soft ocean atmosphere */}
+        <div className="absolute -left-48 top-0 h-[500px] w-[500px] rounded-full bg-cyan-400/[0.045] blur-[140px]" />
 
-        {/* Bottom glow */}
-        <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-teal-500/5 blur-3xl" />
+        <div className="absolute -right-48 bottom-0 h-[550px] w-[550px] rounded-full bg-teal-400/[0.045] blur-[150px]" />
+
+        <motion.div
+          className="absolute left-[42%] top-[35%] h-80 w-80 rounded-full bg-sky-400/[0.025] blur-[130px]"
+          animate={{
+            scale: [1, 1.12, 1],
+            opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
 
         {/* Subtle grid */}
         <div
-          className="absolute inset-0 opacity-[0.025]"
+          className="absolute inset-0 opacity-[0.018]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(0,70,110,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(0,70,110,0.7) 1px, transparent 1px)",
-            backgroundSize: "70px 70px",
+              "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+            backgroundSize: "80px 80px",
           }}
         />
+
+        {/* Soft radial vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(2,11,24,0.35)_100%)]" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* =======================================================
-            SECTION HEADER
-        ======================================================= */}
+        {/* =========================================================
+            HEADER
+        ========================================================= */}
 
         <motion.div
           initial={{
@@ -115,37 +135,74 @@ export default function DepartmentsSection() {
             y: 0,
           }}
           transition={{
-            duration: 0.6,
+            duration: 0.7,
           }}
           viewport={{
             once: true,
+            amount: 0.3,
           }}
-          className="mx-auto mb-14 max-w-2xl text-center"
+          className="mx-auto mb-14 max-w-3xl text-center"
         >
-          {/* Small label */}
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-ocean-200/70 bg-white/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-ocean-600 backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
-            Academic Excellence
+
+          {/* Eyebrow */}
+          <div className="mb-5 inline-flex items-center gap-3">
+
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-teal-300/60" />
+
+            <span className="
+              rounded-full
+              border border-white/[0.08]
+              bg-white/[0.035]
+              px-4 py-2
+              text-[10px]
+              font-semibold
+              uppercase
+              tracking-[0.28em]
+              text-teal-300/80
+              backdrop-blur-xl
+            ">
+              Academic Ecosystem
+            </span>
+
+            <span className="h-px w-8 bg-gradient-to-l from-transparent to-teal-300/60" />
+
           </div>
 
-          <h2 className="section-title">
-            Our Departments
+          <h2 className="
+            font-display
+            text-3xl
+            font-bold
+            tracking-[-0.03em]
+            text-white
+            sm:text-4xl
+            lg:text-5xl
+          ">
+            Where curiosity meets the{" "}
+            <span className="bg-gradient-to-r from-cyan-300 via-teal-300 to-emerald-300 bg-clip-text text-transparent">
+              aquatic world.
+            </span>
           </h2>
 
-          <div className="wave-divider mx-auto mt-4" />
-
-          <p className="section-sub mx-auto mt-4">
-            Five specialized departments driving excellence in fisheries
-            education, research, innovation, and sustainable aquatic resource
-            management.
+          <p className="
+            mx-auto
+            mt-5
+            max-w-2xl
+            text-sm
+            leading-7
+            text-slate-500
+            sm:text-base
+          ">
+            Five specialized departments bring together scientists, educators,
+            researchers, and students working across the many dimensions of
+            fisheries and aquatic sciences.
           </p>
         </motion.div>
 
-        {/* =======================================================
+        {/* =========================================================
             DEPARTMENT GRID
-        ======================================================= */}
+        ========================================================= */}
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 
           {deptKeys.map((key, i) => {
             const info = deptInfo[key];
@@ -155,179 +212,510 @@ export default function DepartmentsSection() {
                 key={key}
                 initial={{
                   opacity: 0,
-                  y: 35,
+                  y: 30,
                 }}
                 whileInView={{
                   opacity: 1,
                   y: 0,
                 }}
                 transition={{
-                  duration: 0.55,
+                  duration: 0.6,
                   delay: i * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
                 }}
                 viewport={{
                   once: true,
-                  margin: "-50px",
+                  margin: "-60px",
                 }}
               >
-
                 <Link
                   href={`/departments/${key.toLowerCase()}`}
-                  className={`group relative block h-full overflow-hidden rounded-3xl border border-white/70 bg-white/45 p-7 shadow-[0_8px_40px_rgba(0,50,80,0.06)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/65 hover:shadow-[0_20px_50px_rgba(0,50,80,0.12)] ${info.border}`}
+                  className={`
+                    group
+                    relative
+                    block
+                    h-full
+                    min-h-[310px]
+                    overflow-hidden
+                    rounded-[1.7rem]
+                    border
+                    border-white/[0.08]
+                    bg-white/[0.025]
+                    p-6
+                    shadow-[0_20px_60px_rgba(0,0,0,0.18)]
+                    backdrop-blur-[28px]
+                    transition-all
+                    duration-500
+                    hover:-translate-y-2
+                    hover:bg-white/[0.045]
+                    hover:shadow-[0_28px_80px_rgba(0,0,0,0.28)]
+                    ${info.border}
+                  `}
                 >
 
                   {/* =================================================
-                      CARD GLOW
+                      GLASS REFLECTION
                   ================================================= */}
 
-                  <div
-                    className={`pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full ${info.glow} opacity-0 blur-3xl transition-all duration-500 group-hover:opacity-100`}
-                  />
+                  <div className="
+                    pointer-events-none
+                    absolute
+                    inset-x-5
+                    top-0
+                    h-px
+                    bg-gradient-to-r
+                    from-transparent
+                    via-white/[0.25]
+                    to-transparent
+                  " />
 
-                  {/* Top glass reflection */}
-                  <div className="pointer-events-none absolute left-8 right-8 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
+                  <div className="
+                    pointer-events-none
+                    absolute
+                    -right-20
+                    -top-24
+                    h-56
+                    w-32
+                    rotate-[35deg]
+                    bg-white/[0.018]
+                    blur-2xl
+                  " />
+
+                  {/* Inner glass border */}
+                  <div className="
+                    pointer-events-none
+                    absolute
+                    inset-1
+                    rounded-[1.6rem]
+                    border
+                    border-white/[0.025]
+                  " />
+
+                  {/* =================================================
+                      DEPARTMENT NUMBER
+                  ================================================= */}
+
+                  <div className="relative flex items-center justify-between">
+
+                    <span className="
+                      font-mono
+                      text-[9px]
+                      font-medium
+                      tracking-[0.3em]
+                      text-white/[0.18]
+                      transition-colors
+                      duration-300
+                      group-hover:text-teal-300/30
+                    ">
+                      0{i + 1}
+                    </span>
+
+                    <span className="
+                      text-[9px]
+                      uppercase
+                      tracking-[0.25em]
+                      text-slate-600
+                    ">
+                      PSTU
+                    </span>
+
+                  </div>
 
                   {/* =================================================
                       ICON
                   ================================================= */}
 
                   <div
-                    className={`relative mb-7 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/80 ${info.iconBg} ${info.color} shadow-sm backdrop-blur-md transition-all duration-500 group-hover:scale-105 group-hover:shadow-md`}
+                    className={`
+                      relative
+                      mt-6
+                      flex
+                      h-[4.3rem]
+                      w-[4.3rem]
+                      items-center
+                      justify-center
+                      rounded-2xl
+                      border
+                      border-white/[0.08]
+                      ${info.iconBg}
+                      ${info.color}
+                      shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]
+                      backdrop-blur-xl
+                      transition-all
+                      duration-500
+                      group-hover:scale-105
+                      group-hover:border-white/[0.13]
+                    `}
                   >
-                    {info.icon}
 
-                    {/* Small indicator */}
-                    <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-teal-400 opacity-0 shadow-[0_0_10px_rgba(45,212,191,0.5)] transition-opacity duration-300 group-hover:opacity-100" />
+                    {/* Icon glow */}
+                    <div
+                      className={`
+                        pointer-events-none
+                        absolute
+                        inset-0
+                        rounded-2xl
+                        ${info.glow}
+                        opacity-0
+                        blur-xl
+                        transition-opacity
+                        duration-500
+                        group-hover:opacity-100
+                      `}
+                    />
+
+                    <span className="relative">
+                      {info.icon}
+                    </span>
+
+                    {/* Live indicator */}
+                    <span className="
+                      absolute
+                      -right-1
+                      -top-1
+                      h-2.5
+                      w-2.5
+                      rounded-full
+                      border-2
+                      border-[#071421]
+                      bg-teal-300
+                      opacity-0
+                      shadow-[0_0_12px_rgba(45,212,191,0.7)]
+                      transition-opacity
+                      duration-500
+                      group-hover:opacity-100
+                    " />
+
                   </div>
 
                   {/* =================================================
-                      DEPARTMENT NAME
+                      NAME
                   ================================================= */}
 
-                  <div className="relative mb-3 flex items-start gap-2">
+                  <div className="relative mt-6">
 
-                    <span
-                      className={`mt-0.5 rounded-md bg-white/70 px-2 py-1 font-mono text-xs font-bold ${info.color} backdrop-blur-sm`}
-                    >
-                      {key}
-                    </span>
+                    <div className="flex items-center gap-2">
 
-                    <span className="mt-1 text-gray-300">
-                      ·
-                    </span>
+                      <span
+                        className={`
+                          rounded-md
+                          border
+                          border-white/[0.07]
+                          bg-white/[0.035]
+                          px-2
+                          py-1
+                          font-mono
+                          text-[9px]
+                          font-bold
+                          tracking-wider
+                          ${info.color}
+                          backdrop-blur-xl
+                        `}
+                      >
+                        {key}
+                      </span>
 
-                    <h3 className="font-display text-base font-bold leading-tight text-gray-900">
+                      <span className="h-px flex-1 bg-white/[0.05]" />
+
+                    </div>
+
+                    <h3 className="
+                      mt-3
+                      max-w-[18rem]
+                      font-display
+                      text-lg
+                      font-semibold
+                      leading-snug
+                      tracking-tight
+                      text-white
+                    ">
                       {DEPARTMENTS[key]}
                     </h3>
+
                   </div>
 
                   {/* =================================================
                       DESCRIPTION
                   ================================================= */}
 
-                  <p className="relative mb-7 min-h-[68px] text-sm leading-6 text-gray-500">
+                  <p className="
+                    relative
+                    mt-3
+                    min-h-[72px]
+                    max-w-[20rem]
+                    text-sm
+                    leading-6
+                    text-slate-500
+                    transition-colors
+                    duration-300
+                    group-hover:text-slate-400
+                  ">
                     {info.desc}
                   </p>
 
                   {/* =================================================
-                      LEARN MORE
+                      FOCUS TAG
                   ================================================= */}
 
-                  <div className="relative flex items-center justify-between border-t border-gray-200/60 pt-5">
+                  <div className="relative mt-5 flex items-center justify-between">
 
-                    <span
-                      className={`inline-flex items-center gap-2 text-sm font-semibold ${info.color} transition-all duration-300`}
-                    >
-                      Explore Department
-
-                      <FaArrowRight className="text-xs transition-transform duration-300 group-hover:translate-x-1.5" />
+                    <span className="
+                      rounded-full
+                      border
+                      border-white/[0.06]
+                      bg-white/[0.025]
+                      px-3
+                      py-1.5
+                      text-[9px]
+                      uppercase
+                      tracking-[0.18em]
+                      text-slate-500
+                    ">
+                      {info.focus}
                     </span>
 
-                    <span className="text-[10px] font-medium uppercase tracking-widest text-gray-400">
-                      PSTU
+                    <span className={`
+                      flex
+                      h-8
+                      w-8
+                      items-center
+                      justify-center
+                      rounded-full
+                      border
+                      border-white/[0.07]
+                      bg-white/[0.025]
+                      ${info.color}
+                      transition-all
+                      duration-500
+                      group-hover:translate-x-1
+                      group-hover:border-white/[0.13]
+                      group-hover:bg-white/[0.06]
+                    `}>
+                      <FaArrowRight className="text-[9px]" />
                     </span>
 
                   </div>
 
-                  {/* Bottom hover line */}
-                  <div
-                    className={`absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-ocean-500 to-teal-400 transition-all duration-500 group-hover:w-full`}
-                  />
+                  {/* Bottom accent */}
+                  <div className="
+                    absolute
+                    bottom-0
+                    left-0
+                    h-px
+                    w-0
+                    bg-gradient-to-r
+                    from-cyan-300/70
+                    via-teal-300/50
+                    to-transparent
+                    transition-all
+                    duration-700
+                    group-hover:w-1/2
+                  " />
 
                 </Link>
               </motion.div>
             );
           })}
 
-          {/* =======================================================
+          {/* =========================================================
               CTA CARD
-          ======================================================= */}
+          ========================================================= */}
 
           <motion.div
             initial={{
               opacity: 0,
-              y: 35,
+              y: 30,
             }}
             whileInView={{
               opacity: 1,
               y: 0,
             }}
             transition={{
-              duration: 0.55,
+              duration: 0.6,
               delay: 0.4,
             }}
             viewport={{
               once: true,
             }}
           >
+            <div
+              className="
+                group
+                relative
+                flex
+                h-full
+                min-h-[310px]
+                flex-col
+                justify-between
+                overflow-hidden
+                rounded-[1.7rem]
+                border
+                border-teal-300/[0.12]
+                bg-gradient-to-br
+                from-teal-400/[0.09]
+                via-white/[0.025]
+                to-cyan-400/[0.04]
+                p-7
+                shadow-[0_25px_70px_rgba(0,0,0,0.25)]
+                backdrop-blur-[30px]
+              "
+            >
 
-            <div className="group relative flex h-full min-h-[280px] flex-col items-center justify-center overflow-hidden rounded-3xl border border-white/20 bg-ocean-gradient p-7 text-center shadow-xl shadow-ocean-900/10">
+              {/* Ambient glows */}
+              <div className="
+                absolute
+                -right-24
+                -top-24
+                h-64
+                w-64
+                rounded-full
+                bg-teal-300/[0.09]
+                blur-[80px]
+                transition-transform
+                duration-1000
+                group-hover:scale-125
+              " />
 
-              {/* Decorative glow */}
-              <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-teal-400/20 blur-3xl transition-transform duration-700 group-hover:scale-150" />
+              <div className="
+                absolute
+                -bottom-24
+                -left-24
+                h-56
+                w-56
+                rounded-full
+                bg-cyan-300/[0.07]
+                blur-[80px]
+              " />
 
-              <div className="absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-ocean-400/20 blur-3xl" />
-
-              {/* Glass layer */}
-              <div className="absolute inset-0 bg-white/[0.03] backdrop-blur-[1px]" />
+              {/* Glass reflection */}
+              <div className="
+                pointer-events-none
+                absolute
+                inset-x-6
+                top-0
+                h-px
+                bg-gradient-to-r
+                from-transparent
+                via-white/[0.3]
+                to-transparent
+              " />
 
               <div className="relative z-10">
 
-                {/* Icon */}
-                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md">
-                  <GiWaves
-                    size={28}
-                    className="text-teal-300"
-                  />
+                {/* Compass icon */}
+                <div className="
+                  flex
+                  h-12
+                  w-12
+                  items-center
+                  justify-center
+                  rounded-2xl
+                  border
+                  border-teal-300/15
+                  bg-teal-300/[0.07]
+                  text-teal-300
+                  shadow-[0_0_30px_rgba(45,212,191,0.08)]
+                  backdrop-blur-xl
+                ">
+                  <FaCompass className="text-sm" />
                 </div>
 
-                <p className="font-display text-xl font-bold text-white">
-                  Ready to dive in?
+                <p className="
+                  mt-7
+                  text-[10px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.28em]
+                  text-teal-300/70
+                ">
+                  Your journey starts here
                 </p>
 
-                <p className="mx-auto mb-6 mt-2 max-w-xs text-sm leading-6 text-ocean-200">
-                  Discover every department and find the academic path that
-                  matches your passion.
+                <h3 className="
+                  mt-3
+                  max-w-[16rem]
+                  font-display
+                  text-2xl
+                  font-semibold
+                  leading-tight
+                  tracking-tight
+                  text-white
+                ">
+                  Find the field that feels like yours.
+                </h3>
+
+                <p className="
+                  mt-3
+                  max-w-sm
+                  text-sm
+                  leading-6
+                  text-slate-500
+                ">
+                  Explore our departments, meet the people behind the work,
+                  and discover where your curiosity can take you.
                 </p>
+
+              </div>
+
+              {/* CTA */}
+              <div className="relative z-10 mt-8">
 
                 <Link
                   href="/departments"
-                  className="group/btn inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-ocean-700 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-ocean-50"
+                  className="
+                    group/btn
+                    inline-flex
+                    items-center
+                    gap-3
+                    rounded-xl
+                    border
+                    border-white/[0.12]
+                    bg-white/[0.08]
+                    px-5
+                    py-3
+                    text-sm
+                    font-semibold
+                    text-white
+                    shadow-lg
+                    backdrop-blur-xl
+                    transition-all
+                    duration-400
+                    hover:-translate-y-1
+                    hover:border-teal-300/25
+                    hover:bg-white/[0.12]
+                  "
                 >
-                  All Departments
+                  Explore all departments
 
-                  <FaArrowRight className="text-xs transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  <span className="
+                    flex
+                    h-6
+                    w-6
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-teal-300/[0.1]
+                  ">
+                    <FaArrowRight className="
+                      text-[9px]
+                      text-teal-300
+                      transition-transform
+                      duration-300
+                      group-hover/btn:translate-x-0.5
+                    " />
+                  </span>
                 </Link>
 
               </div>
-            </div>
 
+            </div>
           </motion.div>
+
         </div>
 
-        {/* =======================================================
-            BOTTOM INFORMATION
-        ======================================================= */}
+        {/* =========================================================
+            BOTTOM STATEMENT
+        ========================================================= */}
 
         <motion.div
           initial={{
@@ -343,17 +731,25 @@ export default function DepartmentsSection() {
           viewport={{
             once: true,
           }}
-          className="mt-14 flex items-center justify-center gap-4 text-xs uppercase tracking-[0.2em] text-ocean-400"
+          className="mt-14 flex items-center justify-center gap-4"
         >
-          <span className="h-px w-12 bg-ocean-200" />
 
-          Fisheries • Research • Innovation
+          <span className="h-px w-12 bg-gradient-to-r from-transparent to-white/[0.08]" />
 
-          <span className="h-px w-12 bg-ocean-200" />
+          <span className="
+            text-[9px]
+            uppercase
+            tracking-[0.3em]
+            text-slate-600
+          ">
+            Fisheries • Research • Innovation
+          </span>
+
+          <span className="h-px w-12 bg-gradient-to-l from-transparent to-white/[0.08]" />
+
         </motion.div>
 
       </div>
     </section>
   );
 }
-
