@@ -40,4 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 # scripts
-scripts/seed.mjs
+scripts/seed.ts
+scripts/data
+
+/scripts/data/
+.env*.local
