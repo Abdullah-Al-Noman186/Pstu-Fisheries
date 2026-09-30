@@ -67,8 +67,7 @@ interface Student {
   Example:
   import studentsData from "@/data/students.json";
 */
-
-import studentsData from "@/scripts/data/students_status.json";
+import studentsData from "../../../scripts/data/students_status.json";
 
 const students: Student[] = Array.isArray(studentsData)
   ? studentsData
