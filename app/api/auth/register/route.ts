@@ -3,11 +3,12 @@ import { adminAuth } from "@/lib/firebase-admin";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import Profile from "@/models/Profile";
+import { findPstuRecord } from "@/lib/findPstuRecord";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { token, name, email, role, department, studentId, batch } = body;
+    const { token, name, email, department, studentId, regNo, batch } = body;
 
     if (!token) {
       return NextResponse.json({ success: false, error: "No token" }, { status: 400 });
@@ -23,20 +24,29 @@ export async function POST(req: NextRequest) {
 
     await connectDB();
 
+    if (!decoded.email || String(decoded.email).toLowerCase() !== String(email || "").trim().toLowerCase()) {
+      return NextResponse.json({ success: false, error: "The account email does not match the registration email." }, { status: 400 });
+    }
+    const match = await findPstuRecord(String(studentId || ""), String(regNo || ""));
+    if (!match || (match.record.uid && match.record.uid !== decoded.uid)) {
+      return NextResponse.json({ success: false, error: "Student ID and Registration number do not match an available MongoDB record." }, { status: 409 });
+    }
+    const linkedRole = match.kind;
+    const linkedName = String(match.record.name || name || "PSTU User");
+    const linkedBatch = Number(match.record.batch ?? match.record.batch_no ?? batch ?? 0);
+
     const user = await User.findOneAndUpdate(
       { uid: decoded.uid },
-      { uid: decoded.uid, name, email, role, department: department || undefined },
+      { uid: decoded.uid, name: linkedName, email: decoded.email.toLowerCase(), role: linkedRole, department: department || match.record.department || undefined },
       { upsert: true, new: true }
     );
 
     const profileData: Record<string, any> = {
-      uid: decoded.uid, name, email, role,
-      department: department || undefined,
+      uid: decoded.uid, name: linkedName, email: decoded.email.toLowerCase(), role: linkedRole,
+      department: department || match.record.department || undefined,
+      studentId: String(match.record.studentId ?? match.record.id_no ?? match.record.student_id ?? studentId),
+      batch: linkedBatch,
     };
-    if (role === "student") {
-      profileData.studentId = studentId;
-      profileData.batch     = batch;
-    }
 
     await Profile.findOneAndUpdate(
       { uid: decoded.uid },

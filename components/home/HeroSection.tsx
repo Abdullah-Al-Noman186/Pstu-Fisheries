@@ -51,7 +51,7 @@ export default function HeroSection() {
 
 <div className="absolute inset-0 z-0">
   <Image
-    src="/Hero.png"
+    src="/faculty.png"
     alt="Faculty of Fisheries building, PSTU"
     fill
     priority

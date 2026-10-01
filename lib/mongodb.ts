@@ -18,7 +18,15 @@ if (!global.mongoose) global.mongoose = cached;
 export async function connectDB() {
   if (cached.conn) return cached.conn;
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false });
+    cached.promise = mongoose
+      .connect(MONGODB_URI, { bufferCommands: false })
+      .catch((error) => {
+        // A transient DNS/network failure should not poison the global cache
+        // for the lifetime of the dev server. Let the next request retry.
+        cached.conn = null;
+        cached.promise = null;
+        throw error;
+      });
   }
   cached.conn = await cached.promise;
   return cached.conn;

@@ -12,7 +12,7 @@ export const FIELDS: Field[] = [
   { key: "id_no", label: "Student ID", section: "Identity", readOnly: true },
   { key: "reg_no", label: "Registration No", section: "Identity", readOnly: true },
   { key: "batch_session", label: "Session", section: "Identity", readOnly: true },
-  { key: "email", label: "Email", section: "Identity", type: "text" },
+  { key: "email", label: "Account email", section: "Identity", type: "text", readOnly: true },
   { key: "status", label: "Profile status", section: "Identity", type: "select", options: ["current_student", "alumni"] },
   { key: "name_bn", label: "Name (Bangla)", section: "Personal" },
   { key: "gender", label: "Gender", section: "Personal", type: "select", options: ["Male", "Female", "Other"] },

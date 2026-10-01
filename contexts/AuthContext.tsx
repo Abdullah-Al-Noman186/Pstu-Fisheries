@@ -8,20 +8,20 @@ import {
   updateProfile
 } from "@/lib/firebase";
 import {
-  signInWithPopup, signOut as firebaseSignOut,
+  deleteUser, GoogleAuthProvider, linkWithCredential, signInWithPopup, signOut as firebaseSignOut,
   onAuthStateChanged, User as FirebaseUser
 } from "firebase/auth";
 import { User } from "@/types";
 import axios from "axios";
 
 interface RegisterData {
-  name: string;
+  name?: string;
   email: string;
   password: string;
   role: "teacher" | "alumni" | "student";
   department?: string;
-  studentId?: string;
-  regNo?: string;
+  studentId: string;
+  regNo: string;
   batch?: number;
 }
 
@@ -29,7 +29,7 @@ interface AuthContextType {
   firebaseUser: FirebaseUser | null;
   user: User | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: (email: string, password?: string) => Promise<FirebaseUser | null>;
   signInWithEmail: (email: string, password: string) => Promise<FirebaseUser>;
   registerWithEmail: (data: RegisterData) => Promise<boolean>;
   forgotPassword: (email: string) => Promise<void>;
@@ -87,14 +87,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return unsubscribe;
   }, []);
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (email: string, password?: string) => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const credential = await signInWithPopup(auth, googleProvider);
+      return credential.user;
     } catch (error: any) {
       if (
         error?.code === "auth/cancelled-popup-request" ||
         error?.code === "auth/popup-closed-by-user"
-      ) return;
+      ) return null;
+      if (error?.code === "auth/account-exists-with-different-credential") {
+        const pendingCredential = GoogleAuthProvider.credentialFromError(error);
+        const accountEmail = String(error?.customData?.email || "").toLowerCase();
+        if (!pendingCredential || accountEmail !== email.trim().toLowerCase()) {
+          throw new Error("Sign in with the same email address used for your PSTU account.");
+        }
+        if (!password) throw new Error("Enter your account password once to connect Google sign-in.");
+        const existing = await signInWithEmailAndPassword(auth, email, password);
+        await linkWithCredential(existing.user, pendingCredential);
+        return existing.user;
+      }
       throw error;
     }
   };
@@ -105,15 +117,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const registerWithEmail = async (data: RegisterData) => {
+    const { data: validation } = await axios.post("/api/auth/validate-registration", data);
     const cred = await createUserWithEmailAndPassword(auth, data.email, data.password);
-    await updateProfile(cred.user, { displayName: data.name });
-    const token = await cred.user.getIdToken();
-    await axios.post("/api/auth/register", { token, ...data });
-    if (!data.studentId || !data.regNo) return false;
     try {
+      await updateProfile(cred.user, { displayName: validation.name || data.name || "PSTU User" });
+      const token = await cred.user.getIdToken();
+      await axios.post("/api/auth/register", { token, ...data, name: validation.name || data.name });
       await axios.post("/api/claim", { studentId: data.studentId, regNo: data.regNo }, { headers: { Authorization: `Bearer ${token}` } });
+      await verifyAndSetUser(cred.user);
       return true;
-    } catch { return false; }
+    } catch (error) {
+      try { await deleteUser(cred.user); } catch { /* Firebase may require a fresh sign-in to remove the account. */ }
+      throw error;
+    }
   };
 
   const forgotPassword = async (email: string) => {

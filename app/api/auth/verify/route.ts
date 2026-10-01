@@ -25,27 +25,8 @@ export async function POST(req: NextRequest) {
 
     await connectDB();
 
-    let user = await User.findOne({ uid: decoded.uid });
-    if (!user) {
-      user = await User.create({
-        uid:   decoded.uid,
-        name:  decoded.name || decoded.email?.split("@")[0] || "User",
-        email: decoded.email,
-        photo: decoded.picture || "",
-        role:  "student",
-      });
-      await Profile.findOneAndUpdate(
-        { uid: decoded.uid },
-        {
-          uid:   decoded.uid,
-          name:  user.name,
-          email: user.email,
-          photo: user.photo,
-          role:  "student",
-        },
-        { upsert: true, new: true }
-      );
-    }
+    const user = await User.findOne({ uid: decoded.uid });
+    if (!user) return NextResponse.json({ success: false, error: "This email is not registered. Register with your PSTU ID and Registration number first." }, { status: 403 });
 
     const [profile, student, alumni] = await Promise.all([
       Profile.findOne({ uid: decoded.uid }).lean(),

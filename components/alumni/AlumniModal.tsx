@@ -254,6 +254,11 @@ export default function AlumniModal({ alumni, onClose }: Props) {
                     <h2 className="font-display text-xl font-bold leading-tight tracking-tight text-[#123B4A] sm:text-2xl">
                       {alumni.name}
                     </h2>
+                    {alumni.nameBn && (
+                      <p lang="bn" className="mt-1 text-sm text-[#55727D]">
+                        {alumni.nameBn}
+                      </p>
+                    )}
 
                     {alumni.currentPosition && (
                       <p className="mt-2 flex items-center gap-2 text-xs leading-5 text-[#55727D] sm:text-sm">
@@ -299,6 +304,28 @@ export default function AlumniModal({ alumni, onClose }: Props) {
                         className={`${style.accent}`}
                       />
                       <span>{alumni.location}</span>
+                    </div>
+                  )}
+
+                  {alumni.permanentAddress && (
+                    <div className="mb-5 rounded-2xl border border-[#087EA4]/10 bg-white p-4">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#087EA4]">
+                        Permanent address
+                      </p>
+                      <p className="mt-1.5 text-sm leading-6 text-[#55727D]">
+                        {alumni.permanentAddress}
+                      </p>
+                    </div>
+                  )}
+
+                  {(alumni.currentCity || alumni.currentCountry) && (
+                    <div className="mb-5 rounded-2xl border border-[#087EA4]/10 bg-white p-4">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#087EA4]">
+                        Present location
+                      </p>
+                      <p className="mt-1.5 text-sm text-[#55727D]">
+                        {[alumni.currentCity, alumni.currentCountry].filter(Boolean).join(", ")}
+                      </p>
                     </div>
                   )}
 

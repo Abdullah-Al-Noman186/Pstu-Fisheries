@@ -33,6 +33,7 @@ export interface Alumni {
   _id: string;
   uid: string;
   name: string;
+  nameBn?: string;
   email?: string;
   photo?: string;
   phone?: string;           // ← add this
@@ -42,6 +43,10 @@ export interface Alumni {
   currentPosition?: string;
   organization?: string;
   location?: string;
+  currentCity?: string;
+  currentCountry?: string;
+  permanentAddress?: string;
+  presentStatus?: string;
   linkedin?: string;
   achievements?: string[];
   testimonial?: string;

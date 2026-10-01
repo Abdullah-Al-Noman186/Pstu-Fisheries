@@ -8,8 +8,6 @@ import {
   FaLinkedin,
   FaMapMarkerAlt,
   FaBriefcase,
-  FaPhone,
-  FaEnvelope,
   FaGraduationCap,
   // FaArrowUpRightFromSquare,
 } from "react-icons/fa";
@@ -210,6 +208,11 @@ export default function AlumniCard({
                   </p>
                 </div>
               )}
+              {alumni.presentStatus && (
+                <span className="mt-2 inline-flex rounded-full bg-[#0891B2]/[0.08] px-2.5 py-1 text-[9px] font-semibold text-[#087EA4]">
+                  {alumni.presentStatus}
+                </span>
+              )}
             </div>
 
             {/* LinkedIn */}
@@ -242,65 +245,6 @@ export default function AlumniCard({
               <p className="truncate text-[10px] font-semibold tracking-wide text-[#55727D]">
                 {alumni.organization}
               </p>
-            </div>
-          )}
-
-          {/* =================================================
-              CONTACT
-          ================================================== */}
-          {(alumni.phone || alumni.email) && (
-            <div className="mt-3 grid gap-2">
-              {alumni.phone && (
-                <a
-                  href={`tel:${alumni.phone}`}
-                  onClick={(event) =>
-                    event.stopPropagation()
-                  }
-                  className="group/contact flex min-w-0 items-center gap-2.5 rounded-xl border border-[#087EA4]/10 bg-white/70 px-3 py-2.5 shadow-sm transition-all duration-300 hover:border-[#087EA4]/20 hover:bg-[#0891B2]/[0.035]"
-                >
-                  <span
-                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${style.accentSoft} ${style.accent}`}
-                  >
-                    <FaPhone size={8} />
-                  </span>
-
-                  <div className="min-w-0">
-                    <p className="text-[7px] font-bold uppercase tracking-[0.15em] text-[#55727D]/55">
-                      Phone
-                    </p>
-
-                    <p className="mt-0.5 truncate text-[10px] font-medium text-[#55727D] transition-colors group-hover/contact:text-[#123B4A]">
-                      {alumni.phone}
-                    </p>
-                  </div>
-                </a>
-              )}
-
-              {alumni.email && (
-                <a
-                  href={`mailto:${alumni.email}`}
-                  onClick={(event) =>
-                    event.stopPropagation()
-                  }
-                  className="group/contact flex min-w-0 items-center gap-2.5 rounded-xl border border-[#087EA4]/10 bg-white/70 px-3 py-2.5 shadow-sm transition-all duration-300 hover:border-[#087EA4]/20 hover:bg-[#0891B2]/[0.035]"
-                >
-                  <span
-                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${style.accentSoft} ${style.accent}`}
-                  >
-                    <FaEnvelope size={8} />
-                  </span>
-
-                  <div className="min-w-0">
-                    <p className="text-[7px] font-bold uppercase tracking-[0.15em] text-[#55727D]/55">
-                      Email
-                    </p>
-
-                    <p className="mt-0.5 truncate text-[10px] font-medium text-[#55727D] transition-colors group-hover/contact:text-[#123B4A]">
-                      {alumni.email}
-                    </p>
-                  </div>
-                </a>
-              )}
             </div>
           )}
 

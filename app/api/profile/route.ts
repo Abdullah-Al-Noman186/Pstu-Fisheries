@@ -46,7 +46,7 @@ export async function PUT(req: NextRequest) {
     if (!uid) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     await connectDB();
     const body = await req.json();
-    const allowed = ["name_bn", "gender", "dob", "permanent_address", "phone", "alt_phone", "contact", "linkedin", "present_status", "job_title", "organization", "location", "degree", "current_city", "current_country", "photo", "bio", "email", "status"];
+    const allowed = ["name_bn", "gender", "dob", "permanent_address", "phone", "alt_phone", "contact", "linkedin", "present_status", "job_title", "organization", "location", "degree", "current_city", "current_country", "photo", "bio", "status"];
     const update = Object.fromEntries(allowed.filter((key) => typeof body[key] === "string").map((key) => [key, body[key].trim()]));
     if (update.status && !["alumni", "current_student"].includes(update.status)) return NextResponse.json({ success: false, error: "Invalid status" }, { status: 400 });
     const current = await Profile.findOne({ uid });

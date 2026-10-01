@@ -24,6 +24,9 @@ import AlumniModal from "@/components/alumni/AlumniModal";
 interface Member {
   _id: string;
   name: string;
+  nameBn?: string;
+  email?: string;
+  phone?: string;
   batch: number;
   session?: string;
   department?: string;
@@ -35,6 +38,9 @@ interface Member {
   achievements?: string[];
   testimonial?: string;
   presentStatus?: string;
+  permanentAddress?: string;
+  currentCity?: string;
+  currentCountry?: string;
   isFeatured?: boolean;
 }
 
