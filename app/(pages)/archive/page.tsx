@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 import {
   FaArchive,
@@ -321,68 +322,18 @@ export default function ArchivePage() {
     try {
       setLoading(true);
 
-      const formData = new FormData();
-
-      formData.append("title", title.trim());
-      formData.append(
-        "description",
-        description.trim()
-      );
-      formData.append(
-        "category",
-        selectedCategory
-      );
-      formData.append("year", year);
-
-      if (location.trim()) {
-        formData.append(
-          "location",
-          location.trim()
-        );
-      }
-
-      formData.append("image", imageFile);
-
-      const response = await axios.post(
-        "/api/archive",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      const newItem =
-        response.data?.archive ||
-        response.data?.data ||
-        response.data;
-
-      if (newItem?.title) {
-        setArchive((current) => [
-          newItem,
-          ...current,
-        ]);
-      } else {
-        const localItem: ArchiveItem = {
-          id: `local-${Date.now()}`,
-          title: title.trim(),
-          description: description.trim(),
-          category: selectedCategory as ArchiveItem["category"],
-          year,
-          location,
-          image: imagePreview,
-          postedBy:
-            user?.name ||
-            user?.email ||
-            "Faculty Member",
-        };
-
-        setArchive((current) => [
-          localItem,
-          ...current,
-        ]);
-      }
+      const image = await uploadToCloudinary(imageFile);
+      const response = await axios.post("/api/archive", {
+        title: title.trim(),
+        description: description.trim(),
+        category: selectedCategory,
+        year,
+        location: location.trim(),
+        image,
+      });
+      const newItem: ArchiveItem | undefined = response.data?.archive;
+      if (!newItem?.title) throw new Error("The archive story was not saved.");
+      setArchive((current) => [newItem, ...current]);
 
       toast.success(
         "Success story added to the Faculty Archive!"
@@ -390,11 +341,11 @@ export default function ArchivePage() {
 
       resetForm();
       setShowAddModal(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
 
       toast.error(
-        "Unable to add the archive story. Please try again."
+        error?.response?.data?.error || error?.message || "Unable to add the archive story. Please try again."
       );
     } finally {
       setLoading(false);
