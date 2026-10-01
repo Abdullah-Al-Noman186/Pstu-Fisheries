@@ -28,7 +28,10 @@ export async function POST(req: NextRequest) {
     }
 
     await connectDB();
-    const user = await User.findOne({ uid: decoded.uid }).lean();
+    const user = await User.findOne({ uid: decoded.uid })
+      .select({ name: 1, photo: 1 })
+      .lean()
+      .exec() as unknown as { name?: string; photo?: string } | null;
     if (!user) return NextResponse.json({ success: false, error: "Your account could not be verified." }, { status: 403 });
 
     const body = await req.json();
