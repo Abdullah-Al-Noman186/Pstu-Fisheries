@@ -119,6 +119,7 @@ export async function POST(req: Request) {
       name: rec.name,
       email: user.email,
       studentId,
+      regNo,
       batch: rec.batch,
       department: rec.department,
       studentRecord: { ...record, email: user.email || record.email },

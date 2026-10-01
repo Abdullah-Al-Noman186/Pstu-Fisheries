@@ -18,6 +18,7 @@ export interface IProfile extends Document {
   education?: { degree: string; institution: string; year: number }[];
   // Student fields
   studentId?: string;
+  regNo?: string;
   batch?: number;
   semester?: number;
   cgpa?: number;
@@ -47,6 +48,7 @@ const ProfileSchema = new Schema<IProfile>({
   joinYear:      Number,
   education:     [{ degree: String, institution: String, year: Number }],
   studentId:     String,
+  regNo:          String,
   batch:         Number,
   semester:      Number,
   cgpa:          Number,

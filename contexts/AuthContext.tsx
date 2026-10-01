@@ -59,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             photo:      profile.photo      || data.user.photo,
             name:       data.user.name     || profile.name || fbUser.displayName || fbUser.email?.split("@")[0],
             department: profile.department || data.user.department,
+            role:       profile.status === "alumni" ? "alumni" : profile.status === "current_student" ? "student" : data.user.role,
           });
         } else {
           setUser({

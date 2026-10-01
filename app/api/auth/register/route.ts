@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
       uid: decoded.uid, name: linkedName, email: decoded.email.toLowerCase(), role: linkedRole,
       department: department || match.record.department || undefined,
       studentId: String(match.record.studentId ?? match.record.id_no ?? match.record.student_id ?? studentId),
+      regNo: String(match.record.regNo ?? match.record.reg_no ?? match.record.registration_no ?? regNo),
       batch: linkedBatch,
     };
 
