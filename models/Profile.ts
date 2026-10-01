@@ -28,6 +28,7 @@ export interface IProfile extends Document {
   linkedin?: string;
   achievements?: string[];
   testimonial?: string;
+  studentRecord?: Record<string, unknown>;
 }
 
 const ProfileSchema = new Schema<IProfile>({
@@ -55,6 +56,7 @@ const ProfileSchema = new Schema<IProfile>({
   linkedin:      String,
   achievements:  [String],
   testimonial:   String,
+  studentRecord: { type: Schema.Types.Mixed, default: {} },
 }, { timestamps: true });
 
 export default mongoose.models.Profile || mongoose.model<IProfile>("Profile", ProfileSchema);

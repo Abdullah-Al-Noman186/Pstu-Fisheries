@@ -53,7 +53,7 @@ interface Student {
 
   permanent_address?: string;
 
-  registered?: boolean;
+  registered?: boolean | number;
   status?: string;
 }
 
@@ -67,11 +67,6 @@ interface Student {
   Example:
   import studentsData from "@/data/students.json";
 */
-import studentsData from "../../../scripts/data/students_status.json";
-
-const students: Student[] = Array.isArray(studentsData)
-  ? studentsData
-  : (studentsData as any)?.students || [];
 
 /* ============================================================
    HELPERS
@@ -164,6 +159,7 @@ function getInitials(name: string) {
 ============================================================ */
 
 export default function OurStudentPage() {
+  const [students, setStudents] = useState<Student[]>([]);
   const [search, setSearch] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("All");
   const [selectedStudent, setSelectedStudent] =
@@ -175,6 +171,13 @@ export default function OurStudentPage() {
   const [page, setPage] = useState(1);
 
   const studentsPerPage = 12;
+
+  useEffect(() => {
+    fetch("/api/students")
+      .then((response) => response.json())
+      .then((result) => { if (result.success) setStudents(result.data); })
+      .catch(() => setStudents([]));
+  }, []);
 
   /* ============================================================
      CURRENT STUDENTS
@@ -189,7 +192,7 @@ export default function OurStudentPage() {
         "current_student"
       );
     });
-  }, []);
+  }, [students]);
 
   /* ============================================================
      BATCH LIST

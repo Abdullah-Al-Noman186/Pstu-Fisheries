@@ -17,12 +17,18 @@ export interface IStudent extends Document {
   gender?: string;
   dob?: string;
   phone?: string;
+  contact?: string;
   altPhone?: string;
   address?: string;
   permanentAddress?: string;
   currentCity?: string;
   currentCountry?: string;
   presentStatus?: string;
+  linkedin?: string;
+  currentPosition?: string;
+  organization?: string;
+  location?: string;
+  degree?: string;
   bio?: string;
   achievements?: string[];
   isRegistered?: boolean;
@@ -47,12 +53,18 @@ const StudentSchema = new Schema<IStudent>(
     gender:           String,
     dob:              String,
     phone:            String,
+    contact:          String,
     altPhone:         String,
     address:          String,
     permanentAddress: String,
     currentCity:      String,
     currentCountry:   String,
     presentStatus:    String,
+    linkedin:         String,
+    currentPosition:  String,
+    organization:     String,
+    location:         String,
+    degree:           String,
     bio:              String,
     achievements:     [String],
     isRegistered:     { type: Boolean, default: false },

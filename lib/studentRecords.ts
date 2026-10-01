@@ -1,0 +1,38 @@
+export type StudentRecord = Record<string, any>;
+
+export const toPublicStudent = (r: Record<string, any>) => ({
+  ...r,
+  _id: r._id?.toString?.() || r.id_no || r.studentId,
+  id_no: r.id_no || r.studentId || "",
+  reg_no: r.reg_no || r.regNo || "",
+  batch_no: r.batch_no ?? r.batch,
+  batch_session: r.batch_session || r.session || "",
+  name_bn: r.name_bn || r.nameBn || "",
+  photo: r.photo || r.photoDriveUrl || "",
+  job_title: r.job_title || r.currentPosition || "",
+  phone: r.phone || "",
+  contact: r.contact || "",
+  permanent_address: r.permanent_address || r.permanentAddress || r.address || "",
+  present_status: r.present_status || r.presentStatus || "",
+  status: r.status || (r.role === "alumni" ? "alumni" : "current_student"),
+});
+
+export const toPublicAlumni = (r: Record<string, any>) => ({
+  _id: r._id?.toString?.() || r.id_no || r.studentId || r.uid,
+  uid: r.uid || "",
+  name: r.name || "Unnamed Alumni",
+  email: r.email || "",
+  photo: r.photo || r.photoDriveUrl || "",
+  phone: r.phone || "",
+  department: r.department || "",
+  batch: Number(r.batch_no ?? r.batch ?? 0),
+  currentPosition: r.job_title || r.currentPosition || r.jobTitle || "",
+  organization: r.organization || "",
+  location: r.location || "",
+  linkedin: r.linkedin || "",
+  achievements: r.achievements || [],
+  testimonial: r.testimonial || "",
+  bio: r.bio || "",
+  presentStatus: r.present_status || r.presentStatus || "",
+  role: "alumni" as const,
+});

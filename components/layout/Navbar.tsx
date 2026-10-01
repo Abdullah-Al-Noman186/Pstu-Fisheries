@@ -102,7 +102,7 @@ export default function Navbar() {
     router.push("/");
   };
 
-  const firstName = user?.name?.split(" ")[0] || "";
+  const displayName = user?.name || user?.email?.split("@")[0] || "";
 
   return (
     <>
@@ -356,13 +356,13 @@ export default function Navbar() {
                         </div>
                       )}
 
-                      <div className="max-w-[90px] text-left">
+                      <div className="max-w-[150px] text-left">
                         <p className="truncate text-xs font-bold leading-tight text-[#123B4A]">
-                          {firstName}
+                          {displayName}
                         </p>
 
                         <p className="mt-0.5 truncate text-[9px] capitalize text-[#55727D]">
-                          {user.role}
+                          {user.role === "student" ? "Current student" : user.role}
                         </p>
                       </div>
 
@@ -462,7 +462,7 @@ export default function Navbar() {
                                       tracking-wider text-white
                                     `}
                                   >
-                                    {user.role}
+                                    {user.role === "student" ? "Current student" : user.role}
                                   </span>
                                 </div>
                               </div>
@@ -478,11 +478,6 @@ export default function Navbar() {
                                     <FaTachometerAlt size={12} />
                                   ),
                                   label: "Dashboard",
-                                },
-                                {
-                                  href: "/profile",
-                                  icon: <FaUser size={12} />,
-                                  label: "My Profile",
                                 },
                                 ...(user.role === "admin"
                                   ? [
@@ -720,7 +715,7 @@ export default function Navbar() {
                         </p>
 
                         <p className="mt-0.5 text-[10px] capitalize text-[#55727D]">
-                          {user.role}
+                          {user.role === "student" ? "Current student" : user.role}
                         </p>
                       </div>
 
@@ -781,7 +776,7 @@ export default function Navbar() {
                     {user ? (
                       <div className="space-y-1">
                         <Link
-                          href="/profile"
+                          href="/dashboard"
                           onClick={() =>
                             setMobileOpen(false)
                           }
@@ -799,7 +794,7 @@ export default function Navbar() {
                             size={13}
                             className="text-[#087EA4]"
                           />
-                          My Profile
+                          Dashboard
                         </Link>
 
                         {user.role === "admin" && (

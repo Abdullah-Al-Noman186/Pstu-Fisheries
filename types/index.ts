@@ -36,6 +36,7 @@ export interface Alumni {
   email?: string;
   photo?: string;
   phone?: string;           // ← add this
+  contact?: string;
   department?: Department;
   batch?: number;
   currentPosition?: string;

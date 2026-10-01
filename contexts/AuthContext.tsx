@@ -21,6 +21,7 @@ interface RegisterData {
   role: "teacher" | "alumni" | "student";
   department?: string;
   studentId?: string;
+  regNo?: string;
   batch?: number;
 }
 
@@ -29,8 +30,8 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
-  signInWithEmail: (email: string, password: string) => Promise<void>;
-  registerWithEmail: (data: RegisterData) => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<FirebaseUser>;
+  registerWithEmail: (data: RegisterData) => Promise<boolean>;
   forgotPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -56,11 +57,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser({
             ...data.user,
             photo:      profile.photo      || data.user.photo,
-            name:       profile.name       || data.user.name,
+            name:       data.user.name     || profile.name || fbUser.displayName || fbUser.email?.split("@")[0],
             department: profile.department || data.user.department,
           });
         } else {
-          setUser(data.user);
+          setUser({
+            ...data.user,
+            name: fbUser.displayName || data.user.name || fbUser.email?.split("@")[0],
+            photo: fbUser.photoURL || data.user.photo,
+          });
         }
       } catch {
         setUser(data.user);
@@ -95,7 +100,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signInWithEmail = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const credential = await signInWithEmailAndPassword(auth, email, password);
+    return credential.user;
   };
 
   const registerWithEmail = async (data: RegisterData) => {
@@ -103,6 +109,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await updateProfile(cred.user, { displayName: data.name });
     const token = await cred.user.getIdToken();
     await axios.post("/api/auth/register", { token, ...data });
+    if (!data.studentId || !data.regNo) return false;
+    try {
+      await axios.post("/api/claim", { studentId: data.studentId, regNo: data.regNo }, { headers: { Authorization: `Bearer ${token}` } });
+      return true;
+    } catch { return false; }
   };
 
   const forgotPassword = async (email: string) => {

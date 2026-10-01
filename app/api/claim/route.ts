@@ -4,14 +4,11 @@ import { verifyUser } from "@/lib/verifyUser";
 import Alumni from "@/models/Alumni";
 import Student from "@/models/Student";
 import Profile from "@/models/Profile";
+import User from "@/models/User";
 
 export async function POST(req: Request) {
   const user = await verifyUser(req);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!user.email_verified) {
-    return NextResponse.json({ error: "Please verify your email first" }, { status: 403 });
-  }
-
   const body = await req.json().catch(() => ({}));
   const studentId = String(body.studentId || "").trim().padStart(7, "0");
   const regNo = String(body.regNo || "").trim().padStart(5, "0");
@@ -25,9 +22,32 @@ export async function POST(req: Request) {
   await connectDB();
 
   // this login is already linked -> nothing to do
-  const already =
-    (await Alumni.findOne({ uid: user.uid })) || (await Student.findOne({ uid: user.uid }));
-  if (already) return NextResponse.json({ ok: true });
+  const linkedAlumni = await Alumni.findOne({ uid: user.uid });
+  const linkedStudent = linkedAlumni ? null : await Student.findOne({ uid: user.uid });
+  const already = linkedAlumni || linkedStudent;
+  if (already) {
+    const kind = linkedAlumni ? "alumni" : "student";
+    if (String(already.studentId || "").trim().padStart(7, "0") !== studentId || String(already.regNo || "").trim().padStart(5, "0") !== regNo) {
+      return NextResponse.json({ error: "This account is already connected to a different PSTU record" }, { status: 409 });
+    }
+    const existingProfile = await Profile.findOne({ uid: user.uid });
+    if (!existingProfile?.studentRecord?.id_no) {
+      const record = {
+        id_no: already.studentId, reg_no: already.regNo, name: already.name,
+        batch_no: already.batch, batch_session: already.session, name_bn: already.nameBn,
+        degree: already.degree, job_title: already.currentPosition, organization: already.organization,
+        location: already.location, contact: already.contact, photo: already.photo || already.photoDriveUrl,
+        bio: already.bio, linkedin: already.linkedin, email: already.email || user.email,
+        phone: already.phone, current_city: already.currentCity, current_country: already.currentCountry,
+        gender: already.gender, present_status: already.presentStatus,
+        permanent_address: already.permanentAddress || already.address, dob: already.dob,
+        alt_phone: already.altPhone, status: kind === "alumni" ? "alumni" : "current_student",
+      };
+      await Profile.findOneAndUpdate({ uid: user.uid }, { $set: { uid: user.uid, role: kind, name: already.name, email: user.email, studentId: already.studentId, batch: already.batch, studentRecord: record } }, { upsert: true, new: true });
+    }
+    await User.updateOne({ uid: user.uid }, { $set: { role: kind } });
+    return NextResponse.json({ ok: true, kind });
+  }
 
   let kind: "alumni" | "student" = "alumni";
   let rec: any = await Alumni.findOne({ studentId, regNo });
@@ -36,10 +56,7 @@ export async function POST(req: Request) {
     kind = "student";
   }
   if (!rec) {
-    return NextResponse.json(
-      { error: "No record matches this Student ID and Reg No" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "No MongoDB record matches this Student ID and Registration number" }, { status: 404 });
   }
   if (rec.uid && rec.uid !== user.uid) {
     return NextResponse.json({ error: "This profile is already claimed" }, { status: 409 });
@@ -50,6 +67,18 @@ export async function POST(req: Request) {
   rec.isRegistered = true;
   await rec.save();
 
+  const record = {
+    id_no: studentId, reg_no: regNo, name: rec.name, batch_no: rec.batch,
+    batch_session: rec.session, name_bn: rec.nameBn, degree: rec.degree,
+    job_title: rec.currentPosition, organization: rec.organization, location: rec.location,
+    contact: rec.contact, photo: rec.photo || rec.photoDriveUrl, bio: rec.bio,
+    linkedin: rec.linkedin, email: rec.email || user.email, phone: rec.phone,
+    current_city: rec.currentCity, current_country: rec.currentCountry,
+    gender: rec.gender, present_status: rec.presentStatus,
+    permanent_address: rec.permanentAddress, dob: rec.dob, alt_phone: rec.altPhone,
+    status: kind === "alumni" ? "alumni" : "current_student",
+  };
+  record.email = record.email || user.email;
   await Profile.findOneAndUpdate(
     { uid: user.uid },
     {
@@ -60,9 +89,11 @@ export async function POST(req: Request) {
       studentId,
       batch: rec.batch,
       department: rec.department,
+      studentRecord: { ...record, email: user.email || record.email },
     },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
+  await User.updateOne({ uid: user.uid }, { $set: { role: kind, name: rec.name, email: user.email } });
 
   return NextResponse.json({ ok: true, kind });
 }

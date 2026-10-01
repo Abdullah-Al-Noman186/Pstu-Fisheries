@@ -23,6 +23,7 @@ export interface IAlumni extends Document {
   regNo?: string;
   gender?: string;
   phone?: string;
+  contact?: string;
   altPhone?: string;
   dob?: string;
   permanentAddress?: string;
@@ -56,6 +57,7 @@ const AlumniSchema = new Schema<IAlumni>(
     regNo:            String,
     gender:           String,
     phone:            String,
+    contact:          String,
     altPhone:         String,
     dob:              String,
     permanentAddress: String,

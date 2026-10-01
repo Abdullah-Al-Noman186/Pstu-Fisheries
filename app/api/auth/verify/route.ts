@@ -3,6 +3,8 @@ import { adminAuth } from "@/lib/firebase-admin";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import Profile from "@/models/Profile";
+import Student from "@/models/Student";
+import Alumni from "@/models/Alumni";
 
 export async function POST(req: NextRequest) {
   try {
@@ -45,7 +47,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = NextResponse.json({ success: true, user });
+    const [profile, student, alumni] = await Promise.all([
+      Profile.findOne({ uid: decoded.uid }).lean(),
+      Student.findOne({ uid: decoded.uid }).lean(),
+      Alumni.findOne({ uid: decoded.uid }).lean(),
+    ]) as any[];
+    const currentUser = {
+      ...user.toObject(),
+      name: student?.name || alumni?.name || profile?.name || decoded.name || user.name || decoded.email?.split("@")[0] || "User",
+      photo: profile?.photo || student?.photo || alumni?.photo || decoded.picture || user.photo || "",
+      role: profile?.role || (student ? "student" : alumni ? "alumni" : user.role),
+      department: profile?.department || user.department,
+    };
+
+    const response = NextResponse.json({ success: true, user: currentUser });
     response.cookies.set("auth_token", token, {
       httpOnly: true,
       secure:   process.env.NODE_ENV === "production",
