@@ -25,8 +25,8 @@ export default function HeroSection() {
     sizes="100vw"
   />
 
-  {/* Minimal overall wash */}
-  <div className="absolute inset-0 bg-white/10" />
+  {/* Softly quiet the image so the foreground stays easy to read. */}
+  <div className="absolute inset-0 bg-[#F0FAFC]/20" />
 
   {/* Text readability only where needed */}
   <div
@@ -36,10 +36,10 @@ export default function HeroSection() {
       left-0
       w-full
       bg-gradient-to-r
-      from-[#F0FAFC]/85
-      via-[#F0FAFC]/40
-      to-transparent
-      lg:w-[58%]
+      from-[#F0FAFC]/95
+      via-[#F0FAFC]/88
+      to-[#F0FAFC]/38
+      lg:w-[70%]
     "
   />
 
@@ -194,7 +194,7 @@ export default function HeroSection() {
               rounded-full
               border
               border-[#087EA4]/15
-              bg-white/75
+              bg-white/95
               px-3
               py-2
               shadow-[0_8px_30px_rgba(7,89,133,0.08)]
@@ -278,6 +278,7 @@ export default function HeroSection() {
               leading-[0.98]
               tracking-[-0.04em]
               text-[#123B4A]
+              drop-shadow-[0_2px_12px_rgba(255,255,255,0.95)]
               sm:text-6xl
               lg:text-[5.5rem]
             "
@@ -347,7 +348,9 @@ export default function HeroSection() {
               max-w-2xl
               text-base
               leading-8
-              text-[#23647c]
+              font-medium
+              text-[#123B4A]
+              drop-shadow-[0_1px_5px_rgba(255,255,255,0.95)]
               sm:text-lg
               sm:leading-8
             "
@@ -392,7 +395,7 @@ export default function HeroSection() {
                 rounded-xl
                 border
                 border-[#087EA4]/15
-                bg-white/75
+                bg-white/95
                 px-6
                 py-3.5
                 font-medium
@@ -447,7 +450,8 @@ export default function HeroSection() {
                 font-semibold
                 uppercase
                 tracking-[0.28em]
-                text-[#55727D]
+                text-[#123B4A]
+                drop-shadow-[0_1px_4px_rgba(255,255,255,0.9)]
               "
             >
               Education
@@ -461,7 +465,8 @@ export default function HeroSection() {
                 font-semibold
                 uppercase
                 tracking-[0.28em]
-                text-[#55727D]
+                text-[#123B4A]
+                drop-shadow-[0_1px_4px_rgba(255,255,255,0.9)]
               "
             >
               Research
