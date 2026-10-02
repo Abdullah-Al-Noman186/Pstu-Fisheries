@@ -51,6 +51,7 @@ export interface Alumni {
   achievements?: string[];
   testimonial?: string;
   bio?: string;
+  isFeatured?: boolean;
   role: "alumni";
 }
 

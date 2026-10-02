@@ -52,8 +52,9 @@ interface Student {
   phone?: string;
 
   permanent_address?: string;
+  permanentAddress?: string;
+  address?: string;
 
-  registered?: boolean | number;
   status?: string;
 }
 
@@ -139,6 +140,10 @@ function getSemester(student: Student) {
     student.present_status ||
     "Current Student"
   );
+}
+
+function getAddress(student: Student) {
+  return student.permanent_address || student.permanentAddress || student.address || "";
 }
 
 function getInitials(name: string) {
@@ -883,10 +888,7 @@ function StudentCard({
   const batch = getBatch(student);
   const session = getSession(student);
   const semester = getSemester(student);
-
-  const isRegistered =
-    student.registered === true ||
-    student.registered === 1;
+  const address = getAddress(student);
 
   return (
     <motion.button
@@ -914,14 +916,14 @@ function StudentCard({
       }}
       className="
         group relative overflow-hidden
-        rounded-3xl
-        border border-[#087EA4]/10
+        rounded-[1.75rem]
+        border border-white
         bg-white
         text-left
-        shadow-[0_8px_30px_rgba(7,89,133,0.06)]
+        shadow-[0_12px_36px_rgba(7,89,133,0.08)]
         transition-all duration-300
-        hover:border-[#087EA4]/20
-        hover:shadow-[0_18px_50px_rgba(7,89,133,0.12)]
+        hover:border-[#2DD4BF]/40
+        hover:shadow-[0_22px_55px_rgba(7,89,133,0.16)]
       "
     >
 
@@ -933,106 +935,35 @@ function StudentCard({
           PHOTO AREA
       ====================================================== */}
 
-      <div className="relative flex items-center gap-4 border-b border-[#087EA4]/7 p-5">
-
-        {/* Avatar */}
-
-        <div className="relative shrink-0">
-
-          {student.photo ? (
-            <Image
-              src={getImageUrl(student.photo)}
-              alt={name}
-              width={72}
-              height={72}
-              className="
-                h-[72px] w-[72px]
-                rounded-2xl
-                object-cover
-                ring-1 ring-[#087EA4]/10
-                transition-transform
-                duration-300
-                group-hover:scale-[1.03]
-              "
-            />
-          ) : (
-            <div
-              className="
-                flex h-[72px] w-[72px]
-                items-center justify-center
-                rounded-2xl
-                bg-gradient-to-br
-                from-[#087EA4]/10
-                to-[#2DD4BF]/15
-                text-xl font-black
-                text-[#087EA4]
-                ring-1 ring-[#087EA4]/10
-              "
-            >
-              {getInitials(name)}
-            </div>
-          )}
-
-          {/* Registered */}
-
-          {isRegistered && (
-            <div
-              title="Registered"
-              className="
-                absolute -bottom-1 -right-1
-                flex h-6 w-6
-                items-center justify-center
-                rounded-full
-                border-2 border-white
-                bg-[#0891B2]
-                text-white
-                shadow-sm
-              "
-            >
-              <FaCheckCircle size={10} />
-            </div>
-          )}
-
-        </div>
-
-        {/* Name */}
-
-        <div className="min-w-0 flex-1">
-
-          <h3 className="truncate text-sm font-black text-[#123B4A]">
-            {name}
-          </h3>
-
-          {banglaName && (
-            <p className="mt-1 truncate text-xs text-[#55727D]">
-              {banglaName}
-            </p>
-          )}
-
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-
-            <span className="rounded-full bg-[#087EA4]/8 px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-[#087EA4]">
-              Batch {batch}
-            </span>
-
-            {isRegistered && (
-              <span className="flex items-center gap-1 rounded-full bg-[#2DD4BF]/10 px-2 py-1 text-[8px] font-bold text-[#087EA4]">
-                <FaCheckCircle size={7} />
-                Registered
-              </span>
-            )}
-
+      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-[#087EA4] via-[#0C7892] to-[#2DD4BF]">
+        {student.photo ? (
+          <Image
+            src={getImageUrl(student.photo)}
+            alt={name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-6xl font-black text-white/90">
+            {getInitials(name)}
           </div>
-
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#082D3A]/90 via-[#082D3A]/10 to-black/10" />
+        <span className="absolute left-4 top-4 rounded-full border border-white/30 bg-white/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm backdrop-blur-md">
+          Batch {batch}
+        </span>
+        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+          <h3 className="truncate text-lg font-bold tracking-tight drop-shadow-sm">{name}</h3>
+          {banglaName && <p className="mt-1 truncate text-sm text-white/80">{banglaName}</p>}
         </div>
-
       </div>
 
       {/* ======================================================
           STUDENT INFORMATION
       ====================================================== */}
 
-      <div className="space-y-3 p-5">
+      <div className="space-y-3.5 p-5">
 
         {/* Student ID */}
 
@@ -1058,11 +989,19 @@ function StudentCard({
           value={session}
         />
 
+        {address && (
+          <InfoRow
+            icon={<FaMapMarkerAlt size={10} />}
+            label="Address"
+            value={address}
+          />
+        )}
+
         {/* Semester */}
 
         <InfoRow
           icon={<FaGraduationCap size={10} />}
-          label="Status"
+          label="Academic status"
           value={semester}
         />
 
@@ -1072,7 +1011,7 @@ function StudentCard({
           VIEW PROFILE
       ====================================================== */}
 
-      <div className="flex items-center justify-between border-t border-[#087EA4]/7 px-5 py-3">
+      <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/70 px-5 py-3.5">
 
         <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#55727D]">
           Student Profile
@@ -1206,10 +1145,7 @@ function StudentModal({
   const batch = getBatch(student);
   const session = getSession(student);
   const semester = getSemester(student);
-
-  const isRegistered =
-    student.registered === true ||
-    student.registered === 1;
+  const address = getAddress(student);
 
   return (
     <motion.div
@@ -1252,7 +1188,7 @@ function StudentModal({
         className="
           relative
           max-h-[90vh]
-          w-full max-w-xl
+          w-full max-w-2xl
           overflow-y-auto
           rounded-[2rem]
           border border-white/70
@@ -1273,9 +1209,9 @@ function StudentModal({
             flex h-9 w-9
             items-center justify-center
             rounded-xl
-            border border-[#087EA4]/8
-            bg-white/90
-            text-[#55727D]
+            border border-white/40
+            bg-white/95
+            text-[#123B4A]
             shadow-sm
             backdrop-blur
             transition
@@ -1290,72 +1226,41 @@ function StudentModal({
             PROFILE HEADER
         ==================================================== */}
 
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#F0FAFC] via-white to-[#E9FBF8] px-6 pb-7 pt-8">
+        <div className="relative isolate min-h-[300px] overflow-hidden bg-gradient-to-br from-[#075985] via-[#087EA4] to-[#2DD4BF]">
+          {student.photo && (
+            <Image
+              src={getImageUrl(student.photo)}
+              alt=""
+              fill
+              sizes="(max-width: 768px) 100vw, 672px"
+              className="object-cover"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#062C3A]/95 via-[#062C3A]/45 to-[#062C3A]/10" />
+          <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#2DD4BF]/20 blur-3xl" />
 
-          <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-[#2DD4BF]/12 blur-[70px]" />
-
-          <div className="relative flex flex-col items-center text-center">
-
-            {/* Avatar */}
-
+          <div className="relative flex min-h-[300px] items-end gap-5 px-6 pb-7 pt-16 sm:px-8 sm:pb-8">
             {student.photo ? (
               <Image
-                src={student.photo}
+                src={getImageUrl(student.photo)}
                 alt={name}
-                width={110}
-                height={110}
-                className="
-                  h-[110px] w-[110px]
-                  rounded-[2rem]
-                  object-cover
-                  ring-4 ring-white
-                  shadow-[0_12px_35px_rgba(7,89,133,0.12)]
-                "
+                width={104}
+                height={104}
+                className="h-24 w-24 shrink-0 rounded-3xl border-4 border-white/90 object-cover shadow-[0_14px_40px_rgba(0,0,0,0.25)] sm:h-28 sm:w-28"
               />
             ) : (
-              <div
-                className="
-                  flex h-[110px] w-[110px]
-                  items-center justify-center
-                  rounded-[2rem]
-                  bg-gradient-to-br
-                  from-[#087EA4]
-                  to-[#2DD4BF]
-                  text-3xl font-black
-                  text-white
-                  ring-4 ring-white
-                  shadow-[0_12px_35px_rgba(7,89,133,0.12)]
-                "
-              >
+              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl border-4 border-white/90 bg-white/15 text-3xl font-black text-white shadow-xl backdrop-blur sm:h-28 sm:w-28">
                 {getInitials(name)}
               </div>
             )}
 
-            <h2 className="mt-5 text-xl font-black text-[#123B4A]">
-              {name}
-            </h2>
-
-            {banglaName && (
-              <p className="mt-1 text-sm text-[#55727D]">
-                {banglaName}
-              </p>
-            )}
-
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
-
-              <span className="rounded-full bg-[#087EA4]/10 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider text-[#087EA4]">
-                Batch {batch}
+            <div className="min-w-0 pb-1 text-white">
+              <span className="inline-flex rounded-full border border-white/25 bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white/90 backdrop-blur">
+                Student profile · Batch {batch}
               </span>
-
-              {isRegistered && (
-                <span className="flex items-center gap-1.5 rounded-full bg-[#2DD4BF]/12 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider text-[#087EA4]">
-                  <FaCheckCircle size={8} />
-                  Registered
-                </span>
-              )}
-
+              <h2 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">{name}</h2>
+              {banglaName && <p className="mt-1 text-base text-white/80">{banglaName}</p>}
             </div>
-
           </div>
         </div>
 
@@ -1363,7 +1268,7 @@ function StudentModal({
             DETAILS
         ==================================================== */}
 
-        <div className="p-6">
+        <div className="p-6 sm:p-8">
 
           <div className="mb-4 flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[#2DD4BF]" />
@@ -1401,18 +1306,8 @@ function StudentModal({
 
             <DetailBox
               icon={<FaGraduationCap />}
-              label="Current Semester / Status"
+              label="Academic status"
               value={semester}
-            />
-
-            <DetailBox
-              icon={<FaCheckCircle />}
-              label="Registration Status"
-              value={
-                isRegistered
-                  ? "Registered"
-                  : "Not Registered"
-              }
             />
 
           </div>
@@ -1421,9 +1316,7 @@ function StudentModal({
               CONTACT
           ================================================== */}
 
-          {(student.email ||
-            student.phone ||
-            student.permanent_address) && (
+          {(student.email || student.phone || address) && (
             <>
               <div className="mb-4 mt-7 flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#2DD4BF]" />
@@ -1449,10 +1342,10 @@ function StudentModal({
                   />
                 )}
 
-                {student.permanent_address && (
+                {address && (
                   <ContactRow
                     icon={<FaMapMarkerAlt />}
-                    value={student.permanent_address}
+                    value={address}
                   />
                 )}
 

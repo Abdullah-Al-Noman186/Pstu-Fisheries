@@ -27,7 +27,13 @@ export async function connectDB() {
   if (cached.conn) return cached.conn;
   if (!cached.promise) {
     cached.promise = mongoose
-      .connect(MONGODB_URI, { bufferCommands: false })
+      .connect(MONGODB_URI, {
+        bufferCommands: false,
+        maxPoolSize: Number(process.env.MONGODB_MAX_POOL_SIZE) || 10,
+        minPoolSize: 0,
+        maxIdleTimeMS: 30_000,
+        serverSelectionTimeoutMS: 10_000,
+      })
       .catch((error) => {
         // A transient DNS/network failure should not poison the global cache
         // for the lifetime of the dev server. Let the next request retry.

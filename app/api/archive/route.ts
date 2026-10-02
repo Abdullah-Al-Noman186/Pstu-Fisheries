@@ -7,8 +7,11 @@ import User from "@/models/User";
 export async function GET() {
   try {
     await connectDB();
-    const archive = await Archive.find({}).sort({ createdAt: -1 }).limit(200).lean();
-    return NextResponse.json({ success: true, archive });
+    const [archive, total] = await Promise.all([
+      Archive.find({}).sort({ createdAt: -1 }).limit(200).lean(),
+      Archive.countDocuments({}),
+    ]);
+    return NextResponse.json({ success: true, archive, total }, { headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" } });
   } catch (error: any) {
     console.error("Archive read failed:", error.message);
     return NextResponse.json({ success: false, error: "Could not load archive stories." }, { status: 500 });

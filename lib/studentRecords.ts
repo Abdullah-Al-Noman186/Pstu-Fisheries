@@ -35,6 +35,7 @@ export const toPublicAlumni = (r: Record<string, any>) => ({
   permanentAddress: r.permanentAddress || r.permanent_address || r.address || "",
   linkedin: r.linkedin || "",
   achievements: r.achievements || [],
+  isFeatured: Boolean(r.isFeatured),
   testimonial: r.testimonial || "",
   bio: r.bio || "",
   presentStatus: r.present_status || r.presentStatus || "",

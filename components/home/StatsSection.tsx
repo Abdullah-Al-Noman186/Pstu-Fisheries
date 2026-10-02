@@ -1,49 +1,30 @@
 "use client";
 
+import { useHomeData } from "@/contexts/HomeDataContext";
 import {
   FaUserGraduate,
   FaBook,
-  FaAward,
-  FaFlask,
   FaGlobe,
   FaArrowUp,
+  FaUsers,
+  FaArchive,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
-const stats = [
-  {
-    value: "5",
-    label: "Departments",
-    description: "Academic disciplines",
-    icon: FaBook,
-  },
-  {
-    value: "30+",
-    label: "Faculty Members",
-    description: "Teachers & researchers",
-    icon: FaUserGraduate,
-  },
-  {
-    value: "500+",
-    label: "Alumni Worldwide",
-    description: "A growing global network",
-    icon: FaGlobe,
-  },
-  {
-    value: "200+",
-    label: "Publications",
-    description: "Research & knowledge",
-    icon: FaFlask,
-  },
-  {
-    value: "15+",
-    label: "Years of Excellence",
-    description: "Building our legacy",
-    icon: FaAward,
-  },
-];
-
 export default function StatsSection() {
+  const { data: homeData } = useHomeData();
+
+  const formatCount = (value: number | null | undefined) =>
+    value == null || !Number.isFinite(value) ? "—" : value.toLocaleString();
+
+  const stats = [
+    { value: "5", label: "Departments", description: "Academic disciplines", icon: FaBook },
+    { value: formatCount(homeData?.stats.totalTeachers), label: "Faculty Members", description: "Teachers and researchers", icon: FaUserGraduate },
+    { value: formatCount(homeData?.stats.totalAlumni), label: "Alumni Network", description: "Profiles in the alumni directory", icon: FaGlobe },
+    { value: formatCount(homeData?.stats.totalStudents), label: "Current Students", description: "Profiles in the student directory", icon: FaUsers },
+    { value: formatCount(homeData?.stats.totalArchive), label: "Archive Stories", description: "Stories shared by the faculty", icon: FaArchive },
+  ];
+
   return (
     <section className="relative overflow-hidden bg-[#F0FAFC] py-20 sm:py-24">
 

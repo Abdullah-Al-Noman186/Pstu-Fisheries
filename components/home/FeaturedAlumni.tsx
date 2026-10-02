@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
 
 import {
   FaLinkedin,
@@ -20,6 +19,7 @@ import {
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import AlumniModal from "@/components/alumni/AlumniModal";
 import { Alumni } from "@/types";
+import { useHomeData } from "@/contexts/HomeDataContext";
 
 /* =========================================================
    DEPARTMENT STYLES
@@ -81,30 +81,9 @@ const deptStyles: Record<
 ========================================================= */
 
 export default function FeaturedAlumni() {
-  const [alumni, setAlumni] = useState<Alumni[]>([]);
-  const [loading, setLoading] = useState(true);
-
+  const { data, loading } = useHomeData();
+  const alumni = data?.featuredAlumni ?? [];
   const [selectedAlumni, setSelectedAlumni] = useState<Alumni | null>(null);
-
-  /* =========================================================
-     FETCH ALUMNI
-  ========================================================= */
-
-  useEffect(() => {
-    axios
-      .get("/api/alumni")
-      .then(({ data }) => {
-        if (data.success) {
-          setAlumni(data.data.slice(0, 6));
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to load alumni:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
 
   return (
     <>
@@ -1041,7 +1020,7 @@ export default function FeaturedAlumni() {
             >
 
               <Link
-                href="/alumni"
+                href="/Ouralumni"
                 className="
                   group
                   inline-flex

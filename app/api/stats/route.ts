@@ -67,7 +67,7 @@ export async function GET() {
         newThisMonth,
         recentUsers,
       }
-    });
+    }, { headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" } });
   } catch (error: any) {
     console.error("Stats error:", error.message);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
