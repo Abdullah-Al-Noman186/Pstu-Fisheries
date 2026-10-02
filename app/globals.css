@@ -3,9 +3,41 @@
 @tailwind utilities;
 
 @layer base {
-  html { scroll-behavior: smooth; }
-  body { @apply text-gray-800 font-sans antialiased; }
+  :root {
+    color-scheme: light;
+    --pstu-ink: #123B4A;
+    --pstu-ocean: #087EA4;
+    --pstu-ocean-deep: #075985;
+    --pstu-sea: #2DD4BF;
+    --pstu-muted: #55727D;
+    --pstu-wash: #F0FAFC;
+    --pstu-line: rgba(8, 126, 164, .12);
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 7rem; }
+  body {
+    @apply text-gray-800 font-sans antialiased;
+    min-width: 320px;
+    background: #F0FAFC;
+    color: var(--pstu-ink);
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
   h1, h2, h3 { @apply font-display; }
+
+  ::selection { background: rgba(45, 212, 191, .28); color: #123B4A; }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid rgba(8, 126, 164, .45) !important;
+    outline-offset: 3px !important;
+  }
+
+  :where(input, select, textarea) {
+    color: #123B4A;
+    accent-color: #087EA4;
+  }
+
+  :where(button, [role="button"]) { touch-action: manipulation; }
 }
 
 @layer components {
@@ -30,21 +62,43 @@
 }
 
 .fish-scale-bg {
-  background-color: #eff8ff;
+  background-color: #F0FAFC;
   background-image:
-    radial-gradient(circle at 50% 0%,   rgba(29,114,235,0.08) 25%, transparent 25%),
-    radial-gradient(circle at 0%   50%, rgba(29,114,235,0.05) 25%, transparent 25%),
-    radial-gradient(circle at 100% 50%, rgba(29,114,235,0.05) 25%, transparent 25%);
+    radial-gradient(circle at 50% 0%,   rgba(8,126,164,0.08) 25%, transparent 25%),
+    radial-gradient(circle at 0%   50%, rgba(8,126,164,0.05) 25%, transparent 25%),
+    radial-gradient(circle at 100% 50%, rgba(8,126,164,0.05) 25%, transparent 25%);
   background-size: 60px 60px;
 }
 
 .ocean-text-gradient {
-  background: linear-gradient(135deg, #142a54, #1d72eb, #14b8a6);
+  background: linear-gradient(135deg, #075985, #087EA4, #2DD4BF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #eff8ff; }
-::-webkit-scrollbar-thumb { background: #1d72eb; border-radius: 4px; }
+@layer utilities {
+  .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+  .surface-card {
+    border: 1px solid var(--pstu-line);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, .92);
+    box-shadow: 0 18px 55px rgba(7, 89, 133, .07);
+  }
+  .text-balance { text-wrap: balance; }
+}
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: #EAF7FA; }
+::-webkit-scrollbar-thumb { background: #80BCCA; border: 2px solid #EAF7FA; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #087EA4; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}

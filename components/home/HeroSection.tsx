@@ -378,75 +378,7 @@ export default function HeroSection() {
           >
             {/* Primary */}
 
-            <Link
-              href="/departments"
-              className="
-                group
-                relative
-                inline-flex
-                items-center
-                gap-3
-                overflow-hidden
-                rounded-xl
-                bg-[#087EA4]
-                px-6
-                py-3.5
-                font-semibold
-                text-white
-                shadow-[0_12px_30px_rgba(8,126,164,0.22)]
-                transition-all
-                duration-300
-                hover:-translate-y-1
-                hover:bg-[#075985]
-                hover:shadow-[0_18px_40px_rgba(7,89,133,0.25)]
-              "
-            >
-              {/* Button shine */}
-
-              <span
-                className="
-                  absolute
-                  inset-0
-                  -translate-x-full
-                  bg-gradient-to-r
-                  from-transparent
-                  via-white/20
-                  to-transparent
-                  transition-transform
-                  duration-700
-                  group-hover:translate-x-full
-                "
-              />
-
-              <span className="relative">
-                Explore Departments
-              </span>
-
-              <span
-                className="
-                  relative
-                  flex
-                  h-7
-                  w-7
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-white/15
-                  transition-all
-                  duration-300
-                  group-hover:bg-white/20
-                "
-              >
-                <FaArrowRight
-                  className="
-                    text-[10px]
-                    transition-transform
-                    duration-300
-                    group-hover:translate-x-0.5
-                  "
-                />
-              </span>
-            </Link>
+            
 
             {/* Secondary */}
 

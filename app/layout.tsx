@@ -1,14 +1,24 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { MotionConfig } from "framer-motion";
 
 export const metadata: Metadata = {
   title: "Faculty of Fisheries — PSTU",
   description: "Patuakhali Science and Technology University — Faculty of Fisheries.",
   keywords: "PSTU, fisheries, aquaculture, marine fisheries, Bangladesh",
+  applicationName: "PSTU Fisheries Alumni",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, title: "PSTU Fisheries", statusBarStyle: "default" },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#F0FAFC",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -21,10 +31,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <AuthProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+          <MotionConfig reducedMotion="user">
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+          </MotionConfig>
         </AuthProvider>
       </body>
     </html>

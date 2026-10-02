@@ -1,3 +1,4 @@
+
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
@@ -11,25 +12,21 @@ import { uploadToCloudinary } from "@/lib/cloudinary";
 import {
   FaArchive,
   FaAward,
-  FaBookOpen,
   FaCamera,
   FaCheckCircle,
-  FaChevronDown,
-  FaClock,
   FaCloudUploadAlt,
   FaGraduationCap,
-  FaImage,
-  FaLeaf,
   FaPlus,
   FaSearch,
   FaTimes,
   FaTrophy,
   FaUniversity,
   FaUser,
-  FaUsers,
   FaFlask,
   FaMapMarkerAlt,
   FaCalendarAlt,
+  FaArrowRight,
+  FaLayerGroup,
 } from "react-icons/fa";
 
 /* ============================================================
@@ -42,7 +39,6 @@ interface ArchiveItem {
 
   title: string;
   description: string;
-
   image: string;
 
   category:
@@ -56,7 +52,6 @@ interface ArchiveItem {
 
   year?: string;
   location?: string;
-
   createdAt?: string;
 
   author?: {
@@ -84,6 +79,7 @@ const CATEGORIES = [
 ];
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  All: <FaLayerGroup />,
   Achievement: <FaTrophy />,
   Research: <FaFlask />,
   Event: <FaCalendarAlt />,
@@ -118,7 +114,6 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 /* ============================================================
    DEMO DATA
-   Remove this once /api/archive is connected.
 ============================================================ */
 
 const DEMO_ARCHIVE: ArchiveItem[] = [
@@ -218,7 +213,7 @@ export default function ArchivePage() {
           setArchive(response.data.archive);
         }
       } catch {
-        // Demo data remains visible when API is not connected.
+        // Demo data remains visible.
       }
     };
 
@@ -247,6 +242,26 @@ export default function ArchivePage() {
       return matchesSearch && matchesCategory;
     });
   }, [archive, search, category]);
+
+  /* ==========================================================
+     CATEGORY COUNTS
+  ========================================================== */
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      All: archive.length,
+    };
+
+    CATEGORIES.forEach((item) => {
+      if (item !== "All") {
+        counts[item] = archive.filter(
+          (story) => story.category === item
+        ).length;
+      }
+    });
+
+    return counts;
+  }, [archive]);
 
   /* ==========================================================
      IMAGE SELECT
@@ -300,7 +315,9 @@ export default function ArchivePage() {
     event.preventDefault();
 
     if (!user) {
-      toast.error("Please login before adding to the archive.");
+      toast.error(
+        "Please login before adding to the archive."
+      );
       return;
     }
 
@@ -323,6 +340,7 @@ export default function ArchivePage() {
       setLoading(true);
 
       const image = await uploadToCloudinary(imageFile);
+
       const response = await axios.post("/api/archive", {
         title: title.trim(),
         description: description.trim(),
@@ -331,8 +349,16 @@ export default function ArchivePage() {
         location: location.trim(),
         image,
       });
-      const newItem: ArchiveItem | undefined = response.data?.archive;
-      if (!newItem?.title) throw new Error("The archive story was not saved.");
+
+      const newItem: ArchiveItem | undefined =
+        response.data?.archive;
+
+      if (!newItem?.title) {
+        throw new Error(
+          "The archive story was not saved."
+        );
+      }
+
       setArchive((current) => [newItem, ...current]);
 
       toast.success(
@@ -345,7 +371,9 @@ export default function ArchivePage() {
       console.error(error);
 
       toast.error(
-        error?.response?.data?.error || error?.message || "Unable to add the archive story. Please try again."
+        error?.response?.data?.error ||
+          error?.message ||
+          "Unable to add the archive story. Please try again."
       );
     } finally {
       setLoading(false);
@@ -366,16 +394,18 @@ export default function ArchivePage() {
     (item) => item.category === "Event"
   ).length;
 
+  /* ==========================================================
+     RENDER
+  ========================================================== */
+
   return (
-    <main className="min-h-screen bg-[#F0FAFC] text-[#123B4A]">
+    <main className="min-h-screen overflow-hidden bg-[#F0FAFC] text-[#123B4A]">
 
       {/* ======================================================
           HERO
       ====================================================== */}
 
       <section className="relative overflow-hidden pt-24">
-
-        {/* Background glow */}
 
         <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-[#2DD4BF]/15 blur-[130px]" />
 
@@ -390,17 +420,9 @@ export default function ArchivePage() {
             {/* LEFT */}
 
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 25,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.7,
-              }}
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
             >
 
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#087EA4]/10 bg-white/80 px-4 py-2 shadow-sm backdrop-blur-xl">
@@ -430,14 +452,14 @@ export default function ArchivePage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-[#55727D] sm:text-lg">
-
                 Explore the achievements, research, fieldwork,
                 events and memorable moments that shape the
                 Faculty of Fisheries.
-
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              {/* STATS */}
+
+              <div className="mt-8 grid grid-cols-1 gap-3 min-[420px]:grid-cols-3">
 
                 <StatCard
                   icon={<FaArchive />}
@@ -533,7 +555,6 @@ export default function ArchivePage() {
           </div>
 
         </div>
-
       </section>
 
       {/* ======================================================
@@ -571,121 +592,316 @@ export default function ArchivePage() {
 
             </div>
 
-            {/* ADD */}
+            {/* ADD BUTTON */}
 
             {user ? (
-              <button
+
+              <motion.button
                 type="button"
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setShowAddModal(true)}
                 className="
-                  inline-flex items-center justify-center gap-2
+                  group
+                  inline-flex
+                  items-center
+                  justify-center
+                  gap-3
                   rounded-2xl
                   bg-[#087EA4]
-                  px-5 py-3
-                  text-xs font-black
+                  px-5
+                  py-3.5
+                  text-xs
+                  font-black
                   text-white
-                  shadow-[0_8px_25px_rgba(8,126,164,0.20)]
+                  shadow-[0_10px_30px_rgba(8,126,164,0.20)]
                   transition-all
-                  hover:-translate-y-0.5
                   hover:bg-[#075985]
                 "
               >
-                <FaPlus size={10} />
+
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15">
+                  <FaPlus size={10} />
+                </span>
+
                 Add to Archive
-              </button>
+
+                <FaArrowRight
+                  size={10}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+
+              </motion.button>
+
             ) : (
+
               <div className="rounded-2xl border border-[#087EA4]/10 bg-white px-4 py-3 text-xs font-semibold text-[#55727D] shadow-sm">
                 Login to share a faculty story
               </div>
+
             )}
 
           </div>
 
-          {/* SEARCH */}
+          {/* ==================================================
+              SEARCH
+          ================================================== */}
 
-          <div className="mb-8 rounded-3xl border border-[#087EA4]/10 bg-white/90 p-3 shadow-[0_12px_45px_rgba(7,89,133,0.07)] backdrop-blur-xl">
+          <div className="mb-6 rounded-[1.75rem] border border-[#087EA4]/10 bg-white/90 p-3 shadow-[0_12px_45px_rgba(7,89,133,0.07)] backdrop-blur-xl">
 
-            <div className="flex flex-col gap-3 md:flex-row">
+            <div className="relative">
 
-              <div className="relative flex-1">
+              <FaSearch
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#087EA4]/60"
+                size={13}
+              />
 
-                <FaSearch
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#087EA4]/60"
-                  size={13}
-                />
+              <input
+                value={search}
+                onChange={(event) =>
+                  setSearch(event.target.value)
+                }
+                placeholder="Search archive stories..."
+                className="
+                  h-12
+                  w-full
+                  rounded-2xl
+                  border
+                  border-[#087EA4]/8
+                  bg-[#F0FAFC]/60
+                  pl-11
+                  pr-11
+                  text-sm
+                  font-medium
+                  text-[#123B4A]
+                  outline-none
+                  transition
+                  placeholder:text-[#55727D]/55
+                  focus:border-[#087EA4]/30
+                  focus:bg-white
+                  focus:ring-4
+                  focus:ring-[#087EA4]/5
+                "
+              />
 
-                <input
-                  value={search}
-                  onChange={(event) =>
-                    setSearch(event.target.value)
-                  }
-                  placeholder="Search archive stories..."
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
                   className="
-                    h-12 w-full rounded-2xl
-                    border border-[#087EA4]/8
-                    bg-[#F0FAFC]/60
-                    pl-11 pr-4
-                    text-sm font-medium
-                    text-[#123B4A]
-                    outline-none
+                    absolute
+                    right-3
+                    top-1/2
+                    flex
+                    h-7
+                    w-7
+                    -translate-y-1/2
+                    items-center
+                    justify-center
+                    rounded-lg
+                    bg-[#F0FAFC]
+                    text-[#55727D]
                     transition
-                    placeholder:text-[#55727D]/55
-                    focus:border-[#087EA4]/30
-                    focus:bg-white
-                    focus:ring-4
-                    focus:ring-[#087EA4]/5
-                  "
-                />
-
-              </div>
-
-              <div className="relative min-w-[210px]">
-
-                <select
-                  value={category}
-                  onChange={(event) =>
-                    setCategory(event.target.value)
-                  }
-                  className="
-                    h-12 w-full
-                    appearance-none
-                    rounded-2xl
-                    border border-[#087EA4]/8
-                    bg-[#F0FAFC]/60
-                    px-4 pr-10
-                    text-sm font-semibold
-                    text-[#123B4A]
-                    outline-none
-                    focus:border-[#087EA4]/30
-                    focus:bg-white
+                    hover:bg-[#087EA4]/10
+                    hover:text-[#087EA4]
                   "
                 >
-
-                  {CATEGORIES.map((item) => (
-                    <option
-                      key={item}
-                      value={item}
-                    >
-                      {item === "All"
-                        ? "All Categories"
-                        : item}
-                    </option>
-                  ))}
-
-                </select>
-
-                <FaChevronDown
-                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#55727D]"
-                  size={10}
-                />
-
-              </div>
+                  <FaTimes size={10} />
+                </button>
+              )}
 
             </div>
 
           </div>
 
-          {/* GRID */}
+          {/* ==================================================
+              PREMIUM CATEGORY BUTTONS
+          ================================================== */}
+
+          <div className="mb-10">
+
+            <div className="mb-4 flex items-center justify-between">
+
+              <div>
+
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#087EA4]">
+                  Browse by category
+                </p>
+
+                <p className="mt-1 text-xs text-[#55727D]">
+                  Explore stories by type
+                </p>
+
+              </div>
+
+              {category !== "All" && (
+                <button
+                  type="button"
+                  onClick={() => setCategory("All")}
+                  className="
+                    text-[10px]
+                    font-black
+                    text-[#087EA4]
+                    transition
+                    hover:text-[#075985]
+                  "
+                >
+                  Clear filter
+                </button>
+              )}
+
+            </div>
+
+            <div className="
+              grid
+              grid-cols-2
+              gap-2.5
+              sm:grid-cols-3
+              lg:grid-cols-4
+              xl:grid-cols-8
+            ">
+
+              {CATEGORIES.map((item) => {
+
+                const active = category === item;
+
+                return (
+                  <motion.button
+                    key={item}
+                    type="button"
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setCategory(item)}
+                    className={`
+                      group
+                      relative
+                      flex
+                      min-h-[74px]
+                      flex-col
+                      items-center
+                      justify-center
+                      gap-2
+                      overflow-hidden
+                      rounded-2xl
+                      border
+                      px-3
+                      py-3
+                      text-center
+                      transition-all
+                      ${
+                        active
+                          ? "border-[#087EA4] bg-[#087EA4] text-white shadow-[0_10px_30px_rgba(8,126,164,0.20)]"
+                          : "border-[#087EA4]/10 bg-white text-[#55727D] shadow-[0_5px_20px_rgba(7,89,133,0.04)] hover:border-[#087EA4]/25 hover:bg-[#F0FAFC] hover:text-[#087EA4]"
+                      }
+                    `}
+                  >
+
+                    <span
+                      className={`
+                        flex
+                        h-8
+                        w-8
+                        items-center
+                        justify-center
+                        rounded-xl
+                        transition
+                        ${
+                          active
+                            ? "bg-white/15 text-white"
+                            : "bg-[#F0FAFC] text-[#087EA4] group-hover:bg-[#087EA4]/10"
+                        }
+                      `}
+                    >
+                      {CATEGORY_ICONS[item]}
+                    </span>
+
+                    <span
+                      className={`
+                        text-[9px]
+                        font-black
+                        uppercase
+                        leading-tight
+                        tracking-wide
+                        ${
+                          active
+                            ? "text-white"
+                            : "text-[#123B4A]"
+                        }
+                      `}
+                    >
+                      {item === "All"
+                        ? "All Stories"
+                        : item}
+                    </span>
+
+                    <span
+                      className={`
+                        absolute
+                        right-2
+                        top-2
+                        flex
+                        min-h-4
+                        min-w-4
+                        items-center
+                        justify-center
+                        rounded-full
+                        px-1
+                        text-[8px]
+                        font-black
+                        ${
+                          active
+                            ? "bg-white/15 text-white"
+                            : "bg-[#087EA4]/8 text-[#087EA4]"
+                        }
+                      `}
+                    >
+                      {categoryCounts[item] || 0}
+                    </span>
+
+                  </motion.button>
+                );
+              })}
+
+            </div>
+
+          </div>
+
+          {/* ==================================================
+              RESULTS HEADER
+          ================================================== */}
+
+          <div className="mb-5 flex items-center justify-between">
+
+            <div>
+
+              <p className="text-sm font-black text-[#123B4A]">
+                {filteredArchive.length}{" "}
+                {filteredArchive.length === 1
+                  ? "story"
+                  : "stories"}
+              </p>
+
+              {category !== "All" && (
+                <p className="mt-1 text-[10px] text-[#55727D]">
+                  Showing {category}
+                </p>
+              )}
+
+            </div>
+
+            <div className="hidden items-center gap-2 text-[10px] font-bold text-[#55727D] sm:flex">
+
+              <span className="h-1.5 w-1.5 rounded-full bg-[#2DD4BF]" />
+
+              Faculty Archive
+
+            </div>
+
+          </div>
+
+          {/* ==================================================
+              GRID
+          ================================================== */}
 
           {filteredArchive.length > 0 ? (
 
@@ -696,6 +912,7 @@ export default function ArchivePage() {
 
               {filteredArchive.map(
                 (item, index) => (
+
                   <ArchiveCard
                     key={
                       item._id ||
@@ -708,6 +925,7 @@ export default function ArchivePage() {
                       setSelectedItem(item)
                     }
                   />
+
                 )
               )}
 
@@ -715,7 +933,7 @@ export default function ArchivePage() {
 
           ) : (
 
-            <div className="rounded-3xl border border-[#087EA4]/10 bg-white px-6 py-16 text-center">
+            <div className="rounded-[2rem] border border-[#087EA4]/10 bg-white px-6 py-20 text-center shadow-[0_10px_40px_rgba(7,89,133,0.05)]">
 
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#087EA4]/8 text-[#087EA4]">
                 <FaArchive size={20} />
@@ -728,6 +946,28 @@ export default function ArchivePage() {
               <p className="mt-2 text-sm text-[#55727D]">
                 Try a different search or category.
               </p>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch("");
+                  setCategory("All");
+                }}
+                className="
+                  mt-6
+                  rounded-xl
+                  bg-[#087EA4]
+                  px-4
+                  py-2.5
+                  text-[10px]
+                  font-black
+                  text-white
+                  transition
+                  hover:bg-[#075985]
+                "
+              >
+                Reset filters
+              </button>
 
             </div>
 
@@ -750,8 +990,12 @@ export default function ArchivePage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="
-              fixed inset-0 z-[100]
-              flex items-center justify-center
+              fixed
+              inset-0
+              z-[100]
+              flex
+              items-center
+              justify-center
               bg-[#123B4A]/40
               p-4
               backdrop-blur-md
@@ -783,10 +1027,12 @@ export default function ArchivePage() {
               }}
               className="
                 max-h-[92vh]
-                w-full max-w-2xl
+                w-full
+                max-w-2xl
                 overflow-y-auto
                 rounded-[2rem]
-                border border-white
+                border
+                border-white
                 bg-white
                 shadow-[0_30px_100px_rgba(7,89,133,0.25)]
               "
@@ -831,10 +1077,14 @@ export default function ArchivePage() {
                       setShowAddModal(false)
                     }
                     className="
-                      flex h-9 w-9
-                      items-center justify-center
+                      flex
+                      h-9
+                      w-9
+                      items-center
+                      justify-center
                       rounded-xl
-                      border border-[#087EA4]/8
+                      border
+                      border-[#087EA4]/8
                       bg-white
                       text-[#55727D]
                       shadow-sm
@@ -866,10 +1116,13 @@ export default function ArchivePage() {
 
                   <label
                     className="
-                      relative block cursor-pointer
+                      relative
+                      block
+                      cursor-pointer
                       overflow-hidden
                       rounded-2xl
-                      border-2 border-dashed
+                      border-2
+                      border-dashed
                       border-[#087EA4]/15
                       bg-[#F0FAFC]/60
                       transition
@@ -964,12 +1217,14 @@ export default function ArchivePage() {
                       {CATEGORIES.filter(
                         (item) => item !== "All"
                       ).map((item) => (
+
                         <option
                           key={item}
                           value={item}
                         >
                           {item}
                         </option>
+
                       ))}
 
                     </select>
@@ -1055,15 +1310,21 @@ export default function ArchivePage() {
 
                 {/* SUBMIT */}
 
-                <button
+                <motion.button
                   type="submit"
                   disabled={loading}
+                  whileTap={{ scale: 0.99 }}
                   className="
-                    flex h-12 w-full
-                    items-center justify-center gap-2
+                    flex
+                    h-12
+                    w-full
+                    items-center
+                    justify-center
+                    gap-2
                     rounded-2xl
                     bg-[#087EA4]
-                    text-xs font-black
+                    text-xs
+                    font-black
                     text-white
                     shadow-[0_8px_25px_rgba(8,126,164,0.20)]
                     transition
@@ -1085,7 +1346,7 @@ export default function ArchivePage() {
                     </>
                   )}
 
-                </button>
+                </motion.button>
 
               </form>
 
@@ -1134,21 +1395,33 @@ function StatCard({
   label: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[#087EA4]/10 bg-white/85 px-5 py-3.5 shadow-[0_8px_30px_rgba(7,89,133,0.06)] backdrop-blur-xl">
+    <motion.div
+      whileHover={{ y: -3 }}
+      className="
+        rounded-2xl
+        border
+        border-[#087EA4]/10
+        bg-white/85
+        px-4
+        py-3.5
+        shadow-[0_8px_30px_rgba(7,89,133,0.06)]
+        backdrop-blur-xl
+      "
+    >
 
       <div className="flex items-center gap-3">
 
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#087EA4]/10 text-[#087EA4]">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#087EA4]/10 text-[#087EA4]">
           {icon}
         </div>
 
-        <div>
+        <div className="min-w-0">
 
           <p className="text-lg font-black text-[#123B4A]">
             {value}
           </p>
 
-          <p className="text-[9px] font-bold uppercase tracking-wider text-[#55727D]">
+          <p className="truncate text-[9px] font-bold uppercase tracking-wider text-[#55727D]">
             {label}
           </p>
 
@@ -1156,7 +1429,7 @@ function StatCard({
 
       </div>
 
-    </div>
+    </motion.div>
   );
 }
 
@@ -1202,9 +1475,11 @@ function ArchiveCard({
       }}
       onClick={onClick}
       className="
-        group overflow-hidden
-        rounded-3xl
-        border border-[#087EA4]/10
+        group
+        overflow-hidden
+        rounded-[1.75rem]
+        border
+        border-[#087EA4]/10
         bg-white
         text-left
         shadow-[0_8px_30px_rgba(7,89,133,0.06)]
@@ -1226,17 +1501,22 @@ function ArchiveCard({
           className="object-cover transition duration-700 group-hover:scale-105"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#123B4A]/75 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#123B4A]/80 via-[#123B4A]/5 to-transparent" />
 
         {/* CATEGORY */}
 
         <div
           className={`
-            absolute left-4 top-4
-            flex items-center gap-1.5
+            absolute
+            left-4
+            top-4
+            flex
+            items-center
+            gap-1.5
             rounded-full
             border
-            px-3 py-1.5
+            px-3
+            py-1.5
             text-[9px]
             font-black
             uppercase
@@ -1245,22 +1525,17 @@ function ArchiveCard({
             ${categoryClass}
           `}
         >
-
           {CATEGORY_ICONS[item.category]}
-
           {item.category}
-
         </div>
 
         {/* YEAR */}
 
         {item.year && (
-          <div className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-black text-[#123B4A] backdrop-blur">
+          <div className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-black text-[#123B4A] shadow-sm backdrop-blur">
             {item.year}
           </div>
         )}
-
-        {/* BOTTOM IMAGE TEXT */}
 
         <div className="absolute bottom-4 left-4 right-4">
 
@@ -1312,8 +1587,9 @@ function ArchiveCard({
 
           </div>
 
-          <span className="text-[10px] font-black text-[#087EA4] transition group-hover:translate-x-1">
-            View →
+          <span className="flex items-center gap-1 text-[10px] font-black text-[#087EA4] transition group-hover:gap-2">
+            View
+            <FaArrowRight size={8} />
           </span>
 
         </div>
@@ -1353,12 +1629,15 @@ function FormField({
 ============================================================ */
 
 const inputClass = `
-  h-12 w-full
+  h-12
+  w-full
   rounded-2xl
-  border border-[#087EA4]/10
+  border
+  border-[#087EA4]/10
   bg-[#F0FAFC]/60
   px-4
-  text-sm font-medium
+  text-sm
+  font-medium
   text-[#123B4A]
   outline-none
   transition
@@ -1386,8 +1665,12 @@ function ArchiveDetailModal({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="
-        fixed inset-0 z-[110]
-        flex items-center justify-center
+        fixed
+        inset-0
+        z-[110]
+        flex
+        items-center
+        justify-center
         bg-[#123B4A]/45
         p-4
         backdrop-blur-md
@@ -1419,13 +1702,16 @@ function ArchiveDetailModal({
         }}
         className="
           max-h-[90vh]
-          w-full max-w-3xl
+          w-full
+          max-w-3xl
           overflow-y-auto
           rounded-[2rem]
           bg-white
           shadow-[0_30px_100px_rgba(7,89,133,0.25)]
         "
       >
+
+        {/* IMAGE */}
 
         <div className="relative h-72 overflow-hidden sm:h-96">
 
@@ -1437,20 +1723,26 @@ function ArchiveDetailModal({
             className="object-cover"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#123B4A]/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#123B4A]/80 via-[#123B4A]/5 to-transparent" />
 
           <button
             type="button"
             onClick={onClose}
             className="
-              absolute right-4 top-4
-              flex h-10 w-10
-              items-center justify-center
+              absolute
+              right-4
+              top-4
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
               rounded-xl
               bg-white/90
               text-[#55727D]
               shadow-lg
               backdrop-blur
+              transition
               hover:text-[#087EA4]
             "
           >
@@ -1463,10 +1755,13 @@ function ArchiveDetailModal({
 
               <span
                 className={`
-                  flex items-center gap-1.5
+                  flex
+                  items-center
+                  gap-1.5
                   rounded-full
                   border
-                  px-3 py-1.5
+                  px-3
+                  py-1.5
                   text-[9px]
                   font-black
                   uppercase
@@ -1494,6 +1789,8 @@ function ArchiveDetailModal({
           </div>
 
         </div>
+
+        {/* CONTENT */}
 
         <div className="p-6 sm:p-8">
 
@@ -1530,6 +1827,7 @@ function ArchiveDetailModal({
             </div>
 
             {item.location && (
+
               <div className="rounded-2xl border border-[#087EA4]/8 bg-[#F0FAFC]/60 p-4">
 
                 <div className="flex items-center gap-3">
@@ -1553,6 +1851,7 @@ function ArchiveDetailModal({
                 </div>
 
               </div>
+
             )}
 
           </div>

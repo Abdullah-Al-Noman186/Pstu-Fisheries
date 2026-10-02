@@ -22,15 +22,15 @@ import Image from "next/image";
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Our Alumni", href: "/Ouralumni" },
-  { label: "Our Student", href: "/ourstudent" },
+  { label: "Our Students", href: "/ourstudent" },
   { label: "Archive", href: "/archive" },
 ];
 
 const roleColor: Record<string, string> = {
-  admin: "from-red-500 to-rose-600",
-  teacher: "from-teal-500 to-emerald-500",
-  alumni: "from-amber-400 to-orange-500",
-  student: "from-blue-500 to-cyan-500",
+  admin: "from-[#075985] to-[#087EA4]",
+  teacher: "from-[#087EA4] to-[#2DD4BF]",
+  alumni: "from-[#087EA4] to-[#0891B2]",
+  student: "from-[#087EA4] to-[#2DD4BF]",
 };
 
 export default function Navbar() {
@@ -220,19 +220,19 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                <div className="hidden sm:block">
-                  <p className="text-sm font-bold leading-tight tracking-wide text-[#123B4A]">
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-bold leading-tight tracking-wide text-[#123B4A] sm:text-sm">
                     Faculty of Fisheries
                   </p>
 
                   <div className="mt-1 flex items-center gap-1.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#087EA4]">
+                    <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#087EA4] sm:text-[9px] sm:tracking-[0.18em]">
                       PSTU
                     </span>
 
                     <span className="h-1 w-1 rounded-full bg-[#2DD4BF]" />
 
-                    <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#55727D]">
+                    <span className="text-[8px] font-medium uppercase tracking-[0.12em] text-[#55727D] sm:text-[9px] sm:tracking-[0.18em]">
                       Bangladesh
                     </span>
                   </div>
@@ -600,6 +600,7 @@ export default function Navbar() {
                 }
                 aria-label="Toggle navigation"
                 aria-expanded={mobileOpen}
+                aria-controls="mobile-navigation"
               >
                 <AnimatePresence mode="wait">
                   {mobileOpen ? (
@@ -669,9 +670,10 @@ export default function Navbar() {
                   duration: 0.25,
                   ease: "easeOut",
                 }}
-                className="overflow-hidden bg-white lg:hidden"
+                id="mobile-navigation"
+                className="max-h-[calc(100dvh-6.75rem)] overflow-y-auto overscroll-contain bg-white lg:hidden"
               >
-                <div className="border-t border-[#087EA4]/8 px-4 pb-5 pt-3">
+                <div className="border-t border-[#087EA4]/8 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3">
 
                   {/* Mobile user */}
 
@@ -895,7 +897,7 @@ export default function Navbar() {
           NAVBAR SPACER
       ======================================================== */}
 
-      <div className="h-[108px]" />
+      <div aria-hidden="true" className="h-[108px]" />
     </>
   );
 }

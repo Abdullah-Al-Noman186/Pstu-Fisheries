@@ -147,11 +147,14 @@ export default function AlumniModal({ alumni, onClose }: Props) {
               duration: 0.3,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5"
+            className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-5"
           >
             <div
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${alumni.name} alumni profile`}
               onClick={(event) => event.stopPropagation()}
-              className="relative flex max-h-[94vh] w-full max-w-3xl flex-col overflow-hidden rounded-[28px] border border-[#087EA4]/10 bg-white shadow-[0_30px_100px_rgba(8,59,74,0.22)]"
+              className="relative flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[24px] border border-[#087EA4]/10 bg-white shadow-[0_30px_100px_rgba(8,59,74,0.22)] sm:max-h-[94vh] sm:rounded-[28px]"
             >
               {/* =====================================================
                   AMBIENT BACKGROUND

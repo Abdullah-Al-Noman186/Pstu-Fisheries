@@ -103,7 +103,17 @@ export default function AlumniCard({
         },
       }}
       onClick={onClick}
-      className="group relative cursor-pointer"
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? `View ${alumni.name}'s alumni profile` : undefined}
+      onKeyDown={(event) => {
+        if (onClick && (event.key === "Enter" || event.key === " ")) {
+          if (event.target !== event.currentTarget) return;
+          event.preventDefault();
+          onClick();
+        }
+      }}
+      className="group relative cursor-pointer rounded-[24px] focus-visible:outline-offset-4"
     >
       {/* =====================================================
           OUTER GLOW
