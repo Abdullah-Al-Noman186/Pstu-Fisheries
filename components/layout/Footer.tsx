@@ -23,6 +23,7 @@ const quickLinks = [
   ["Alumni Network", "/Ouralumni"],
   ["Research Publications", "/research"],
   ["Faculty Archive", "/archive"],
+  ["Behind this website", "/behind-this-website"],
   ["Contact Us", "/contact"],
 ];
 
