@@ -1,5 +1,13 @@
 export type StudentRecord = Record<string, any>;
 
+export const toDirectPhotoUrl = (value: unknown): string => {
+  if (typeof value !== "string" || !value.trim()) return "";
+  const photo = value.trim();
+  if (photo.startsWith("/")) return photo;
+  const driveId = photo.match(/(?:\/d\/|[?&]id=)([^/&?]+)/)?.[1];
+  return driveId ? `https://drive.google.com/uc?export=view&id=${driveId}` : photo;
+};
+
 export const toPublicStudent = (r: Record<string, any>) => ({
   ...r,
   _id: r._id?.toString?.() || r.id_no || r.studentId,
@@ -8,7 +16,7 @@ export const toPublicStudent = (r: Record<string, any>) => ({
   batch_no: r.batch_no ?? r.batch,
   batch_session: r.batch_session || r.session || "",
   name_bn: r.name_bn || r.nameBn || "",
-  photo: r.photo || r.photoDriveUrl || "",
+  photo: toDirectPhotoUrl(r.photo) || toDirectPhotoUrl(r.photoDriveUrl),
   job_title: r.job_title || r.currentPosition || "",
   phone: r.phone || "",
   contact: r.contact || "",
@@ -23,7 +31,7 @@ export const toPublicAlumni = (r: Record<string, any>) => ({
   name: r.name || "Unnamed Alumni",
   nameBn: r.nameBn || r.name_bn || "",
   email: r.email || "",
-  photo: r.photo || r.photoDriveUrl || "",
+  photo: toDirectPhotoUrl(r.photo) || toDirectPhotoUrl(r.photoDriveUrl),
   phone: r.phone || "",
   department: r.department || "",
   batch: Number(r.batch_no ?? r.batch ?? 0),

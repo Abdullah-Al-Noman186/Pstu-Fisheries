@@ -6,12 +6,10 @@ import Image from "next/image";
 import {
   FaArrowRight,
   FaBookOpen,
-  FaBriefcase,
   FaChevronLeft,
   FaChevronRight,
   FaEnvelope,
   FaGraduationCap,
-  FaIdCard,
   FaMapMarkerAlt,
   FaPhone,
   FaSearch,
@@ -1143,8 +1141,10 @@ function StudentCard({
     student.photo
   );
   const batch = getBatch(student);
-  const studentId = getStudentId(student);
   const semester = getSemester(student);
+  const session = getSession(student);
+  const status = student.present_status?.trim() || "Current student";
+  const address = getAddress(student);
 
   return (
     <motion.article
@@ -1168,64 +1168,56 @@ function StudentCard({
       whileHover={{
         y: -5,
       }}
-      className="group relative overflow-hidden rounded-[1.5rem] border border-[#DCEEF2] bg-white shadow-[0_8px_35px_rgba(8,126,164,0.06)] transition-shadow duration-300 hover:shadow-[0_20px_50px_rgba(8,126,164,0.13)]"
+      className="group relative overflow-hidden rounded-[1.75rem] border border-[#DCEEF2] bg-white shadow-[0_10px_34px_rgba(8,67,86,0.06)] transition-all duration-300 hover:border-[#A9D9E3] hover:shadow-[0_22px_54px_rgba(8,67,86,0.12)]"
     >
-      {/* top accent */}
       <div className="h-1 bg-gradient-to-r from-[#075985] via-[#087EA4] to-[#2DD4BF]" />
 
-      <div className="p-5">
-        <div className="flex gap-4">
-          {/* PHOTO */}
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-[#F0FAFC] ring-4 ring-[#F0FAFC]">
+      <div className="p-5 sm:p-6">
+        <div className="flex items-start gap-4">
+          <div className="relative h-[5.25rem] w-[5.25rem] shrink-0 overflow-hidden rounded-[1.35rem] bg-[#E9F6F8] ring-1 ring-[#DCEEF2]">
             {imageUrl ? (
               <Image
                 src={imageUrl}
                 alt={name}
                 fill
-                sizes="80px"
+                sizes="84px"
                 className="object-cover transition duration-500 group-hover:scale-105"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#075985] to-[#0891B2] text-xl font-black text-white">
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#075985] to-[#0891B2] text-xl font-bold text-white">
                 {getInitials(name)}
               </div>
             )}
           </div>
 
-          {/* INFO */}
           <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h3 className="truncate text-lg font-black text-[#123B4A]">
-                  {name}
-                </h3>
-
-                {banglaName &&
-                  banglaName !== name && (
-                    <p className="mt-0.5 truncate text-xs text-[#55727D]">
-                      {banglaName}
-                    </p>
-                  )}
-              </div>
-
-              <span className="shrink-0 rounded-full bg-[#087EA4]/10 px-2.5 py-1 text-[10px] font-black text-[#087EA4]">
-                {batch}
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <h3 className="min-w-0 flex-1 text-lg font-bold leading-snug tracking-tight text-[#123B4A] sm:text-xl">
+                {name}
+              </h3>
+              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#BDE5E9] bg-[#EFFAFA] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#087EA4]">
+                <FaGraduationCap /> Batch {batch}
               </span>
             </div>
 
-            <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-[#55727D]">
-              <FaIdCard className="text-[#087EA4]" />
-              {studentId}
-            </p>
+            {banglaName && banglaName !== name && (
+              <p className="mt-1 truncate text-sm text-[#55727D]" lang="bn">
+                {banglaName}
+              </p>
+            )}
+
+            <span className="mt-3 inline-flex max-w-full items-center gap-2 rounded-full bg-[#F4F8FA] px-2.5 py-1 text-[11px] font-semibold text-[#55727D]">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#22B8A5]" />
+              <span className="truncate">{status}</span>
+            </span>
           </div>
         </div>
 
-        {/* DETAILS */}
-        <div className="mt-5 grid grid-cols-2 gap-2">
+        <div className="mt-5 grid grid-cols-2 gap-2.5 border-t border-[#E9F2F4] pt-4">
           <InfoRow
-            icon={<FaGraduationCap />}
-            label="Batch"
-            value={batch}
+            icon={<FaBookOpen />}
+            label="Session"
+            value={session}
           />
 
           <InfoRow
@@ -1235,14 +1227,20 @@ function StudentCard({
           />
         </div>
 
-        {/* BUTTON */}
+        {address !== "Not available" && (
+          <div className="mt-4 flex min-w-0 items-start gap-2.5 rounded-xl bg-[#F7FBFC] px-3 py-2.5 text-xs leading-5 text-[#55727D]">
+            <FaMapMarkerAlt className="mt-1 shrink-0 text-[#087EA4]" />
+            <span className="line-clamp-2">{address}</span>
+          </div>
+        )}
+
         <button
           type="button"
           onClick={onClick}
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F0FAFC] py-3 text-xs font-black text-[#087EA4] transition-all hover:bg-[#087EA4] hover:text-white"
+          className="mt-5 flex min-h-11 w-full items-center justify-between rounded-xl border border-[#D9EBEF] bg-white px-4 py-3 text-sm font-semibold text-[#087EA4] transition-all hover:border-[#087EA4] hover:bg-[#087EA4] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087EA4] focus-visible:ring-offset-2"
         >
-          View profile
-          <FaArrowRight className="text-[10px] transition-transform group-hover:translate-x-0.5" />
+          <span>View student profile</span>
+          <FaArrowRight className="text-xs transition-transform group-hover:translate-x-0.5" />
         </button>
       </div>
     </motion.article>
@@ -1413,7 +1411,7 @@ function StudentModal({
           stiffness: 280,
           damping: 25,
         }}
-        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-white/70 bg-white shadow-[0_30px_100px_rgba(0,0,0,0.22)]"
+        className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[1.75rem] border border-white/70 bg-white shadow-[0_30px_100px_rgba(0,0,0,0.22)] sm:rounded-[2rem]"
       >
         {/* CLOSE */}
         <button
@@ -1426,12 +1424,12 @@ function StudentModal({
         </button>
 
         {/* HEADER */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#075985] via-[#087EA4] to-[#0891B2] px-6 pb-8 pt-8 text-white sm:px-8">
-          <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#064D70] via-[#087EA4] to-[#0C8EA4] px-5 pb-7 pt-8 text-white sm:px-8 sm:pb-8">
+          <div className="pointer-events-none absolute -right-14 -top-20 h-56 w-56 rounded-full border-[24px] border-white/[0.07]" />
+          <div className="pointer-events-none absolute -bottom-24 left-1/3 h-40 w-40 rounded-full bg-[#2DD4BF]/10 blur-3xl" />
 
           <div className="relative flex flex-col items-center gap-5 sm:flex-row sm:items-end">
-            {/* PHOTO */}
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-[1.75rem] border-4 border-white/30 bg-white/10 shadow-xl">
+            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-[1.6rem] border-[3px] border-white/40 bg-white/10 shadow-[0_14px_35px_rgba(0,0,0,0.2)] sm:h-32 sm:w-32">
               {imageUrl ? (
                 <Image
                   src={imageUrl}
@@ -1448,11 +1446,11 @@ function StudentModal({
             </div>
 
             <div className="min-w-0 text-center sm:text-left">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/65">
-                Student Profile
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">
+                Student directory
               </p>
 
-              <h2 className="mt-1 break-words text-2xl font-black sm:text-3xl">
+              <h2 className="mt-1 break-words text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
                 {name}
               </h2>
 
@@ -1462,29 +1460,24 @@ function StudentModal({
                     {banglaName}
                   </p>
                 )}
+              <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
+                <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/90">Batch {getBatch(student)}</span>
+                {getSession(student) !== "Not available" && <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/90">Session {getSession(student)}</span>}
+              </div>
             </div>
           </div>
         </div>
 
         {/* BODY */}
-        <div className="p-6 sm:p-8">
+        <div className="p-5 sm:p-8">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="h-8 w-1 rounded-full bg-[#087EA4]" />
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#087EA4]">Academic profile</p>
+              <h3 className="mt-0.5 text-lg font-bold text-[#123B4A]">Student details</h3>
+            </div>
+          </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <DetailBox
-              icon={<FaIdCard />}
-              label="Student ID"
-              value={getStudentId(
-                student
-              )}
-            />
-
-            <DetailBox
-              icon={<FaIdCard />}
-              label="Registration"
-              value={getRegistration(
-                student
-              )}
-            />
-
             <DetailBox
               icon={<FaGraduationCap />}
               label="Batch"
@@ -1519,12 +1512,16 @@ function StudentModal({
             student.phone ||
             getAddress(student) !==
               "Not available") && (
-            <div className="mt-7">
-              <h3 className="mb-3 text-sm font-black uppercase tracking-[0.12em] text-[#123B4A]">
-                Contact & Address
-              </h3>
+            <div className="mt-8 border-t border-[#E7F0F2] pt-6">
+              <div className="mb-4 flex items-center gap-3">
+                <span className="h-8 w-1 rounded-full bg-[#2DD4BF]" />
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#087EA4]">Stay connected</p>
+                  <h3 className="mt-0.5 text-lg font-bold text-[#123B4A]">Contact & address</h3>
+                </div>
+              </div>
 
-              <div className="space-y-2">
+              <div className="grid gap-2 sm:grid-cols-2">
                 {student.email && (
                   <ContactRow
                     icon={<FaEnvelope />}
@@ -1551,6 +1548,7 @@ function StudentModal({
                     value={getAddress(
                       student
                     )}
+                    className="sm:col-span-2"
                   />
                 )}
               </div>
@@ -1602,13 +1600,15 @@ function ContactRow({
   icon,
   label,
   value,
+  className = "",
 }: {
   icon: ReactNode;
   label: string;
   value: string;
+  className?: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-[#DCEEF2] bg-white p-3">
+    <div className={`flex items-start gap-3 rounded-xl border border-[#DCEEF2] bg-white p-3 ${className}`}>
       <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#087EA4]/10 text-xs text-[#087EA4]">
         {icon}
       </div>

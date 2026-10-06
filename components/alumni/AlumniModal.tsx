@@ -120,7 +120,7 @@ export default function AlumniModal({ alumni, onClose }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 bg-[#123B4A]/35 backdrop-blur-md"
+            className="fixed inset-0 z-50 bg-[#123B4A]/45 backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -154,40 +154,20 @@ export default function AlumniModal({ alumni, onClose }: Props) {
               aria-modal="true"
               aria-label={`${alumni.name} alumni profile`}
               onClick={(event) => event.stopPropagation()}
-              className="relative flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[24px] border border-[#087EA4]/10 bg-white shadow-[0_30px_100px_rgba(8,59,74,0.22)] sm:max-h-[94vh] sm:rounded-[28px]"
+              className="relative flex max-h-[92dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border border-white/70 bg-white shadow-[0_28px_80px_rgba(8,59,74,0.28)] sm:max-h-[92vh] sm:rounded-3xl"
             >
-              {/* =====================================================
-                  AMBIENT BACKGROUND
-              ===================================================== */}
-              <div
-                className={`pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full ${style.glow} blur-[90px]`}
-              />
-
-              <div className="pointer-events-none absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-[#2DD4BF]/[0.05] blur-[100px]" />
-
-              {/* Subtle grid */}
-              <div
-                className="pointer-events-none absolute inset-0 opacity-[0.035]"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(rgba(8,126,164,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(8,126,164,0.8) 1px, transparent 1px)",
-                  backgroundSize: "28px 28px",
-                }}
-              />
-
-              {/* Top accent */}
               <div className="absolute inset-x-0 top-0 z-20 h-1 bg-gradient-to-r from-[#075985] via-[#087EA4] to-[#2DD4BF]" />
 
               {/* =====================================================
                   HEADER
               ===================================================== */}
-              <div className="relative z-10 shrink-0 border-b border-[#087EA4]/10 bg-white/85 px-5 pb-6 pt-6 backdrop-blur-xl sm:px-7 sm:pb-7">
+              <div className="relative z-10 shrink-0 border-b border-[#E4EFF2] bg-white px-5 pb-5 pt-7 sm:px-7 sm:pb-6 sm:pt-8">
                 {/* Close */}
                 <button
                   type="button"
                   onClick={onClose}
                   aria-label="Close alumni profile"
-                  className="absolute right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-xl border border-[#087EA4]/10 bg-[#F0FAFC]/80 text-[#55727D] transition-all duration-300 hover:border-[#087EA4]/20 hover:bg-[#0891B2]/[0.08] hover:text-[#087EA4] sm:right-5 sm:top-5"
+                  className="absolute right-4 top-5 z-30 flex h-9 w-9 items-center justify-center rounded-full border border-[#DCEBF0] bg-white text-[#55727D] transition-colors hover:border-[#087EA4]/30 hover:bg-[#EAF5F8] hover:text-[#087EA4] sm:right-6 sm:top-6"
                 >
                   <FaTimes size={12} />
                 </button>
@@ -198,7 +178,7 @@ export default function AlumniModal({ alumni, onClose }: Props) {
                   ================================================= */}
                   <div className="relative shrink-0">
                     {alumni.photo ? (
-                      <div className="relative h-[84px] w-[84px] overflow-hidden rounded-[22px] border border-[#087EA4]/10 bg-[#F0FAFC] shadow-[0_10px_30px_rgba(8,126,164,0.10)] sm:h-[96px] sm:w-[96px]">
+                      <div className="relative h-[88px] w-[88px] overflow-hidden rounded-2xl border border-[#DCEBF0] bg-[#F0FAFC] shadow-sm sm:h-[104px] sm:w-[104px]">
                         <Image
                           src={alumni.photo}
                           alt={alumni.name}
@@ -207,11 +187,11 @@ export default function AlumniModal({ alumni, onClose }: Props) {
                           className="object-cover"
                         />
 
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#075985]/20 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#075985]/10 to-transparent" />
                       </div>
                     ) : (
                       <div
-                        className={`flex h-[84px] w-[84px] items-center justify-center rounded-[22px] border ${style.border} ${style.accentSoft} ${style.accent} text-3xl font-semibold shadow-sm sm:h-[96px] sm:w-[96px]`}
+                        className={`flex h-[88px] w-[88px] items-center justify-center rounded-2xl border ${style.border} ${style.accentSoft} ${style.accent} text-3xl font-semibold sm:h-[104px] sm:w-[104px]`}
                       >
                         {alumni.name?.[0]?.toUpperCase() || "A"}
                       </div>
@@ -295,7 +275,7 @@ export default function AlumniModal({ alumni, onClose }: Props) {
               {/* =====================================================
                   SCROLLABLE BODY
               ===================================================== */}
-              <div className="relative min-h-0 flex-1 overflow-y-auto bg-[#F0FAFC]/35">
+              <div className="relative min-h-0 flex-1 overflow-y-auto bg-[#F7FAFB]">
                 <div className="relative z-10 px-5 py-5 sm:px-7 sm:py-6">
                   {/* =================================================
                       LOCATION
@@ -504,11 +484,11 @@ export default function AlumniModal({ alumni, onClose }: Props) {
               {/* =====================================================
                   FOOTER
               ===================================================== */}
-              <div className="relative z-20 shrink-0 border-t border-[#087EA4]/10 bg-white/95 px-5 py-4 backdrop-blur-xl sm:px-7">
+              <div className="relative z-20 shrink-0 border-t border-[#E4EFF2] bg-white px-5 py-4 sm:px-7">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="group flex w-full items-center justify-center gap-2 rounded-xl border border-[#087EA4]/10 bg-[#F0FAFC] py-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#55727D] transition-all duration-300 hover:border-[#087EA4]/20 hover:bg-[#0891B2]/[0.07] hover:text-[#087EA4]"
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl border border-[#DCEBF0] bg-white py-3 text-xs font-semibold text-[#466671] transition-colors hover:border-[#087EA4]/30 hover:bg-[#EAF5F8] hover:text-[#087EA4]"
                 >
                   <FaTimes
                     size={9}

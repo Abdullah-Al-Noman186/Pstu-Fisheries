@@ -1,0 +1,287 @@
+Drive photo matching report
+Image files found: 357
+Photos added by automatic name matching: 36
+Additional manual photo matches applied: 34
+Files without an exact student/alumni name match: 178
+
+MANUALLY MATCHED FILES
+- 17 - rahamat ullah.JPG -> Md. Rahamat Ullah (batch 8)
+- 1789365701241 - Royal Noyon.png -> MD. ROYAL HOSSAIN NOYON (batch 17)
+- 2016-10-23-12-19-54-453 - shanta niloy.jpg -> Mst. Niloy Jaman (batch 1)
+- 2019-08-03-12-22-21-567 - Hafizur Rahman.jpg -> MD.HAFIZUR RAHMAN (batch 4)
+- 20191225_082858 - Islam Robiul.jpg -> MD. ROBIUL ISLAM SHAWON (batch 6)
+- 20200109_142112 - Remiza Akter.jpg -> Mosa Remiza Akter (batch 8)
+- 21317887_1573128672750008_8881033944966833353_n - Jamal Hossain.jpg -> Md. Jamal Hossain (batch 1)
+- 300 - Mahmud Shadik.jpg -> Mahmud Shadik Maruf (batch 8)
+- 34688033_1763176110430717_1370133187769925632_o - Sadique hossain.jpg -> Md. Sadique Hossain (batch 10)
+- 51371495_413969749374395_5285125805129596928_n - suzan khan.jpg -> MD. SUZAN KHAN (batch 3)
+- 62579935_1597196360414827_8442608464898818048_n - Kyume Sharder Shadin.jpg -> Kyume Sharder Shadin (batch 7)
+- 7240 - hisbullah khan.jpg -> Md. Hisbullah Khan (batch 8)
+- C360_2020-01-07-01-38-26-463 - Sanjana Akter.jpg -> Sanjana Akter Samia (batch 9)
+- DSC_0009 - jayanta's maths academy.JPG -> Jayanta Mondal (batch 7)
+- DSC_0192 copy - AH Parvez.jpg -> PARVEZ AHAMED (batch 4)
+- DSC_4694 - Abu Abbas.JPG -> Md. Abu Abbas (batch 13)
+- FB_IMG_1575282016083 - Tanvir Wahid Tamim.jpg -> Md. Tanvir Wahid Tamim (batch 12)
+- IMG20191219115124 - Sudipta kzsmmcckk.jpg -> Sudipta Kumar Nag (batch 10)
+- IMG20200122093401 - Mir Israt Jahan.jpg -> Mir Israt Jahan (Migrated SAU) (batch 13)
+- IMG_20190304_230825_778 - Ujjwal Mistry.JPG -> Ujjwal Baran Mistry (batch 9)
+- IMG_20190416_221043 - Md. Samsul Kabir Student.JPG -> Md. Samsul Kabir (batch 12)
+- IMG_20191020_221438_1571588179375 - Bayazid Bostami PSTU.jpg -> Md. Bayazid Bostami (batch 11)
+- IMG_20191202_165001_011 - Muktadir Soumik.jpg -> Md. Al Muktadir Soumik (batch 13)
+- IMG_20191231_224609 - Muhsinul Islam.jpg -> M. Muhsinul Islam (batch 10)
+- IMG_20200108_102646 - muhasina pstu.jpg -> Mst. Muhasina Rahman (batch 12)
+- IMG_20200110_101407 - M Rifat.jpg -> Mushfiq Rifat (batch 12)
+- IMG_20200110_213247_444 - Ayon Samadder.JPG -> Ayon Samadder Shuvo (batch 9)
+- IMG_20200112_210634_623[1] - Anisur Rahman.JPG -> Md. Anisur Rahman (batch 14)
+- Pasport Size Pic - Anup paul.jpg -> Anup Kumar Paul (batch 1)
+- PicsArt_01-06-09.43.24(1) - Kabbya Raj.jpg -> Kabbya Raj Bagchi (batch 11)
+- RAFI PHOTO - Rafi Sarker.jpg -> Md. Rafi Sarker (batch 12)
+- _DSC5732 copy - Asikur Rahaman Rahat.jpg -> Md. Asikur Rahaman Rahat (batch 9)
+- DSC_2133-3-01 - Rayhan hossain.jpeg -> MD. RAYHAN HOSSAIN (batch 6)
+- DSC_34466 (2) - Mahafujur rahaman.jpg -> SHEIKH MAHAFUJUR RAHAMAN (batch 4)
+
+ADDITIONAL EXACT NAME MATCHES (honorifics ignored)
+- Imran - Mehedi Alam.jpg -> Md. Mehedi Alam (batch 1)
+- inbound2195112767389583307 - Ainul Nishat.jpg -> Md. Ainul Nishat (batch 7)
+- inbound9182659964080641644 - Musfiqur Rahman.jpg -> Md. Musfiqur Rahman (batch 13)
+- received_579769546204305 - Gias Uddin.jpeg -> MD. GIAS UDDIN (batch 6)
+
+UNMATCHED FILES
+- 1000038610-removebg-preview - Umme Salma Keya.png
+- 1000050445-01 - I am Lisan.jpeg
+- 10433215_715886041801889_2034183763956562370_n - Shakil Nirob.jpg
+- 11111 (2)(1) - masud priyanka.jpg
+- 12 years of FoF - Mahmud Hasan.png
+- 1405 - MH JOY.jpg
+- 16684466_1177383602360055_1172501959_n - Sohel miah.jpg
+- 1759345627848 - Md Mahir Faysal.jpg
+- 1789642437658 - Ahmed SQUAD.jpg
+- 20180216_165316 - Pritom Biswas.jpg
+- 20181221003139_IMG_0602 - saiful islam.jpg
+- 2019-03-07-01-17-10 - Tahrim Ummi.jpg
+- 20191113_161610 - RUBEL ISLAM.jpg
+- 20191217_112434-02 - Nahid Nirob.jpeg
+- 20191229_184612 - Maruf Shuvo.jpg
+- 20200101_153740 - Md Naiem.jpg
+- 20200105152718707 - Grand opening.jpg
+- 20200110_210825[1] - Rakib Mridha.jpg
+- 20200204_173652-1 - Milon krishna.jpg
+- 26 - Sheikh Shaheen Siraj.JPG
+- 2990 copy - Sourav Saha.JPG
+- 300x300 2 - Shahriar Shihan.jpg
+- 45280402_2122809884647139_1873383413604417536_o - Mehedi pstuhasan.jpg
+- 71221891_391759731503346_3274826715393687552_n - Monir Zaman.jpg
+- 764=2 - Nature & Fish Club BD.jpg
+- 80620908_464084407605833_1927202845631709184_n - rimon star.jpg
+- 81706296_565509634295855_7159759934685446144_n - Faculty of Fisheries, PSTU.jpg
+- 82085568_2725204840891530_2658332126247649280_n - Nusrat Shanta.jpg
+- 83230154_858070654627289_90484902113312768_n - Zoynal Abdin.png
+- Ayesha - Eity Eity.jpg
+- B612_20191021_025506_438 - Md Sranto.jpg
+- Bappy Photo - Smti Bappy.jpg
+- BeautyPlus_20190724190422142_save - Science & Technology.jpg
+- ChatGPT Image Jan 18, 2026, 07_16_39 PM - Muhammad Masum.png
+- DSC_0617s - MD MUNTASIN HASSAN NABIN.jpg
+- FB_IMG_15774675465645601 - Milon Biswas.jpg
+- FB_IMG_1579437558103 - SHADOW.jpg
+- FB_IMG_15794378789117682 - worlds best incident from bangladesh.jpg
+- FB_IMG_1579889769439 - chainsmok er.jpg
+- Fahim 300 - shadin talora.jpg
+- IMG-20200109-WA0000 - Mujahid Shagor.jpg
+- IMG-20250507-WA0089 - Nafiz Iqbal.jpg
+- IMG-20260917-WA0001 - Ajmal Hossain.jpg
+- IMG_0763 - Genuine Rased.jpeg
+- IMG_1441 - Hazrat.JPG
+- IMG_20181225_221154_276 - em on.JPG
+- IMG_20190830_205326 - Impassive Rume.jpg
+- IMG_20190909_234445[1] - Nazmul Hasan Khan.jpg
+- IMG_20191101_142248 - Bappy Hridoy.jpg
+- IMG_20191212_114034_mix01[1] - PARIZAT REZA.jpg
+- IMG_20191222_153526-01 - Adhora Akhi.jpeg
+- IMG_20191229_183756 - paulo dybala.jpg
+- IMG_20191230_1423481 - Polash Khan.jpg
+- IMG_20200109_171525 - afia tasnim.jpg
+- IMG_20200109_184932 - Rafiq Islam.jpg
+- IMG_20200110_092641 - Jony Khan.jpg
+- IMG_20200110_184500 - Shakil ahmed.JPG
+- IMG_20200110_191135 - Debojit Debu.jpg
+- IMG_20200110_200637 - Farhan Sadik Utso.jpg
+- IMG_20200110_211553 - Rahul Tuhin PSTU.jpg
+- IMG_20200115_151705 - Riad kabir.jpg
+- IMG_20200120_145817 - Saif Khan.jpg
+- IMG_20200121_150432 - Tasnim Sayedi.jpg
+- IMG_20200123_105116_966 - Md.Saddam Islam.JPG
+- IMG_20251029_204434_copy_477x617 - Safiul Alambd.jpg
+- IMG_20260405_152400 - Farukh Hasan.jpg
+- IMG_20260503_155039_438 - Farjahan Mia.JPG
+- IMG_20260723_175716_159 - Nahida Riya.jpg
+- IMG_20260917_201830_412~3 - Sakib Hasan.jpg
+- IMG_20260919_081002_264 - Aktaruzzaman zaman.jpg
+- IMG_3607 - shahoria emon.jpeg
+- IMG_4231 - pranto karmoker.JPG
+- IMG_4363.JPG - Rasheda Begum.jpg
+- IMG_4995-01-01 - Sakib nawaz.jpeg
+- IMG_5088-02 - Milton Sikder.jpeg
+- Nazmus Sakib  - Nazmus Sakib.jpg
+- PicsArt_01-12-10.16.56 - Asraful Alam.jpg
+- Picsart_25-10-19_12-21-31-703 - mustakim hasan.jpg
+- Picture - Tuli Ahsan.jpg
+- SAVE_20260917_243210 - fahim tamim.jpg
+- Sabbir FSH 17 - Sabbir Hossain Kanon.jpg
+- Screenshot_2019-10-22-22-48-20-78 - Shakib Rizwan.png
+- Tanu - MS Kabir.png
+- _MG_2770ggghybgh - Istiak Ahmed prodhan.jpg
+- inbound-1912875661 - Aongnuching chowdhury Marma.jpg
+- inbound1087811311942796154 - Emran Hasan Emon.jpg
+- inbound1167663016513236677 - Sabrina Tishi.jpg
+- inbound1204797462983111312 - Mominul Haque.png
+- inbound1245332560075936794 - Hafijur Rahman.jpg
+- inbound1292839095787355504 - Gazi Zahedul Islam.jpg
+- inbound1495763274940490882 - Taher Lamim.jpg
+- inbound1582636500706336205 - jannaty neela.jpg
+- inbound1620020295215388516 - Mimuna Momota.jpg
+- inbound1754889925993745737 - Tahia Mir.jpg
+- inbound1824770412529473722 - Arafat Salehin.jpg
+- inbound18531468985123375 - Annafi Aidah Sabha.png
+- inbound1996932974105291829 - naurin ratri.jpg
+- inbound2050419026332711321 - habibul basher.jpg
+- inbound2097244852 - Adnan Sakib.jpg
+- inbound2108588122508985551 - Galibhasan Shad.jpg
+- inbound2304270119932178225 - Subrina Oyshe.jpg
+- inbound2822320764423909306 - Sabbir Ahsan.jpg
+- inbound2835404003739767501 - Imran Hossain.jpg
+- inbound2860620305653154860 - Susen Sarker.jpg
+- inbound3201193954611509482 - Nishat Ahmed.jpg
+- inbound3425089944671866089 - ripachakrobartty12@gmail.com.jpg
+- inbound3553522862582049431 - Team - Xiro - Official.jpg
+- inbound3577442365423795040 - Khairul Islam Mahi.jpg
+- inbound3708720398092434138 - Rahim Islam Badhon.jpg
+- inbound3874527904627406791 - SAIB SHAHRIAR Utsow.jpg
+- inbound4015926235988276792 - saim Islam.jpg
+- inbound4063307562449316210 - nymou. pstu.png
+- inbound4228202586740437593 - Ashikul Islam Nur.png
+- inbound442107869586681575 - Sabiha Khanom Nupa.jpg
+- inbound4575120127100326113 - Mehedi H Shamim.jpg
+- inbound4693751389311391254 - Prince Arif.jpg
+- inbound4735840514796507809 - Revive To.jpg
+- inbound4787540306404505634 - Tanzina Moon.jpg
+- inbound4876002211566211122 - Humyun Kabir.jpg
+- inbound535979225073913551 - Milon krishna.jpg
+- inbound5470160599852656691 - antor ahmed.jpg
+- inbound5473880203847296590 - Mahmuda Siddika.jpg
+- inbound5512338573189147539 - Fahim Foysal.jpg
+- inbound5520303483751968625 - Mahi.png
+- inbound5572126214768588962 - Rejaul Nayem.jpg
+- inbound5608238000364169976 - Abu Raihan Siam.png
+- inbound563611398150598369 - Md.Taufik Khan.jpg
+- inbound5647275961048867605 - Ratul Mahmud.jpg
+- inbound5714878226829226260 - ashik joy.jpg
+- inbound577169890500294097 - Rakib Hasan.jpg
+- inbound5880355000761665728 - Arafat Salehin.jpg
+- inbound6097930537781103792 - Saimum Sifat.jpg
+- inbound6281316454412439278 - Rupom.jpg
+- inbound6559734152510101387 - Al-amin Noyon.jpg
+- inbound6951044804953793146 - Al Amin.jpg
+- inbound7088277462169893503 - Anonno Mohonto.png
+- inbound7178677769519364444 - Shourov Islam.png
+- inbound7414877678006777267 - Amir Hamja (Parvez).jpg
+- inbound751026747433171066 - Mitu.jpg
+- inbound7706690458072203445 - Sohel Rana.png
+- inbound777152863732302653 - Tanvir Kabir.png
+- inbound7892762099325313727 - Md.Ashraful Bhuiyan.png
+- inbound7904989375155340966 - Ismail Hossain.png
+- inbound8354218160411336055 - fahim naimur.jpg
+- inbound865919692532378792 - Rahim Mahmud.jpg
+- inbound8678637933559236597 - Humayra Beeva Student.jpg
+- inbound8753109403620733333 - Mushfiqur Rahaman Fahad.png
+- inbound8873847308112106897 - Taysur Rahman.jpg
+- inbound9081239680958982722 - Rakib Khan.jpg
+- inbound912140783941024277 - Rohan Sharkar.png
+- jjjjj - Rehenuma Jukti.jpg
+- job photo - Copy - Masud rana.jpg
+- juli - farjina jannat.jpg
+- mashaba - Ismat Jahan.jpg
+- naim - subroto saha shuvo.jpg
+- nawaz picture - Sakib nawaz.JPG
+- passportPhotoMaker_765 - dj anik.jpeg
+- photo - farhana yeasmin.jpg
+- photo_2026-09-17_16-35-39 formal - Tawfiqur Saad.jpg
+- pic11 - Prokash Ch. Biswas.jpg
+- received_1609023289236168 - Mallika Roy.jpeg
+- received_1646851488790798 - Fahim Haque.jpeg
+- received_177422116706624 - Ismat Jahan.jpeg
+- received_2539506882993286 - Harami Express.jpeg
+- received_310227593215686 - Rafsana Muniba.jpeg
+- received_449144135743962 - Nh Nehan.jpeg
+- received_517348818882912 - moshina trina.jpeg
+- received_582489262541842 - Md. Nayan Ahmed.jpeg
+- received_711661245892866__01 - Sefat Islam.jpg
+- received_793752624464964 - রঙিন রংপেন্সিল.jpeg
+- resized_360x450 - mdsamiur rahaman.jpg
+- retouch_2026091416254065 - Rush Hour.jpg
+- sami - Mahamudul Hasan Mredul.jpg
+- square t - Israt jahan Tamanna.jpg
+- sss - khandakar pstu.jpg
+- suja picture 2 - Samiul Islam Suja.png
+- unnamed - Asma Afrin.jpg
+- uzzal - k.m uzzal.JPG
+
+AMBIGUOUS FILE NAMES (more than one record matched)
+- inbound2708778149719672189 - Mehedi Hasan.jpg
+  - Mehedi Hasan
+  - Mehedi Hasan
+- received_318827869041501 - Md. Mahmudul Hasan.jpeg
+  - Md. Mahmudul Hasan
+  - Md. Mahmudul Hasan
+  - Md. Mahmudul Hasan
+- DSC_8641 - Md. Arifur Rahman.JPG
+  - MD. ARIFUR RAHMAN
+  - Md. Arifur Rahman
+  - Md. Arifur Rahman
+- Nusrat Photo - nusrat jahan.jpg
+  - Nusrat Jahan
+  - Nusrat Jahan
+  - Nusrat Jahan
+  - NUSRAT JAHAN
+  - NUSRAT JAHAN
+
+RECORDS WITH MULTIPLE MATCHING IMAGES (left unchanged)
+- Mahadi Amin
+  - Mahadi - Mahadi Amin.jpg
+  - received_449631169301085-01 - Mahadi Amin.jpeg
+- Shairin Khanam
+  - inbound6865170847534872750 - Shairin Khanam.jpg
+  - IMG_20200113_115450 - Shairin Khanam.jpg
+- Subroto Sarkar
+  - 300-300 - Subroto Sarkar.jpg
+  - IMG_20200109_122923 - Subroto Sarkar.jpg
+- Anika Tahsin Puspoo
+  - inbound6910814048417092360 - Anika Tahsin Puspoo.jpg
+  - inbound6910814048417092360 - Anika Tahsin Puspoo.jpg
+- AL-SHAHRIAR
+  - IMG_2050 - Al Shahriar.jpeg
+  - inbound7121368424130164084 - Al- Shahriar.jpg
+- Md. Sifatullah
+  - inbound5331617361999394418 - Md Sifatullah.jpg
+  - OK-16852 - MD SIFATULLAH.jpg
+- Fairuz Rahman
+  - inbound3543134840240755193 - Fairuz Rahman.jpg
+  - 01 - Fairuz Rahman.jpg
+- Kawsar Ahmed
+  - IMG-20260321-WA0001 - Kawsar Ahmed.jpg
+  - Passport - Kawsar Ahmed.jpg
+- Jubayr al Mahabub
+  - inbound5768094564746942189 - Jubayr Al Mahabub.png
+  - 81097590_2222468894725502_7439728348537815040_n - Jubayr Al Mahabub.jpg
+- BIPLOB DEY MITHUN
+  - inbound3576202345053981428 - Biplob Dey Mithun.jpg
+  - ppp - Biplob Dey Mithun.jpg
+- Rezaul Karim
+  - rezaul-karim - Rezaul Karim.png
+  - inbound979424102029219225 - Rezaul Karim.jpg
+- Al-Azim
+  - Al Azim - Al Azim.png
+  - IMG_20191231_093338 - Al- Azim.jpg
+- Jannatul Hosen
+  - received_1051004551951393 - Jannatul Hosen.jpeg
+  - 000000000 - Jannatul Hosen.JPG

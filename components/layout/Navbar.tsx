@@ -7,8 +7,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  FaBars,
-  FaTimes,
   FaChevronDown,
   FaUser,
   FaSignOutAlt,
@@ -16,14 +14,18 @@ import {
   FaCog,
   FaPhone,
   FaEnvelope,
+  FaHome,
+  FaUserGraduate,
+  FaUsers,
+  FaArchive,
 } from "react-icons/fa";
 import Image from "next/image";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Our Alumni", href: "/Ouralumni" },
-  { label: "Our Students", href: "/ourstudent" },
-  { label: "Archive", href: "/archive" },
+  { label: "Home", href: "/", icon: FaHome },
+  { label: "Our Alumni", href: "/Ouralumni", icon: FaUserGraduate },
+  { label: "Our Students", href: "/ourstudent", icon: FaUsers },
+  { label: "Archive", href: "/archive", icon: FaArchive },
 ];
 
 const roleColor: Record<string, string> = {
@@ -35,7 +37,6 @@ const roleColor: Record<string, string> = {
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const { user, signOut, loading } = useAuth();
@@ -81,11 +82,10 @@ export default function Navbar() {
   }, []);
 
   /* ============================================================
-     CLOSE MOBILE MENU WHEN ROUTE CHANGES
+     CLOSE PROFILE MENU WHEN ROUTE CHANGES
   ============================================================ */
 
   useEffect(() => {
-    setMobileOpen(false);
     setDropdownOpen(false);
   }, [pathname]);
 
@@ -97,7 +97,6 @@ export default function Navbar() {
     await signOut();
 
     setDropdownOpen(false);
-    setMobileOpen(false);
 
     router.push("/");
   };
@@ -576,322 +575,43 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* =================================================
-                  MOBILE BUTTON
-              ================================================= */}
-
-              <button
-                type="button"
-                className="
-                  relative flex h-10 w-10
-                  items-center justify-center
-                  rounded-xl
-                  border border-[#087EA4]/10
-                  bg-white
-                  text-[#075985]
-                  shadow-[0_4px_14px_rgba(7,89,133,0.07)]
-                  transition-all
-                  hover:border-[#087EA4]/20
-                  hover:bg-[#F0FAFC]
-                  lg:hidden
-                "
-                onClick={() =>
-                  setMobileOpen((open) => !open)
-                }
-                aria-label="Toggle navigation"
-                aria-expanded={mobileOpen}
-                aria-controls="mobile-navigation"
-              >
-                <AnimatePresence mode="wait">
-                  {mobileOpen ? (
-                    <motion.div
-                      key="close"
-                      initial={{
-                        rotate: -90,
-                        opacity: 0,
-                      }}
-                      animate={{
-                        rotate: 0,
-                        opacity: 1,
-                      }}
-                      exit={{
-                        rotate: 90,
-                        opacity: 0,
-                      }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      <FaTimes size={16} />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="open"
-                      initial={{
-                        rotate: 90,
-                        opacity: 0,
-                      }}
-                      animate={{
-                        rotate: 0,
-                        opacity: 1,
-                      }}
-                      exit={{
-                        rotate: -90,
-                        opacity: 0,
-                      }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      <FaBars size={16} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </button>
             </div>
           </nav>
 
-          {/* ====================================================
-              MOBILE MENU
-          ===================================================== */}
-
-          <AnimatePresence>
-            {mobileOpen && (
-              <motion.div
-                initial={{
-                  height: 0,
-                  opacity: 0,
-                }}
-                animate={{
-                  height: "auto",
-                  opacity: 1,
-                }}
-                exit={{
-                  height: 0,
-                  opacity: 0,
-                }}
-                transition={{
-                  duration: 0.25,
-                  ease: "easeOut",
-                }}
-                id="mobile-navigation"
-                className="max-h-[calc(100dvh-6.75rem)] overflow-y-auto overscroll-contain bg-white lg:hidden"
-              >
-                <div className="border-t border-[#087EA4]/8 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3">
-
-                  {/* Mobile user */}
-
-                  {user && (
-                    <div
-                      className="
-                        mb-3 flex items-center gap-3
-                        rounded-2xl
-                        border border-[#087EA4]/10
-                        bg-[#F0FAFC]
-                        px-4 py-3
-                      "
-                    >
-                      {user.photo ? (
-                        <Image
-                          key={user.photo}
-                          src={user.photo}
-                          alt={user.name}
-                          width={40}
-                          height={40}
-                          className="h-10 w-10 rounded-xl object-cover ring-1 ring-[#087EA4]/10"
-                        />
-                      ) : (
-                        <div
-                          className={`
-                            flex h-10 w-10 shrink-0
-                            items-center justify-center
-                            rounded-xl
-                            bg-gradient-to-br
-                            ${roleColor[user.role] || "from-blue-500 to-cyan-500"}
-                            text-sm font-bold text-white
-                          `}
-                        >
-                          {user.name?.[0]?.toUpperCase()}
-                        </div>
-                      )}
-
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-[#123B4A]">
-                          {user.name}
-                        </p>
-
-                        <p className="mt-0.5 text-[10px] capitalize text-[#55727D]">
-                          {user.role === "student" ? "Current student" : user.role}
-                        </p>
-                      </div>
-
-                      <Link
-                        href="/dashboard"
-                        onClick={() =>
-                          setMobileOpen(false)
-                        }
-                        className="
-                          shrink-0 rounded-lg
-                          bg-[#087EA4]/8
-                          px-3 py-1.5
-                          text-[10px] font-bold
-                          text-[#087EA4]
-                          transition-colors
-                          hover:bg-[#087EA4]/15
-                        "
-                      >
-                        Dashboard
-                      </Link>
-                    </div>
-                  )}
-
-                  {/* =================================================
-                      MOBILE NAVIGATION
-                  ================================================= */}
-
-                  <div className="space-y-1">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() =>
-                          setMobileOpen(false)
-                        }
-                        className={`
-                          flex items-center
-                          rounded-xl px-3 py-3
-                          text-sm font-semibold
-                          transition-all
-                          ${
-                            pathname === link.href
-                              ? "border border-[#087EA4]/10 bg-[#087EA4]/8 text-[#075985]"
-                              : "text-[#55727D] hover:bg-[#F0FAFC] hover:text-[#123B4A]"
-                          }
-                        `}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-
-                  {/* =================================================
-                      MOBILE ACCOUNT
-                  ================================================= */}
-
-                  <div className="mt-3 border-t border-[#087EA4]/8 pt-3">
-                    {user ? (
-                      <div className="space-y-1">
-                        <Link
-                          href="/dashboard"
-                          onClick={() =>
-                            setMobileOpen(false)
-                          }
-                          className="
-                            flex items-center gap-3
-                            rounded-xl px-3 py-3
-                            text-sm font-medium
-                            text-[#55727D]
-                            transition-all
-                            hover:bg-[#F0FAFC]
-                            hover:text-[#123B4A]
-                          "
-                        >
-                          <FaUser
-                            size={13}
-                            className="text-[#087EA4]"
-                          />
-                          Dashboard
-                        </Link>
-
-                        {user.role === "admin" && (
-                          <Link
-                            href="/admin"
-                            onClick={() =>
-                              setMobileOpen(false)
-                            }
-                            className="
-                              flex items-center gap-3
-                              rounded-xl px-3 py-3
-                              text-sm font-medium
-                              text-[#55727D]
-                              transition-all
-                              hover:bg-[#F0FAFC]
-                              hover:text-[#123B4A]
-                            "
-                          >
-                            <FaCog
-                              size={13}
-                              className="text-[#087EA4]"
-                            />
-                            Admin Panel
-                          </Link>
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={handleSignOut}
-                          className="
-                            flex w-full items-center gap-3
-                            rounded-xl px-3 py-3
-                            text-sm font-medium
-                            text-red-500/70
-                            transition-all
-                            hover:bg-red-50
-                            hover:text-red-600
-                          "
-                        >
-                          <FaSignOutAlt size={13} />
-                          Sign Out
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-2">
-                        <Link
-                          href="/login"
-                          onClick={() =>
-                            setMobileOpen(false)
-                          }
-                          className="
-                            rounded-xl
-                            border border-[#087EA4]/10
-                            bg-white
-                            py-3
-                            text-center
-                            text-sm font-semibold
-                            text-[#55727D]
-                            shadow-sm
-                            transition-all
-                            hover:bg-[#F0FAFC]
-                            hover:text-[#123B4A]
-                          "
-                        >
-                          Sign In
-                        </Link>
-
-                        <Link
-                          href="/register"
-                          onClick={() =>
-                            setMobileOpen(false)
-                          }
-                          className="
-                            rounded-xl
-                            bg-[#087EA4]
-                            py-3
-                            text-center
-                            text-sm font-bold
-                            text-white
-                            shadow-[0_6px_18px_rgba(8,126,164,0.18)]
-                            transition-all
-                            hover:bg-[#075985]
-                          "
-                        >
-                          Register
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          
         </div>
       </header>
+
+      <nav
+        aria-label="Mobile navigation"
+        className="fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[60] mx-auto grid w-[min(96vw,30rem)] grid-cols-5 rounded-2xl border border-[#DCEBF0] bg-white/95 p-2 shadow-[0_12px_36px_rgba(18,59,74,0.18)] backdrop-blur-xl lg:hidden"
+      >
+        {navLinks.map((link) => {
+          const Icon = link.icon;
+          const active = pathname === link.href;
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              aria-current={active ? "page" : undefined}
+              aria-label={link.label}
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 transition-colors ${active ? "bg-[#EAF5F8] text-[#087EA4]" : "text-[#66828C] hover:bg-[#F7FAFB] hover:text-[#123B4A]"}`}
+            >
+              <Icon size={17} aria-hidden="true" />
+              <span className="text-[10px] font-semibold leading-none">{link.label}</span>
+            </Link>
+          );
+        })}
+        <Link
+          href={user ? "/dashboard" : "/login"}
+          aria-label={user ? "Dashboard" : "Sign in"}
+          aria-current={pathname === "/dashboard" ? "page" : undefined}
+          className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 transition-colors ${pathname === "/dashboard" ? "bg-[#EAF5F8] text-[#087EA4]" : "text-[#66828C] hover:bg-[#F7FAFB] hover:text-[#123B4A]"}`}
+        >
+          <FaUser size={16} aria-hidden="true" />
+          <span className="text-[10px] font-semibold leading-none">{user ? "Account" : "Sign in"}</span>
+        </Link>
+      </nav>
 
       {/* ========================================================
           NAVBAR SPACER
