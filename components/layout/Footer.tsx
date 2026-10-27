@@ -19,12 +19,12 @@ const deptKeys = Object.keys(DEPARTMENTS) as Department[];
 
 const quickLinks = [
   ["About Faculty", "/about"],
-  ["Faculty Members", "/teachers"],
+  // ["Faculty Members", "/teachers"],
   ["Alumni Network", "/Ouralumni"],
-  ["Research Publications", "/research"],
+  // ["Research Publications", "/research"],
   ["Faculty Archive", "/archive"],
   ["Behind this website", "/behind-this-website"],
-  ["Contact Us", "/contact"],
+  // ["Contact Us", "/contact"],
 ];
 
 const socialLinks = [

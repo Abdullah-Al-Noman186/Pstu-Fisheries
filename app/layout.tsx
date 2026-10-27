@@ -5,9 +5,13 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { MotionConfig } from "framer-motion";
+import FishAnimation from "@/components/ui/FishAnimation";
 
 export const metadata: Metadata = {
-  title: "Faculty of Fisheries — PSTU",
+  title: {
+    default: "Faculty of Fisheries — PSTU",
+    template: "%s | PSTU Fisheries",
+  },
   description: "Patuakhali Science and Technology University — Faculty of Fisheries.",
   keywords: "PSTU, fisheries, aquaculture, marine fisheries, Bangladesh",
   applicationName: "PSTU Fisheries Alumni",
@@ -32,9 +36,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <AuthProvider>
           <MotionConfig reducedMotion="user">
+            <FishAnimation />
+            <a
+              href="#main-content"
+              className="skip-link"
+            >
+              Skip to content
+            </a>
             <Navbar />
-            <main>{children}</main>
-            <Footer />
+            <main id="main-content" className="relative z-[1]">{children}</main>
+            <div className="relative z-[1]">
+              <Footer />
+            </div>
             <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
           </MotionConfig>
         </AuthProvider>

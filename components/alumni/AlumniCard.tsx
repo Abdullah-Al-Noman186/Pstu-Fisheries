@@ -45,13 +45,13 @@ export default function AlumniCard({ alumni, index = 0, onClick }: Props) {
 
         <div className="flex flex-1 flex-col p-5 sm:p-6">
           <div className="flex items-start gap-4">
-            <div className="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-xl border border-[#DCEBF0] bg-[#F0FAFC] shadow-sm sm:h-[84px] sm:w-[84px]">
+            <div className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-xl border border-[#DCEBF0] bg-[#F0FAFC] shadow-sm sm:h-24 sm:w-24">
               {alumni.photo ? (
                 <Image
                   src={alumni.photo}
                   alt={alumni.name}
                   fill
-                  sizes="84px"
+                  sizes="96px"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (

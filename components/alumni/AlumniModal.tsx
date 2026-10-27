@@ -16,7 +16,8 @@ import {
   FaCalendarAlt,
   FaGraduationCap,
 } from "react-icons/fa";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface Props {
   alumni: Alumni | null;
@@ -79,6 +80,12 @@ const defaultStyle = {
 };
 
 export default function AlumniModal({ alumni, onClose }: Props) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -108,7 +115,9 @@ export default function AlumniModal({ alumni, onClose }: Props) {
   const style =
     departmentStyles[alumni?.department || ""] || defaultStyle;
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal((
     <AnimatePresence>
       {alumni && (
         <>
@@ -120,7 +129,7 @@ export default function AlumniModal({ alumni, onClose }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 bg-[#123B4A]/45 backdrop-blur-sm"
+            className="fixed inset-0 z-[70] bg-[#123B4A]/45 backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -147,7 +156,7 @@ export default function AlumniModal({ alumni, onClose }: Props) {
               duration: 0.3,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-5"
+            className="fixed inset-0 z-[70] flex items-end justify-center p-0 sm:items-center sm:p-5"
           >
             <div
               role="dialog"
@@ -178,12 +187,12 @@ export default function AlumniModal({ alumni, onClose }: Props) {
                   ================================================= */}
                   <div className="relative shrink-0">
                     {alumni.photo ? (
-                      <div className="relative h-[88px] w-[88px] overflow-hidden rounded-2xl border border-[#DCEBF0] bg-[#F0FAFC] shadow-sm sm:h-[104px] sm:w-[104px]">
+                      <div className="relative h-24 w-24 overflow-hidden rounded-2xl border border-[#DCEBF0] bg-[#F0FAFC] shadow-sm sm:h-32 sm:w-32">
                         <Image
                           src={alumni.photo}
                           alt={alumni.name}
                           fill
-                          sizes="96px"
+                          sizes="(min-width: 640px) 128px, 96px"
                           className="object-cover"
                         />
 
@@ -191,7 +200,7 @@ export default function AlumniModal({ alumni, onClose }: Props) {
                       </div>
                     ) : (
                       <div
-                        className={`flex h-[88px] w-[88px] items-center justify-center rounded-2xl border ${style.border} ${style.accentSoft} ${style.accent} text-3xl font-semibold sm:h-[104px] sm:w-[104px]`}
+                        className={`flex h-24 w-24 items-center justify-center rounded-2xl border ${style.border} ${style.accentSoft} ${style.accent} text-3xl font-semibold sm:h-32 sm:w-32`}
                       >
                         {alumni.name?.[0]?.toUpperCase() || "A"}
                       </div>
@@ -502,7 +511,7 @@ export default function AlumniModal({ alumni, onClose }: Props) {
         </>
       )}
     </AnimatePresence>
-  );
+  ), document.body);
 }
 
 function SectionLabel({

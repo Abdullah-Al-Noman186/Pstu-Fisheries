@@ -558,14 +558,14 @@ export default function OurStudentPage() {
                 Faculty Student Directory
               </div>
 
-              <h1 className="max-w-3xl text-4xl font-black leading-[1.05] tracking-tight text-[#123B4A] sm:text-5xl lg:text-6xl">
+              <h1 className="page-title max-w-3xl">
                 Meet the students of{" "}
                 <span className="bg-gradient-to-r from-[#075985] via-[#087EA4] to-[#0891B2] bg-clip-text text-transparent">
                   Fisheries
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-7 text-[#55727D] sm:text-lg">
+              <p className="page-lead mt-6">
                 Explore our student community by
                 batch, discover academic information,
                 and connect with the people shaping
@@ -1174,13 +1174,13 @@ function StudentCard({
 
       <div className="p-5 sm:p-6">
         <div className="flex items-start gap-4">
-          <div className="relative h-[5.25rem] w-[5.25rem] shrink-0 overflow-hidden rounded-[1.35rem] bg-[#E9F6F8] ring-1 ring-[#DCEEF2]">
+          <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[1.35rem] bg-[#E9F6F8] ring-1 ring-[#DCEEF2]">
             {imageUrl ? (
               <Image
                 src={imageUrl}
                 alt={name}
                 fill
-                sizes="84px"
+                sizes="96px"
                 className="object-cover transition duration-500 group-hover:scale-105"
               />
             ) : (
@@ -1377,6 +1377,11 @@ function StudentModal({
   const imageUrl = getImageUrl(
     student.photo
   );
+  const [imageFailed, setImageFailed] = useState(false);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [imageUrl]);
 
   return (
     <motion.div
@@ -1429,17 +1434,18 @@ function StudentModal({
           <div className="pointer-events-none absolute -bottom-24 left-1/3 h-40 w-40 rounded-full bg-[#2DD4BF]/10 blur-3xl" />
 
           <div className="relative flex flex-col items-center gap-5 sm:flex-row sm:items-end">
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-[1.6rem] border-[3px] border-white/40 bg-white/10 shadow-[0_14px_35px_rgba(0,0,0,0.2)] sm:h-32 sm:w-32">
-              {imageUrl ? (
+            <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-[1.6rem] border-[3px] border-white/40 bg-white/10 shadow-[0_14px_35px_rgba(0,0,0,0.2)] sm:h-40 sm:w-40">
+              {imageUrl && !imageFailed ? (
                 <Image
                   src={imageUrl}
                   alt={name}
                   fill
-                  sizes="112px"
+                  sizes="(min-width: 640px) 160px, 128px"
                   className="object-cover"
+                  onError={() => setImageFailed(true)}
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-white/15 text-3xl font-black">
+                <div className="flex h-full w-full items-center justify-center bg-white/15 text-4xl font-black">
                   {getInitials(name)}
                 </div>
               )}

@@ -22,10 +22,10 @@ import {
 import Image from "next/image";
 
 const navLinks = [
-  { label: "Home", href: "/", icon: FaHome },
-  { label: "Our Alumni", href: "/Ouralumni", icon: FaUserGraduate },
-  { label: "Our Students", href: "/ourstudent", icon: FaUsers },
-  { label: "Archive", href: "/archive", icon: FaArchive },
+  { label: "Home", mobileLabel: "Home", href: "/", icon: FaHome },
+  { label: "Our Alumni", mobileLabel: "Alumni", href: "/Ouralumni", icon: FaUserGraduate },
+  { label: "Our Students", mobileLabel: "Students", href: "/ourstudent", icon: FaUsers },
+  { label: "Archive", mobileLabel: "Archive", href: "/archive", icon: FaArchive },
 ];
 
 const roleColor: Record<string, string> = {
@@ -48,16 +48,22 @@ export default function Navbar() {
   ============================================================ */
 
   useEffect(() => {
+    let frame = 0;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 20);
+        frame = 0;
+      });
     };
 
     handleScroll();
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -79,6 +85,15 @@ export default function Navbar() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setDropdownOpen(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   /* ============================================================
@@ -182,7 +197,7 @@ export default function Navbar() {
               MAIN NAVIGATION
           ================================================== */}
 
-          <nav className="w-full px-4 sm:px-6 lg:px-8">
+          <nav aria-label="Primary navigation" className="w-full px-4 sm:px-6 lg:px-8">
             <div className="flex h-[72px] items-center justify-between gap-4">
 
               {/* =================================================
@@ -209,11 +224,12 @@ export default function Navbar() {
                       group-hover:border-[#087EA4]/25
                     "
                   >
-                    <img
+                    <Image
                       src="/logo.png"
                       alt="PSTU Logo"
                       width={46}
                       height={46}
+                      priority
                       className="h-full w-full object-cover"
                     />
                   </div>
@@ -247,6 +263,7 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    aria-current={pathname === link.href ? "page" : undefined}
                     className="group relative rounded-xl px-3.5 py-2.5 text-sm font-semibold"
                   >
                     {/* Active background */}
@@ -317,6 +334,8 @@ export default function Navbar() {
                   <div id="user-dropdown" className="relative">
                     <button
                       type="button"
+                      aria-expanded={dropdownOpen}
+                      aria-haspopup="true"
                       onClick={() =>
                         setDropdownOpen((open) => !open)
                       }
@@ -598,14 +617,14 @@ export default function Navbar() {
               className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 transition-colors ${active ? "bg-[#EAF5F8] text-[#087EA4]" : "text-[#66828C] hover:bg-[#F7FAFB] hover:text-[#123B4A]"}`}
             >
               <Icon size={17} aria-hidden="true" />
-              <span className="text-[10px] font-semibold leading-none">{link.label}</span>
+              <span className="text-[10px] font-semibold leading-none">{link.mobileLabel}</span>
             </Link>
           );
         })}
         <Link
           href={user ? "/dashboard" : "/login"}
           aria-label={user ? "Dashboard" : "Sign in"}
-          aria-current={pathname === "/dashboard" ? "page" : undefined}
+          aria-current={user ? (pathname === "/dashboard" ? "page" : undefined) : (pathname === "/login" ? "page" : undefined)}
           className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 transition-colors ${pathname === "/dashboard" ? "bg-[#EAF5F8] text-[#087EA4]" : "text-[#66828C] hover:bg-[#F7FAFB] hover:text-[#123B4A]"}`}
         >
           <FaUser size={16} aria-hidden="true" />

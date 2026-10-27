@@ -437,7 +437,7 @@ export default function ArchivePage() {
 
               </div>
 
-              <h1 className="max-w-3xl text-4xl font-black leading-[1.05] tracking-tight text-[#123B4A] sm:text-5xl lg:text-6xl">
+              <h1 className="page-title max-w-3xl">
 
                 Stories that{" "}
 
@@ -451,7 +451,7 @@ export default function ArchivePage() {
 
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-7 text-[#55727D] sm:text-lg">
+              <p className="page-lead mt-6">
                 Explore the achievements, research, fieldwork,
                 events and memorable moments that shape the
                 Faculty of Fisheries.

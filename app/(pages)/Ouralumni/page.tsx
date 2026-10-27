@@ -791,7 +791,7 @@ export default function AlumniPage() {
                   duration: 0.65,
                   delay: 0.08,
                 }}
-                className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.035em] text-[#123B4A] sm:text-5xl lg:text-6xl xl:text-7xl"
+                className="page-title max-w-3xl"
               >
                 A community that
                 <span className="block bg-gradient-to-r from-[#075985] via-[#087EA4] to-[#0891B2] bg-clip-text text-transparent">
