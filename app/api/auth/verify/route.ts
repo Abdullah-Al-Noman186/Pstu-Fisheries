@@ -23,10 +23,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Invalid token" }, { status: 401 });
     }
 
-    if (decoded.email && decoded.email_verified !== true) {
-      return NextResponse.json({ success: false, error: "Verify your email before signing in." }, { status: 403 });
-    }
-
     await connectDB();
 
     const user = await User.findOne({ uid: decoded.uid });

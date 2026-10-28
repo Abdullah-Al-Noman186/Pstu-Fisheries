@@ -20,8 +20,8 @@ export default function RegisterPage() {
     setBusy(true);
     try {
       await registerWithEmail({ email, password, role: "student", studentId, regNo });
-      toast.success("Registration complete. Verify your email, then sign in to open your dashboard.");
-      router.replace("/login?registered=1");
+      toast.success("Registration complete. Your dashboard is ready. Verify your email before your next sign-in.");
+      router.replace("/dashboard");
     } catch (error: any) {
       toast.error(error?.response?.data?.error || error?.message || "Registration failed.");
     } finally { setBusy(false); }

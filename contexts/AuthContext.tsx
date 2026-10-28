@@ -73,6 +73,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(data.user);
       }
     }
+    setFirebaseUser(fbUser);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -92,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithGoogle = async (email: string, password?: string) => {
     try {
       const credential = await signInWithPopup(auth, googleProvider);
+      await verifyAndSetUser(credential.user);
       return credential.user;
     } catch (error: any) {
       if (
@@ -107,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!password) throw new Error("Enter your account password once to connect Google sign-in.");
         const existing = await signInWithEmailAndPassword(auth, email, password);
         await linkWithCredential(existing.user, pendingCredential);
+        await verifyAndSetUser(existing.user);
         return existing.user;
       }
       throw error;
@@ -120,6 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await firebaseSignOut(auth);
       throw new Error("Verify your email first. We sent a fresh verification link to your inbox.");
     }
+    await verifyAndSetUser(credential.user);
     return credential.user;
   };
 
@@ -132,12 +137,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const token = await cred.user.getIdToken();
       await axios.post("/api/auth/register", { token, ...data, name: validation.name || data.name });
       await axios.post("/api/claim", { studentId: data.studentId, regNo: data.regNo }, { headers: { Authorization: `Bearer ${token}` } });
-      await firebaseSignOut(auth);
-      return true;
     } catch (error) {
       try { await deleteUser(cred.user); } catch { /* Firebase may require a fresh sign-in to remove the account. */ }
       throw error;
     }
+    // Keep the newly registered account signed in and load its linked PSTU profile
+    // before navigating, so the dashboard doesn't briefly redirect back to login.
+    await verifyAndSetUser(cred.user);
+    return true;
   };
 
   const forgotPassword = async (email: string) => {

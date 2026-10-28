@@ -252,6 +252,7 @@ export default function OurStudentPage() {
 
   const [search, setSearch] = useState("");
   const [expandedBatch, setExpandedBatch] = useState<string | null>(null);
+  const [activeBatch, setActiveBatch] = useState("all");
 
   const [selectedStudent, setSelectedStudent] =
     useState<Student | null>(null);
@@ -391,11 +392,17 @@ export default function OurStudentPage() {
     });
   }, [filteredStudents]);
 
-  const visibleGroups = expandedBatch
-    ? groupedStudents.filter(([batch]) => batch === expandedBatch)
+  const visibleGroups = activeBatch !== "all"
+    ? groupedStudents.filter(([batch]) => batch === activeBatch)
     : groupedStudents;
+  const visibleStudentCount = activeBatch === "all"
+    ? filteredStudents.length
+    : filteredStudents.filter((student) => getBatch(student) === activeBatch).length;
 
-  useEffect(() => setExpandedBatch(null), [search]);
+  useEffect(() => {
+    setExpandedBatch(null);
+    setActiveBatch("all");
+  }, [search]);
 
   /* =====================================================
      MODAL
@@ -620,10 +627,10 @@ export default function OurStudentPage() {
               <p className="mt-2 text-sm text-[#55727D] sm:text-base">
                 Showing{" "}
                 <span className="font-bold text-[#087EA4]">
-                  {filteredStudents.length}
+                  {visibleStudentCount}
                 </span>{" "}
                 student
-                {filteredStudents.length !== 1
+                {visibleStudentCount !== 1
                   ? "s"
                   : ""}
               </p>
@@ -662,13 +669,55 @@ export default function OurStudentPage() {
             </div>
           </div>
 
+          {!loading && filteredStudents.length > 0 && (
+            <div className="mt-8" aria-label="Browse students by batch">
+              <div className="mb-4 flex items-end justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#087EA4]">Explore the student directory</p>
+                  <p className="mt-1 text-sm font-medium text-[#55727D]">Browse students by batch</p>
+                </div>
+                {activeBatch !== "all" && (
+                  <button type="button" onClick={() => { setActiveBatch("all"); setExpandedBatch(null); }} className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#087EA4] transition hover:text-[#075985]">Clear batch</button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setActiveBatch("all"); setExpandedBatch(null); }}
+                  aria-pressed={activeBatch === "all"}
+                  className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-bold transition-all duration-200 ${activeBatch === "all" ? "border-[#087EA4] bg-[#087EA4] text-white shadow-[0_8px_24px_rgba(8,126,164,0.2)]" : "border-[#087EA4]/10 bg-white/75 text-[#55727D] hover:-translate-y-0.5 hover:border-[#087EA4]/25 hover:text-[#087EA4]"}`}
+                >
+                  <FaUsers size={10} />
+                  <span>All batches</span>
+                  <span className={`rounded-full px-2 py-0.5 text-[9px] ${activeBatch === "all" ? "bg-white/15 text-white" : "bg-[#F0FAFC] text-[#55727D]"}`}>{filteredStudents.length}</span>
+                </button>
+                {groupedStudents.filter(([batch]) => batch !== "Unknown").map(([batch, members]) => {
+                  const active = activeBatch === batch;
+                  return (
+                    <button
+                      key={batch}
+                      type="button"
+                      onClick={() => { setActiveBatch(batch); setExpandedBatch(batch); }}
+                      aria-pressed={active}
+                      className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-bold transition-all duration-200 ${active ? "border-[#087EA4] bg-[#087EA4] text-white shadow-[0_8px_24px_rgba(8,126,164,0.2)]" : "border-[#087EA4]/10 bg-white/75 text-[#55727D] hover:-translate-y-0.5 hover:border-[#087EA4]/25 hover:text-[#087EA4]"}`}
+                    >
+                      <FaGraduationCap size={10} className={active ? "text-white" : "text-[#087EA4]/70"} />
+                      <span>Batch {batch}</span>
+                      <span className={`rounded-full px-2 py-0.5 text-[9px] ${active ? "bg-white/15 text-white" : "bg-[#F0FAFC] text-[#55727D]"}`}>{members.length}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* =================================================
               CONTENT
           ================================================= */}
 
           {loading ? (
             <StudentGridSkeleton />
-          ) : filteredStudents.length > 0 ? (
+          ) : visibleStudentCount > 0 ? (
             <div className="mt-10 space-y-14">
               {visibleGroups.map(([batch, members]) => {
                 const isExpanded = expandedBatch === batch;
@@ -687,8 +736,8 @@ export default function OurStudentPage() {
                         </div>
                         <p className="mt-2 text-xs text-[#55727D]">{members.length} student{members.length === 1 ? "" : "s"} in this batch</p>
                       </div>
-                      {expandedBatch && isExpanded ? (
-                        <button type="button" onClick={() => setExpandedBatch(null)} className="inline-flex min-h-10 w-fit items-center gap-2 rounded-xl border border-[#087EA4]/15 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[.12em] text-[#087EA4] shadow-sm transition hover:bg-[#F0FAFC]">All batches <FaArrowRight className="rotate-180" size={9} /></button>
+                      {activeBatch !== "all" && isExpanded ? (
+                        <button type="button" onClick={() => { setActiveBatch("all"); setExpandedBatch(null); }} className="inline-flex min-h-10 w-fit items-center gap-2 rounded-xl border border-[#087EA4]/15 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[.12em] text-[#087EA4] shadow-sm transition hover:bg-[#F0FAFC]">All batches <FaArrowRight className="rotate-180" size={9} /></button>
                       ) : members.length > previewCount ? (
                         <button type="button" onClick={() => { setExpandedBatch(batch); document.getElementById(`student-batch-${batch}`)?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="inline-flex min-h-10 w-fit items-center gap-2 rounded-xl border border-[#087EA4]/15 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[.12em] text-[#087EA4] shadow-sm transition hover:bg-[#F0FAFC]">View all {members.length} <FaArrowRight size={9} /></button>
                       ) : null}
