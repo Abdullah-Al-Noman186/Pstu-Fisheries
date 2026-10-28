@@ -6,11 +6,10 @@ import Image from "next/image";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import ModalPortal from "@/components/ui/ModalPortal";
 import {
   FaArrowRight,
   FaBookOpen,
-  FaChevronLeft,
-  FaChevronRight,
   FaEnvelope,
   FaGraduationCap,
   FaMapMarkerAlt,
@@ -135,6 +134,13 @@ function getBatch(student: Student) {
   );
 }
 
+function getBatchOrdinal(batch: string) {
+  const number = Number(batch);
+  const lastTwo = number % 100;
+  const suffix = lastTwo >= 11 && lastTwo <= 13 ? "th" : ({ 1: "st", 2: "nd", 3: "rd" } as Record<number, string>)[number % 10] || "th";
+  return `${number}${suffix}`;
+}
+
 function getSession(student: Student) {
   return (
     student.batch_session?.trim() ||
@@ -240,54 +246,15 @@ function CountUp({
 ========================================================= */
 
 export default function OurStudentPage() {
+  const previewCount = 6;
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
-  const [selectedBatch, setSelectedBatch] =
-    useState("All");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [jobFilter, setJobFilter] = useState("");
-  const [organizationFilter, setOrganizationFilter] = useState("");
-  const [cityFilter, setCityFilter] = useState("");
-  const [countryFilter, setCountryFilter] = useState("");
-  const [sortOrder, setSortOrder] = useState("name-asc");
-  const [filtersReady, setFiltersReady] = useState(false);
+  const [expandedBatch, setExpandedBatch] = useState<string | null>(null);
 
   const [selectedStudent, setSelectedStudent] =
     useState<Student | null>(null);
-
-  const [page, setPage] = useState(1);
-
-  const studentsPerPage = 12;
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setSearch(params.get("q") || "");
-    setSelectedBatch(params.get("batch") || "All");
-    setStatusFilter(params.get("status") || "");
-    setJobFilter(params.get("job") || "");
-    setOrganizationFilter(params.get("organization") || "");
-    setCityFilter(params.get("city") || "");
-    setCountryFilter(params.get("country") || "");
-    setSortOrder(params.get("sort") || "name-asc");
-    setFiltersReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!filtersReady) return;
-    const params = new URLSearchParams();
-    if (search.trim()) params.set("q", search.trim());
-    if (selectedBatch !== "All") params.set("batch", selectedBatch);
-    if (statusFilter) params.set("status", statusFilter);
-    if (jobFilter) params.set("job", jobFilter);
-    if (organizationFilter) params.set("organization", organizationFilter);
-    if (cityFilter) params.set("city", cityFilter);
-    if (countryFilter) params.set("country", countryFilter);
-    if (sortOrder !== "name-asc") params.set("sort", sortOrder);
-    const query = params.toString();
-    window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
-  }, [filtersReady, search, selectedBatch, statusFilter, jobFilter, organizationFilter, cityFilter, countryFilter, sortOrder]);
 
   /* =====================================================
      FETCH STUDENTS
@@ -365,57 +332,13 @@ export default function OurStudentPage() {
     });
   }, [students]);
 
-  /* =====================================================
-     BATCHES
-  ===================================================== */
-
-  const batches = useMemo(() => {
-    const unique = new Set<string>();
-
-    currentStudents.forEach((student) => {
-      const batch = getBatch(student);
-
-      if (batch !== "Unknown") {
-        unique.add(batch);
-      }
-    });
-
-    return Array.from(unique).sort((a, b) => {
-      const aNumber = Number(a);
-      const bNumber = Number(b);
-
-      if (
-        !Number.isNaN(aNumber) &&
-        !Number.isNaN(bNumber)
-      ) {
-        return bNumber - aNumber;
-      }
-
-      return b.localeCompare(a);
-    });
-  }, [currentStudents]);
+  const batches = useMemo(
+    () => Array.from(new Set(currentStudents.map(getBatch).filter((batch) => batch !== "Unknown"))).sort((a, b) => Number(b) - Number(a)),
+    [currentStudents]
+  );
 
   /* =====================================================
-     BATCH COUNTS
-  ===================================================== */
-
-  const batchCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-
-    currentStudents.forEach((student) => {
-      const batch = getBatch(student);
-
-      counts.set(
-        batch,
-        (counts.get(batch) ?? 0) + 1
-      );
-    });
-
-    return counts;
-  }, [currentStudents]);
-
-  /* =====================================================
-     FILTER STUDENTS
+     SEARCH STUDENTS
   ===================================================== */
 
   const filteredStudents = useMemo(() => {
@@ -424,20 +347,8 @@ export default function OurStudentPage() {
       .toLowerCase();
 
     return currentStudents.filter((student) => {
-      const batch = getBatch(student);
-
-      const matchesBatch =
-        selectedBatch === "All" ||
-        batch === selectedBatch;
-
-      if (!matchesBatch) return false;
-      if (statusFilter && (student.present_status || "") !== statusFilter) return false;
-      if (jobFilter && (student.job_title || student.currentPosition || "") !== jobFilter) return false;
-      if (organizationFilter && (student.organization || "") !== organizationFilter) return false;
-      if (cityFilter && (student.current_city || "") !== cityFilter) return false;
-      if (countryFilter && (student.current_country || "") !== countryFilter) return false;
       if (!query) return true;
-
+      const batch = getBatch(student);
       const searchableText = [
         getStudentName(student),
         getBanglaName(student),
@@ -462,98 +373,29 @@ export default function OurStudentPage() {
     }).sort((a, b) => {
       const first = getStudentName(a).toLowerCase();
       const second = getStudentName(b).toLowerCase();
-      if (sortOrder === "name-desc") return second.localeCompare(first);
-      if (sortOrder === "batch-asc") return Number(getBatch(a)) - Number(getBatch(b)) || first.localeCompare(second);
-      if (sortOrder === "batch-desc") return Number(getBatch(b)) - Number(getBatch(a)) || first.localeCompare(second);
       return first.localeCompare(second);
     });
-  }, [
-    currentStudents,
-    search,
-    selectedBatch,
-    statusFilter,
-    jobFilter,
-    organizationFilter,
-    cityFilter,
-    countryFilter,
-    sortOrder,
-  ]);
+  }, [currentStudents, search]);
 
-  const filterOptions = useMemo(() => ({
-    statuses: Array.from(new Set(currentStudents.map((student) => student.present_status).filter(Boolean))).sort(),
-    jobs: Array.from(new Set(currentStudents.map((student) => student.job_title || student.currentPosition).filter(Boolean))).sort(),
-    organizations: Array.from(new Set(currentStudents.map((student) => student.organization).filter(Boolean))).sort(),
-    cities: Array.from(new Set(currentStudents.map((student) => student.current_city).filter(Boolean))).sort(),
-    countries: Array.from(new Set(currentStudents.map((student) => student.current_country).filter(Boolean))).sort(),
-  }), [currentStudents]);
+  const groupedStudents = useMemo(() => {
+    const grouped = new Map<string, Student[]>();
+    filteredStudents.forEach((student) => {
+      const batch = getBatch(student);
+      if (!grouped.has(batch)) grouped.set(batch, []);
+      grouped.get(batch)!.push(student);
+    });
+    return Array.from(grouped.entries()).sort(([a], [b]) => {
+      if (a === "Unknown") return 1;
+      if (b === "Unknown") return -1;
+      return Number(a) - Number(b);
+    });
+  }, [filteredStudents]);
 
-  /* =====================================================
-     PAGINATION
-  ===================================================== */
+  const visibleGroups = expandedBatch
+    ? groupedStudents.filter(([batch]) => batch === expandedBatch)
+    : groupedStudents;
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(
-      filteredStudents.length /
-        studentsPerPage
-    )
-  );
-
-  const paginatedStudents = useMemo(() => {
-    const start =
-      (page - 1) * studentsPerPage;
-
-    return filteredStudents.slice(
-      start,
-      start + studentsPerPage
-    );
-  }, [filteredStudents, page]);
-
-  /* =====================================================
-     RESET PAGE WHEN FILTER CHANGES
-  ===================================================== */
-
-  useEffect(() => {
-    setPage(1);
-  }, [search, selectedBatch, statusFilter, jobFilter, organizationFilter, cityFilter, countryFilter, sortOrder]);
-
-  /* =====================================================
-     BATCH SELECT
-  ===================================================== */
-
-  const selectBatch = (batch: string) => {
-    setSelectedBatch(batch);
-    setPage(1);
-
-    window.setTimeout(() => {
-      document
-        .getElementById("student-directory")
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-    }, 50);
-  };
-
-  const clearDirectoryFilters = () => {
-    setSearch("");
-    setSelectedBatch("All");
-    setStatusFilter("");
-    setJobFilter("");
-    setOrganizationFilter("");
-    setCityFilter("");
-    setCountryFilter("");
-    setSortOrder("name-asc");
-  };
-
-  const copyDirectoryLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success("Filtered student directory link copied.");
-    } catch {
-      window.prompt("Copy this filtered directory link:", window.location.href);
-    }
-  };
+  useEffect(() => setExpandedBatch(null), [search]);
 
   /* =====================================================
      MODAL
@@ -589,30 +431,6 @@ export default function OurStudentPage() {
       document.body.style.overflow = "";
     };
   }, [selectedStudent]);
-
-  /* =====================================================
-     PAGINATION NUMBERS
-  ===================================================== */
-
-  const paginationNumbers = useMemo(() => {
-    const pages: number[] = [];
-
-    const start = Math.max(
-      1,
-      page - 2
-    );
-
-    const end = Math.min(
-      totalPages,
-      page + 2
-    );
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    return pages;
-  }, [page, totalPages]);
 
   /* =====================================================
      RENDER
@@ -688,18 +506,8 @@ export default function OurStudentPage() {
 
                 <StatCard
                   icon={<FaBookOpen />}
-                  value={
-                    selectedBatch === "All"
-                      ? currentStudents.length
-                      : batchCounts.get(
-                          selectedBatch
-                        ) ?? 0
-                  }
-                  label={
-                    selectedBatch === "All"
-                      ? "Directory"
-                      : `Batch ${selectedBatch}`
-                  }
+                  value={currentStudents.length}
+                  label="Directory"
                   className="col-span-2 sm:col-span-1"
                 />
               </div>
@@ -785,135 +593,6 @@ export default function OurStudentPage() {
             </motion.div>
           </div>
 
-          {/* =================================================
-              BATCH EXPLORER
-          ================================================= */}
-
-          <motion.section
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.6,
-              delay: 0.25,
-            }}
-            className="mt-12"
-          >
-            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#087EA4]">
-                  Explore Students
-                </p>
-
-                <h2 className="mt-1 text-xl font-black text-[#123B4A] sm:text-2xl">
-                  Find students by batch
-                </h2>
-
-                <p className="mt-1 text-sm text-[#55727D]">
-                  Select a batch to quickly browse
-                  its students.
-                </p>
-              </div>
-
-              {selectedBatch !== "All" && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    selectBatch("All")
-                  }
-                  className="self-start rounded-full border border-[#D6E9EE] bg-white px-4 py-2 text-xs font-bold text-[#087EA4] shadow-sm transition hover:border-[#087EA4] hover:bg-[#F0FAFC] sm:self-auto"
-                >
-                  Show all students
-                </button>
-              )}
-            </div>
-
-            {/* NO DROPDOWN / NO SCROLLBAR */}
-            <div className="flex flex-wrap gap-2.5">
-              {/* ALL */}
-              <button
-                type="button"
-                onClick={() =>
-                  selectBatch("All")
-                }
-                aria-pressed={
-                  selectedBatch === "All"
-                }
-                className={`group flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-all duration-200 ${
-                  selectedBatch === "All"
-                    ? "border-[#087EA4] bg-[#087EA4] text-white shadow-lg shadow-[#087EA4]/20"
-                    : "border-[#D6E9EE] bg-white text-[#123B4A] hover:-translate-y-0.5 hover:border-[#087EA4] hover:text-[#087EA4] hover:shadow-md"
-                }`}
-              >
-                <FaUsers className="text-xs" />
-
-                <span>All Batches</span>
-
-                <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] ${
-                    selectedBatch === "All"
-                      ? "bg-white/20 text-white"
-                      : "bg-[#F0FAFC] text-[#55727D]"
-                  }`}
-                >
-                  {currentStudents.length}
-                </span>
-              </button>
-
-              {/* INDIVIDUAL BATCHES */}
-              {batches.map((batch) => {
-                const count =
-                  batchCounts.get(batch) ??
-                  0;
-
-                const active =
-                  selectedBatch === batch;
-
-                return (
-                  <button
-                    key={batch}
-                    type="button"
-                    onClick={() =>
-                      selectBatch(batch)
-                    }
-                    aria-pressed={active}
-                    className={`group flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-all duration-200 ${
-                      active
-                        ? "border-[#087EA4] bg-[#087EA4] text-white shadow-lg shadow-[#087EA4]/20"
-                        : "border-[#D6E9EE] bg-white text-[#123B4A] hover:-translate-y-0.5 hover:border-[#087EA4] hover:text-[#087EA4] hover:shadow-md"
-                    }`}
-                  >
-                    <FaGraduationCap
-                      className={`text-xs ${
-                        active
-                          ? "text-white"
-                          : "text-[#087EA4]"
-                      }`}
-                    />
-
-                    <span>
-                      Batch {batch}
-                    </span>
-
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] ${
-                        active
-                          ? "bg-white/20 text-white"
-                          : "bg-[#F0FAFC] text-[#55727D]"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </motion.section>
         </div>
       </section>
 
@@ -935,9 +614,7 @@ export default function OurStudentPage() {
               </div>
 
               <h2 className="text-3xl font-black tracking-tight text-[#123B4A] sm:text-4xl">
-                {selectedBatch === "All"
-                  ? "All Students"
-                  : `Batch ${selectedBatch}`}
+                All Students
               </h2>
 
               <p className="mt-2 text-sm text-[#55727D] sm:text-base">
@@ -985,184 +662,52 @@ export default function OurStudentPage() {
             </div>
           </div>
 
-          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            <label className="sr-only" htmlFor="student-status-filter">Filter by present status</label>
-            <select id="student-status-filter" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All statuses</option>{filterOptions.statuses.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="student-job-filter">Filter by job or position</label>
-            <select id="student-job-filter" value={jobFilter} onChange={(event) => setJobFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All jobs / positions</option>{filterOptions.jobs.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="student-organization-filter">Filter by organization</label>
-            <select id="student-organization-filter" value={organizationFilter} onChange={(event) => setOrganizationFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All organizations</option>{filterOptions.organizations.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="student-city-filter">Filter by city</label>
-            <select id="student-city-filter" value={cityFilter} onChange={(event) => setCityFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All cities</option>{filterOptions.cities.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="student-country-filter">Filter by country</label>
-            <select id="student-country-filter" value={countryFilter} onChange={(event) => setCountryFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All countries</option>{filterOptions.countries.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="student-sort">Sort students</label>
-            <select id="student-sort" value={sortOrder} onChange={(event) => setSortOrder(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="name-asc">Name: A to Z</option><option value="name-desc">Name: Z to A</option><option value="batch-asc">Batch: oldest first</option><option value="batch-desc">Batch: newest first</option>
-            </select>
-            <button type="button" onClick={() => void copyDirectoryLink()} className="min-h-11 rounded-xl border border-[#087EA4]/20 bg-white px-3 text-sm font-semibold text-[#087EA4] transition hover:bg-[#F0FAFC]">Copy filtered link</button>
-            <button type="button" onClick={clearDirectoryFilters} className="min-h-11 rounded-xl border border-transparent px-3 text-sm font-semibold text-[#55727D] transition hover:bg-[#F0FAFC] hover:text-[#087EA4]">Clear filters</button>
-          </div>
-
-          {/* ACTIVE FILTER */}
-          {(search ||
-            selectedBatch !== "All") && (
-            <div className="mt-6 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#55727D]">
-                Active filters:
-              </span>
-
-              {selectedBatch !== "All" && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    selectBatch("All")
-                  }
-                  className="inline-flex items-center gap-2 rounded-full bg-[#087EA4]/10 px-3 py-1.5 text-xs font-bold text-[#087EA4]"
-                >
-                  Batch {selectedBatch}
-                  <FaTimes />
-                </button>
-              )}
-
-              {search && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setSearch("")
-                  }
-                  className="inline-flex items-center gap-2 rounded-full bg-[#2DD4BF]/15 px-3 py-1.5 text-xs font-bold text-[#087EA4]"
-                >
-                  Search: "{search}"
-                  <FaTimes />
-                </button>
-              )}
-            </div>
-          )}
-
           {/* =================================================
               CONTENT
           ================================================= */}
 
           {loading ? (
             <StudentGridSkeleton />
-          ) : paginatedStudents.length > 0 ? (
-            <>
-              <motion.div
-                layout
-                className="mt-9 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
-              >
-                <AnimatePresence mode="popLayout">
-                  {paginatedStudents.map(
-                    (student, index) => (
-                      <StudentCard
-                        key={
-                          student.id ||
-                          `${getStudentId(
-                            student
-                          )}-${index}`
-                        }
-                        student={student}
-                        index={index}
-                        onClick={() =>
-                          setSelectedStudent(
-                            student
-                          )
-                        }
-                      />
-                    )
-                  )}
-                </AnimatePresence>
-              </motion.div>
-
-              {/* PAGINATION */}
-              {totalPages > 1 && (
-                <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[#DCEEF2] pt-7 sm:flex-row">
-                  <p className="text-sm text-[#55727D]">
-                    Page{" "}
-                    <span className="font-bold text-[#123B4A]">
-                      {page}
-                    </span>{" "}
-                    of{" "}
-                    <span className="font-bold text-[#123B4A]">
-                      {totalPages}
-                    </span>
-                  </p>
-
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      disabled={page === 1}
-                      onClick={() =>
-                        setPage((p) =>
-                          Math.max(1, p - 1)
-                        )
-                      }
-                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#D6E9EE] bg-white text-[#55727D] transition hover:border-[#087EA4] hover:text-[#087EA4] disabled:cursor-not-allowed disabled:opacity-40"
-                      aria-label="Previous page"
-                    >
-                      <FaChevronLeft className="text-xs" />
-                    </button>
-
-                    {paginationNumbers.map(
-                      (number) => (
-                        <button
-                          key={number}
-                          type="button"
-                          onClick={() =>
-                            setPage(number)
-                          }
-                          className={`flex h-10 min-w-10 items-center justify-center rounded-xl px-3 text-sm font-bold transition ${
-                            page === number
-                              ? "bg-[#087EA4] text-white shadow-md shadow-[#087EA4]/20"
-                              : "border border-[#D6E9EE] bg-white text-[#55727D] hover:border-[#087EA4] hover:text-[#087EA4]"
-                          }`}
-                        >
-                          {number}
-                        </button>
-                      )
-                    )}
-
-                    <button
-                      type="button"
-                      disabled={
-                        page === totalPages
-                      }
-                      onClick={() =>
-                        setPage((p) =>
-                          Math.min(
-                            totalPages,
-                            p + 1
-                          )
-                        )
-                      }
-                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#D6E9EE] bg-white text-[#55727D] transition hover:border-[#087EA4] hover:text-[#087EA4] disabled:cursor-not-allowed disabled:opacity-40"
-                      aria-label="Next page"
-                    >
-                      <FaChevronRight className="text-xs" />
-                    </button>
-                  </div>
-                </div>
-              )}
-            </>
+          ) : filteredStudents.length > 0 ? (
+            <div className="mt-10 space-y-14">
+              {visibleGroups.map(([batch, members]) => {
+                const isExpanded = expandedBatch === batch;
+                const cards = isExpanded ? members : members.slice(0, previewCount);
+                const session = getSession(members[0] || {});
+                return (
+                  <section key={batch} aria-labelledby={`student-batch-${batch}`}>
+                    <div className="mb-6 flex flex-col gap-4 border-b border-[#087EA4]/10 pb-4 sm:flex-row sm:items-end sm:justify-between">
+                      <div>
+                        <div className="flex items-center gap-3">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#087EA4]/10 text-sm font-bold text-[#087EA4]">{batch === "Unknown" ? "—" : batch}</span>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#0891B2]">Session {session || "Details unavailable"}</p>
+                            <h3 id={`student-batch-${batch}`} className="mt-0.5 text-xl font-semibold tracking-tight text-[#123B4A]">{batch === "Unknown" ? "Batch details unavailable" : `${getBatchOrdinal(batch)} Batch`}</h3>
+                          </div>
+                        </div>
+                        <p className="mt-2 text-xs text-[#55727D]">{members.length} student{members.length === 1 ? "" : "s"} in this batch</p>
+                      </div>
+                      {expandedBatch && isExpanded ? (
+                        <button type="button" onClick={() => setExpandedBatch(null)} className="inline-flex min-h-10 w-fit items-center gap-2 rounded-xl border border-[#087EA4]/15 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[.12em] text-[#087EA4] shadow-sm transition hover:bg-[#F0FAFC]">All batches <FaArrowRight className="rotate-180" size={9} /></button>
+                      ) : members.length > previewCount ? (
+                        <button type="button" onClick={() => { setExpandedBatch(batch); document.getElementById(`student-batch-${batch}`)?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="inline-flex min-h-10 w-fit items-center gap-2 rounded-xl border border-[#087EA4]/15 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[.12em] text-[#087EA4] shadow-sm transition hover:bg-[#F0FAFC]">View all {members.length} <FaArrowRight size={9} /></button>
+                      ) : null}
+                    </div>
+                    <motion.div layout className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                      <AnimatePresence mode="popLayout">
+                        {cards.map((student, index) => (
+                          <StudentCard key={student.id || `${getStudentId(student)}-${index}`} student={student} index={index} onClick={() => setSelectedStudent(student)} />
+                        ))}
+                      </AnimatePresence>
+                    </motion.div>
+                  </section>
+                );
+              })}
+            </div>
           ) : (
             <EmptyState
               search={search}
-              selectedBatch={selectedBatch}
-              onReset={() => {
-                setSearch("");
-                selectBatch("All");
-              }}
+              onReset={() => setSearch("")}
             />
           )}
         </div>
@@ -1172,6 +717,7 @@ export default function OurStudentPage() {
           STUDENT MODAL
       ================================================= */}
 
+      <ModalPortal>
       <AnimatePresence>
         {selectedStudent && (
           <StudentModal
@@ -1182,6 +728,7 @@ export default function OurStudentPage() {
           />
         )}
       </AnimatePresence>
+      </ModalPortal>
     </main>
   );
 }
@@ -1451,11 +998,9 @@ function StudentGridSkeleton() {
 
 function EmptyState({
   search,
-  selectedBatch,
   onReset,
 }: {
   search: string;
-  selectedBatch: string;
   onReset: () => void;
 }) {
   return (
@@ -1472,9 +1017,7 @@ function EmptyState({
         We couldn't find students matching
         {search
           ? ` "${search}"`
-          : selectedBatch !== "All"
-          ? ` batch ${selectedBatch}`
-          : " your filters"}
+          : " the directory"}
         .
       </p>
 
@@ -1483,7 +1026,7 @@ function EmptyState({
         onClick={onReset}
         className="mt-6 rounded-xl bg-[#087EA4] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#087EA4]/20 transition hover:bg-[#075985]"
       >
-        Clear filters
+        Clear search
       </button>
     </div>
   );

@@ -191,6 +191,96 @@ function CountUp({
   );
 }
 
+function FilterDropdown({
+  id,
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const rootRef = useRef<HTMLDivElement>(null);
+  const selected = options.find((option) => option.value === value);
+  const visibleOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(query.trim().toLowerCase())
+  );
+
+  useEffect(() => {
+    if (!open) return;
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className="relative min-w-0">
+      <button
+        id={id}
+        type="button"
+        aria-label={`${label}: ${selected?.label || value}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={`${id}-options`}
+        onClick={() => {
+          setOpen((current) => !current);
+          setQuery("");
+        }}
+        className="flex min-h-11 w-full min-w-0 items-center justify-between gap-2 rounded-xl border border-[#DCEEF2] bg-white px-3 text-left text-sm text-[#123B4A] transition hover:border-[#087EA4]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087EA4]/30"
+      >
+        <span className="min-w-0 truncate">{selected?.label || value}</span>
+        <FaChevronDown aria-hidden="true" className={`shrink-0 text-[10px] transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="absolute left-0 right-0 top-[calc(100%+0.4rem)] z-50 w-full min-w-0 overflow-hidden rounded-xl border border-[#DCEEF2] bg-white p-2 shadow-[0_16px_45px_rgba(7,45,60,0.2)]">
+          <label className="sr-only" htmlFor={`${id}-search`}>Search {label.toLowerCase()}</label>
+          <input
+            id={`${id}-search`}
+            autoFocus
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={`Search ${label.toLowerCase()}…`}
+            className="mb-2 min-h-10 w-full rounded-lg border border-[#DCEEF2] bg-[#F7FCFD] px-3 text-sm text-[#123B4A] outline-none focus:border-[#087EA4]"
+          />
+          <div id={`${id}-options`} role="listbox" aria-label={label} className="max-h-56 overflow-y-auto overscroll-contain">
+            {visibleOptions.length ? visibleOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={option.value === value}
+                onClick={() => {
+                  onChange(option.value);
+                  setOpen(false);
+                  setQuery("");
+                }}
+                className={`directory-filter-option block min-h-10 w-full rounded-lg px-3 py-2 text-left text-sm leading-5 transition ${option.value === value ? "bg-[#087EA4]/10 font-semibold text-[#087EA4]" : "text-[#123B4A]"}`}
+              >
+                <span className="block break-words">{option.label}</span>
+              </button>
+            )) : <p className="px-3 py-3 text-sm text-[#55727D]">No matches found.</p>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* =========================================================
    ALUMNI GRID
 ========================================================= */
@@ -549,11 +639,11 @@ export default function AlumniPage() {
   }, [alumni, search, presentStatus, job, organization, city, country]);
 
   const options = useMemo(() => ({
-    statuses: Array.from(new Set(alumni.map((member) => member.presentStatus).filter(Boolean))).sort(),
-    jobs: Array.from(new Set(alumni.map((member) => member.currentPosition).filter(Boolean))).sort(),
-    organizations: Array.from(new Set(alumni.map((member) => member.organization).filter(Boolean))).sort(),
-    cities: Array.from(new Set(alumni.map((member) => member.currentCity).filter(Boolean))).sort(),
-    countries: Array.from(new Set(alumni.map((member) => member.currentCountry).filter(Boolean))).sort(),
+    statuses: Array.from(new Set(alumni.map((member) => member.presentStatus).filter((value): value is string => Boolean(value)))).sort(),
+    jobs: Array.from(new Set(alumni.map((member) => member.currentPosition).filter((value): value is string => Boolean(value)))).sort(),
+    organizations: Array.from(new Set(alumni.map((member) => member.organization).filter((value): value is string => Boolean(value)))).sort(),
+    cities: Array.from(new Set(alumni.map((member) => member.currentCity).filter((value): value is string => Boolean(value)))).sort(),
+    countries: Array.from(new Set(alumni.map((member) => member.currentCountry).filter((value): value is string => Boolean(value)))).sort(),
   }), [alumni]);
 
   /* =====================================================
@@ -755,15 +845,6 @@ export default function AlumniPage() {
     setCity("");
     setCountry("");
     setSort("name-asc");
-  };
-
-  const copySearchLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      window.alert("Filtered directory link copied.");
-    } catch {
-      window.prompt("Copy this filtered directory link:", window.location.href);
-    }
   };
 
   /* =====================================================
@@ -1092,31 +1173,12 @@ export default function AlumniPage() {
           </motion.div>
 
           <div className="mx-auto mt-3 grid max-w-4xl gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            <label className="sr-only" htmlFor="alumni-status-filter">Filter by present status</label>
-            <select id="alumni-status-filter" value={presentStatus} onChange={(event) => setPresentStatus(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All present statuses</option>{options.statuses.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="alumni-job-filter">Filter by job or position</label>
-            <select id="alumni-job-filter" value={job} onChange={(event) => setJob(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All jobs / positions</option>{options.jobs.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="alumni-organization-filter">Filter by organization</label>
-            <select id="alumni-organization-filter" value={organization} onChange={(event) => setOrganization(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All organizations</option>{options.organizations.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="alumni-city-filter">Filter by city</label>
-            <select id="alumni-city-filter" value={city} onChange={(event) => setCity(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All cities</option>{options.cities.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="alumni-country-filter">Filter by country</label>
-            <select id="alumni-country-filter" value={country} onChange={(event) => setCountry(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="">All countries</option>{options.countries.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-            <label className="sr-only" htmlFor="alumni-sort">Sort alumni</label>
-            <select id="alumni-sort" value={sort} onChange={(event) => setSort(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
-              <option value="name-asc">Name: A to Z</option><option value="name-desc">Name: Z to A</option><option value="batch-asc">Batch: oldest first</option><option value="batch-desc">Batch: newest first</option>
-            </select>
-            <button type="button" onClick={() => void copySearchLink()} className="min-h-11 rounded-xl border border-[#087EA4]/20 bg-white px-3 text-sm font-semibold text-[#087EA4] transition hover:bg-[#EAF5F8]">Copy filtered link</button>
+            <FilterDropdown id="alumni-status-filter" label="Present status" value={presentStatus} onChange={setPresentStatus} options={[{ value: "", label: "All present statuses" }, ...options.statuses.map((value) => ({ value, label: value }))]} />
+            <FilterDropdown id="alumni-job-filter" label="Job or position" value={job} onChange={setJob} options={[{ value: "", label: "All jobs / positions" }, ...options.jobs.map((value) => ({ value, label: value }))]} />
+            <FilterDropdown id="alumni-organization-filter" label="Organization" value={organization} onChange={setOrganization} options={[{ value: "", label: "All organizations" }, ...options.organizations.map((value) => ({ value, label: value }))]} />
+            <FilterDropdown id="alumni-city-filter" label="City" value={city} onChange={setCity} options={[{ value: "", label: "All cities" }, ...options.cities.map((value) => ({ value, label: value }))]} />
+            <FilterDropdown id="alumni-country-filter" label="Country" value={country} onChange={setCountry} options={[{ value: "", label: "All countries" }, ...options.countries.map((value) => ({ value, label: value }))]} />
+            <FilterDropdown id="alumni-sort" label="Sort alumni" value={sort} onChange={setSort} options={[{ value: "name-asc", label: "Name: A to Z" }, { value: "name-desc", label: "Name: Z to A" }, { value: "batch-asc", label: "Batch: oldest first" }, { value: "batch-desc", label: "Batch: newest first" }]} />
             <button type="button" onClick={clearAll} className="min-h-11 rounded-xl border border-transparent px-3 text-sm font-semibold text-[#55727D] transition hover:bg-[#EAF5F8] hover:text-[#087EA4]">Clear filters</button>
           </div>
 

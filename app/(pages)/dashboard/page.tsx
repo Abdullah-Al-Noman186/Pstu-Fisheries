@@ -11,9 +11,7 @@ import { FIELDS } from "@/lib/profileFields";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 
 type RecordData = Record<string, string>;
-type ProfilePrivacy = { showEmail: boolean; showPhone: boolean; showAddress: boolean };
 const empty: RecordData = { status: "current_student" };
-const defaultPrivacy: ProfilePrivacy = { showEmail: false, showPhone: false, showAddress: false };
 const sections = ["Identity", "Personal", "Contact", "Work & study", "About"];
 
 export default function DashboardPage() {
@@ -23,11 +21,10 @@ export default function DashboardPage() {
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [linked, setLinked] = useState(false);
-  const [privacy, setPrivacy] = useState<ProfilePrivacy>(defaultPrivacy);
   const [deleting, setDeleting] = useState(false);
   const savedSnapshot = useRef("");
 
-  const recordFromApi = (data: RecordData) => ({ ...empty, ...Object.fromEntries(Object.entries(data).filter(([key]) => key !== "privacy").map(([key, value]) => [key, value == null ? "" : Array.isArray(value) ? value.join("\n") : String(value)])) });
+  const recordFromApi = (data: RecordData) => ({ ...empty, ...Object.fromEntries(Object.entries(data).map(([key, value]) => [key, value == null ? "" : Array.isArray(value) ? value.join("\n") : String(value)])) });
 
   const loadRecord = useCallback(async () => {
     try {
@@ -35,9 +32,7 @@ export default function DashboardPage() {
       if (data.success && data.data) {
         const nextRecord = recordFromApi(data.data);
         setRecord(nextRecord);
-        const nextPrivacy = { ...defaultPrivacy, ...(data.data.privacy || {}) };
-        setPrivacy(nextPrivacy);
-        savedSnapshot.current = JSON.stringify({ record: nextRecord, privacy: nextPrivacy });
+        savedSnapshot.current = JSON.stringify(nextRecord);
         const isLinked = Boolean(nextRecord.id_no && nextRecord.reg_no);
         setLinked(isLinked);
       }
@@ -55,7 +50,7 @@ export default function DashboardPage() {
   const completenessFields = ["photo", "name_bn", "gender", "dob", "phone", "permanent_address", "present_status", "bio"];
   const missingFields = completenessFields.filter((key) => !String(record[key] || "").trim());
   const completion = Math.round(((completenessFields.length - missingFields.length) / completenessFields.length) * 100);
-  const isDirty = loaded && savedSnapshot.current !== JSON.stringify({ record, privacy });
+  const isDirty = loaded && savedSnapshot.current !== JSON.stringify(record);
 
   useEffect(() => {
     if (!isDirty) return;
@@ -87,12 +82,10 @@ export default function DashboardPage() {
         setBusy(false);
         return;
       }
-      const { data } = await axios.put("/api/profile", { ...record, privacy });
+      const { data } = await axios.put("/api/profile", record);
       const savedRecord = recordFromApi(data.data || record);
       setRecord(savedRecord);
-      const savedPrivacy = { ...defaultPrivacy, ...(data.data?.privacy || privacy) };
-      setPrivacy(savedPrivacy);
-      savedSnapshot.current = JSON.stringify({ record: savedRecord, privacy: savedPrivacy });
+      savedSnapshot.current = JSON.stringify(savedRecord);
       await refreshUser();
       toast.success("Profile saved.");
     } catch (error: any) { toast.error(error?.response?.data?.error || "Could not save your profile."); }
@@ -146,7 +139,6 @@ export default function DashboardPage() {
           {record.photo && <div className="mt-5 flex items-center gap-4"><img src={record.photo} alt="Profile preview" className="h-16 w-16 rounded-2xl object-cover" /><span className="text-sm text-[#55727D]">This photo will show in your navbar and directory after saving.</span></div>}
           {!linked ? <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900">We couldn’t automatically find a PSTU record connected to this account. Please contact the faculty administrator to link the correct record.</div> : <form onSubmit={save} className="mt-6 space-y-5 sm:space-y-6">
             {sections.map((section) => <div key={section} className="rounded-2xl border border-[#087EA4]/10 bg-[#FBFEFF] p-4 sm:p-5"><h2 className="mb-4 text-[11px] font-black uppercase tracking-[.18em] text-[#087EA4]">{section}</h2><div className="grid gap-4 sm:grid-cols-2">{bySection[section].map((field) => <label key={field.key} className={`block text-sm font-semibold text-[#123B4A] ${field.type === "textarea" ? "sm:col-span-2" : ""}`}>{field.label}{field.key === "status" ? <select value={record.status || "current_student"} onChange={(e) => setValue(field.key, e.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#087EA4]/15 bg-white px-4 py-3 transition focus:border-[#087EA4]"> <option value="current_student">Current student</option><option value="alumni">Alumni</option></select> : field.type === "select" ? <select value={record[field.key] || ""} onChange={(e) => setValue(field.key, e.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#087EA4]/15 bg-white px-4 py-3 transition focus:border-[#087EA4]"><option value="">Select…</option>{field.options?.map((option) => <option key={option} value={option}>{option}</option>)}</select> : field.type === "textarea" ? <textarea rows={4} value={record[field.key] || ""} onChange={(e) => setValue(field.key, e.target.value)} className="mt-2 w-full rounded-xl border border-[#087EA4]/15 bg-white px-4 py-3 outline-none transition focus:border-[#087EA4]" /> : <input type={field.type || "text"} readOnly={field.readOnly} value={record[field.key] || ""} onChange={(e) => setValue(field.key, e.target.value)} className={`mt-2 min-h-12 w-full rounded-xl border bg-white px-4 py-3 outline-none transition focus:border-[#087EA4] ${field.readOnly ? "border-slate-100 bg-slate-50 text-slate-500" : "border-[#087EA4]/15"}`} />}</label>)}</div></div>)}
-            <section aria-labelledby="privacy-title" className="rounded-2xl border border-[#087EA4]/10 bg-[#FBFEFF] p-4 sm:p-5"><h2 id="privacy-title" className="text-[11px] font-black uppercase tracking-[.18em] text-[#087EA4]">Directory privacy</h2><p className="mt-1 text-xs text-[#55727D]">Contact details are private unless you choose to show them.</p><div className="mt-4 grid gap-3 sm:grid-cols-3">{([["showEmail", "Show my email"], ["showPhone", "Show my phone"], ["showAddress", "Show my permanent address"]] as const).map(([key, label]) => <label key={key} className="flex min-h-11 items-center gap-2 text-sm font-medium text-[#123B4A]"><input type="checkbox" checked={privacy[key]} onChange={(event) => setPrivacy((current) => ({ ...current, [key]: event.target.checked }))} className="h-4 w-4 accent-[#087EA4]" />{label}</label>)}</div></section>
             <div className="pt-1 sm:flex sm:items-center sm:justify-between"><p aria-live="polite" className="mb-3 text-xs text-amber-700 sm:mb-0">{isDirty ? "You have unsaved changes. Leaving this page will ask you to confirm." : "Your changes are saved."}</p><button disabled={busy || !isDirty} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#087EA4] px-6 py-3 font-bold text-white shadow-[0_8px_24px_rgba(8,126,164,0.2)] transition hover:bg-[#075985] disabled:opacity-60 sm:w-auto">{busy ? <FaSpinner className="animate-spin" /> : <FaCheck />} Save profile</button></div>
           </form>}
           <section aria-labelledby="delete-account-title" className="mt-8 border-t border-[#DCEEF2] pt-6"><h2 id="delete-account-title" className="text-sm font-bold text-rose-700">Delete account</h2><p className="mt-1 max-w-2xl text-xs leading-5 text-[#55727D]">This permanently removes your sign-in and saved profile. Your PSTU source record is kept so you can register again later.</p><button type="button" disabled={deleting} onClick={() => void deleteAccount()} className="mt-3 min-h-10 rounded-xl border border-rose-200 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 disabled:opacity-60">{deleting ? "Deleting account…" : "Delete my account"}</button></section>

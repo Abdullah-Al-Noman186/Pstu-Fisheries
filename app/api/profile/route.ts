@@ -78,7 +78,6 @@ export async function GET(req: NextRequest) {
         status: profile.role === "alumni" ? "alumni" : "current_student",
         batch_no: savedRecord.batch_no ?? profile.batch ?? "",
         batch_session: savedRecord.batch_session || "",
-        privacy: profile.privacy || { showEmail: false, showPhone: false, showAddress: false },
       } : null });
     }
 
@@ -127,7 +126,6 @@ export async function GET(req: NextRequest) {
       photo: profile.photo,
       status: currentStatus,
       batch_no: publicRecord.batch_no ?? profile.batch ?? "",
-      privacy: profile.privacy || { showEmail: false, showPhone: false, showAddress: false },
     } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
@@ -142,11 +140,6 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     const allowed = ["name_bn", "gender", "dob", "permanent_address", "phone", "alt_phone", "contact", "linkedin", "present_status", "job_title", "organization", "location", "degree", "current_city", "current_country", "photo", "bio", "achievements", "status"];
     const update = Object.fromEntries(allowed.filter((key) => typeof body[key] === "string").map((key) => [key, body[key].trim()]));
-    const privacy = body.privacy && typeof body.privacy === "object" ? {
-      showEmail: body.privacy.showEmail === true,
-      showPhone: body.privacy.showPhone === true,
-      showAddress: body.privacy.showAddress === true,
-    } : undefined;
     if (update.status && !["alumni", "current_student"].includes(update.status)) return NextResponse.json({ success: false, error: "Invalid status" }, { status: 400 });
     const current = await Profile.findOne({ uid });
     if (!current?.studentRecord?.id_no) return NextResponse.json({ success: false, error: "Claim your student record before editing it" }, { status: 409 });
@@ -179,12 +172,9 @@ export async function PUT(req: NextRequest) {
       await Alumni.deleteOne({ uid });
       await Student.findOneAndUpdate({ uid }, { $set: { ...mapped, address: record.permanent_address } }, { upsert: true, new: true, setDefaultsOnInsert: true });
     }
-    await Promise.all([
-      User.updateOne({ uid }, { $set: { name: record.name, email: record.email, photo: record.photo, role: newRole } }),
-      ...(privacy ? [Profile.updateOne({ uid }, { $set: { privacy } })] : []),
-    ]);
+    await User.updateOne({ uid }, { $set: { name: record.name, email: record.email, photo: record.photo, role: newRole } });
 
-    return NextResponse.json({ success: true, data: { ...record, privacy: privacy || current.privacy || { showEmail: false, showPhone: false, showAddress: false }, status: record.status, _id: profile._id.toString() } });
+    return NextResponse.json({ success: true, data: { ...record, status: record.status, _id: profile._id.toString() } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

@@ -15,28 +15,21 @@ export async function GET() {
       Profile.find({ studentRecord: { $exists: true } }).lean(),
     ]);
     const byId = new Map<string, Record<string, any>>();
-    const privacyByUid = new Map<string, any>(profiles.map((profile: any) => [profile.uid, profile.privacy || {}]));
     saved.forEach((r: any) => {
       const publicRecord: Record<string, any> = toPublicStudent(r);
-      const privacy = privacyByUid.get(String(r.uid || "")) || {};
       byId.set(String(r.studentId || r.id_no || r._id), {
         ...publicRecord,
-        email: privacy.showEmail ? publicRecord.email : "",
-        phone: privacy.showPhone ? publicRecord.phone : "",
-        contact: privacy.showPhone ? publicRecord.contact : "",
-        permanent_address: privacy.showAddress ? publicRecord.permanent_address : "",
         status: "current_student",
       });
     });
     profiles.forEach((p: any) => {
-      const privacy = p.privacy || {};
       byId.set(String(p.studentRecord?.id_no), {
         ...p.studentRecord,
         name: p.name,
-        email: privacy.showEmail ? p.email : "",
-        phone: privacy.showPhone ? p.studentRecord?.phone || "" : "",
-        contact: privacy.showPhone ? p.studentRecord?.contact || "" : "",
-        permanent_address: privacy.showAddress ? p.studentRecord?.permanent_address || "" : "",
+        email: p.email || p.studentRecord?.email || "",
+        phone: p.studentRecord?.phone || "",
+        contact: p.studentRecord?.contact || "",
+        permanent_address: p.studentRecord?.permanent_address || p.studentRecord?.permanentAddress || p.studentRecord?.address || "",
         photo: p.photo || p.studentRecord?.photo,
         isRegistered: true,
         status: p.role === "alumni" ? "alumni" : "current_student",

@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import TeacherCard from "@/components/teachers/TeacherCard";
 import TeacherModal from "@/components/teachers/TeacherModal";
+import ModalPortal from "@/components/ui/ModalPortal";
 
 const deptKeys = ["ALL", ...Object.keys(DEPARTMENTS)] as const;
 
@@ -136,10 +137,12 @@ export default function TeachersPage() {
       {/* =========================================================
           MODAL
       ========================================================== */}
+      <ModalPortal>
       <TeacherModal
         teacher={selectedTeacher}
         onClose={() => setSelectedTeacher(null)}
       />
+      </ModalPortal>
 
       {/* =========================================================
           HERO

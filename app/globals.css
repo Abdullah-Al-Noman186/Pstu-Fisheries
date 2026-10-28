@@ -157,6 +157,23 @@ html[data-color-mode="dark"] .surface-card {
   background: #102A36;
 }
 
+.directory-filter-option:hover,
+.directory-filter-option:focus-visible {
+  background-color: #EAF5F8;
+  color: #123B4A;
+}
+
+html[data-color-mode="dark"] .directory-filter-option:hover,
+html[data-color-mode="dark"] .directory-filter-option:focus-visible {
+  background-color: #1B3B49 !important;
+  color: #E5F1F4 !important;
+}
+
+html[data-color-mode="dark"] .directory-filter-option[aria-selected="true"] {
+  background-color: rgba(8, 126, 164, .22) !important;
+  color: #62C6E1 !important;
+}
+
 html[data-color-mode="dark"] .home-dark-decoration {
   display: none !important;
 }

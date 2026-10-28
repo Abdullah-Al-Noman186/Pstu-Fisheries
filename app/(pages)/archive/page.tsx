@@ -8,6 +8,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import ModalPortal from "@/components/ui/ModalPortal";
 
 import {
   FaArchive,
@@ -180,6 +181,13 @@ export default function ArchivePage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedItem, setSelectedItem] =
     useState<ArchiveItem | null>(null);
+
+  useEffect(() => {
+    if (!showAddModal && !selectedItem) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [showAddModal, selectedItem]);
 
   const [loading, setLoading] = useState(false);
 
@@ -1040,6 +1048,8 @@ export default function ArchivePage() {
           ADD MODAL
       ====================================================== */}
 
+      <ModalPortal>
+      <>
       <AnimatePresence>
 
         {showAddModal && user && (
@@ -1441,6 +1451,8 @@ export default function ArchivePage() {
         )}
 
       </AnimatePresence>
+      </>
+      </ModalPortal>
 
     </main>
   );
