@@ -108,12 +108,12 @@ export default function StatsSection() {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-[#F0FAFC] py-16 sm:py-20 lg:py-24">
+    <section className="stats-section relative overflow-hidden bg-[#F0FAFC] py-16 sm:py-20 lg:py-24">
       {/* =========================================================
           BACKGROUND
       ========================================================== */}
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="home-dark-decoration pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-52 bg-gradient-to-b from-[#D9F3FA]/70 to-transparent" />
 
         <div className="absolute -left-32 top-24 h-72 w-72 rounded-full bg-[#0891B2]/[0.045] blur-[100px]" />

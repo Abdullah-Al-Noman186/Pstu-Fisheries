@@ -15,9 +15,13 @@ import {
   FaQuoteLeft,
   FaCalendarAlt,
   FaGraduationCap,
+  FaCheckCircle,
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   alumni: Alumni | null;
@@ -80,6 +84,7 @@ const defaultStyle = {
 };
 
 export default function AlumniModal({ alumni, onClose }: Props) {
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -114,6 +119,21 @@ export default function AlumniModal({ alumni, onClose }: Props) {
 
   const style =
     departmentStyles[alumni?.department || ""] || defaultStyle;
+
+  const reportProfile = async () => {
+    if (!user) {
+      toast.error("Sign in to report a profile.");
+      return;
+    }
+    const message = window.prompt("What information is incorrect? Please describe it in at least 10 characters.");
+    if (!message?.trim()) return;
+    try {
+      await axios.post("/api/profile/report", { targetUid: alumni?.uid, message });
+      toast.success("Report sent to the faculty team for review.");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || "Could not send the report.");
+    }
+  };
 
   if (!mounted) return null;
 
@@ -246,6 +266,7 @@ export default function AlumniModal({ alumni, onClose }: Props) {
                     <h2 className="font-display text-xl font-bold leading-tight tracking-tight text-[#123B4A] sm:text-2xl">
                       {alumni.name}
                     </h2>
+                    {alumni.isVerified && <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700"><FaCheckCircle aria-hidden="true" /> Verified PSTU record</span>}
                     {alumni.nameBn && (
                       <p lang="bn" className="mt-1 text-sm text-[#55727D]">
                         {alumni.nameBn}
@@ -494,17 +515,24 @@ export default function AlumniModal({ alumni, onClose }: Props) {
                   FOOTER
               ===================================================== */}
               <div className="relative z-20 shrink-0 border-t border-[#E4EFF2] bg-white px-5 py-4 sm:px-7">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="group flex w-full items-center justify-center gap-2 rounded-xl border border-[#DCEBF0] bg-white py-3 text-xs font-semibold text-[#466671] transition-colors hover:border-[#087EA4]/30 hover:bg-[#EAF5F8] hover:text-[#087EA4]"
-                >
+                <div className="flex gap-3">
+                  {alumni.uid && (
+                    <button type="button" onClick={() => void reportProfile()} className="min-h-11 flex-1 rounded-xl border border-[#DCEBF0] px-3 py-3 text-xs font-semibold text-[#55727D] hover:bg-[#EAF5F8]" aria-label={`Report incorrect information for ${alumni.name}`}>
+                      Report incorrect info
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="group flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-[#DCEBF0] bg-white py-3 text-xs font-semibold text-[#466671] transition-colors hover:border-[#087EA4]/30 hover:bg-[#EAF5F8] hover:text-[#087EA4]"
+                  >
                   <FaTimes
                     size={9}
                     className="transition-transform duration-300 group-hover:rotate-90"
                   />
                   Close Profile
-                </button>
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>

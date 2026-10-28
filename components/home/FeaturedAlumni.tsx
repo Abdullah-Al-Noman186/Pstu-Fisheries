@@ -97,7 +97,7 @@ export default function FeaturedAlumni() {
             BACKGROUND
         ======================================================= */}
 
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="home-dark-decoration pointer-events-none absolute inset-0 overflow-hidden">
 
           {/* Top-left aqua glow */}
 

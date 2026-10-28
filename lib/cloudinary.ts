@@ -21,5 +21,7 @@ export async function uploadToCloudinary(file: File): Promise<string> {
   }
 
   const data = await response.json();
-  return data.secure_url;
+  // Let Cloudinary deliver a compressed, device-appropriate image instead of
+  // serving the original upload bytes to every directory card.
+  return data.secure_url.replace("/upload/", "/upload/f_auto,q_auto,c_limit,w_1600/");
 }

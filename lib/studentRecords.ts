@@ -23,6 +23,7 @@ export const toPublicStudent = (r: Record<string, any>) => ({
   permanent_address: r.permanent_address || r.permanentAddress || r.address || "",
   present_status: r.present_status || r.presentStatus || "",
   status: r.status || (r.role === "alumni" ? "alumni" : "current_student"),
+  isVerified: Boolean(r.isRegistered || r.uid),
 });
 
 export const toPublicAlumni = (r: Record<string, any>) => ({
@@ -48,4 +49,5 @@ export const toPublicAlumni = (r: Record<string, any>) => ({
   bio: r.bio || "",
   presentStatus: r.present_status || r.presentStatus || "",
   role: "alumni" as const,
+  isVerified: Boolean(r.isRegistered || r.uid),
 });

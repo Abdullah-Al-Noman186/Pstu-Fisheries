@@ -30,4 +30,5 @@ export const FIELDS: Field[] = [
   { key: "current_city", label: "Current city", section: "Work & study" },
   { key: "current_country", label: "Current country", section: "Work & study" },
   { key: "bio", label: "Bio", section: "About", type: "textarea" },
+  { key: "achievements", label: "Achievements and career milestones (one per line)", section: "About", type: "textarea" },
 ];

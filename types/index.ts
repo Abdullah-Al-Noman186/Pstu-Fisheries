@@ -40,6 +40,7 @@ export interface Alumni {
   contact?: string;
   department?: Department;
   batch?: number;
+  session?: string;
   currentPosition?: string;
   organization?: string;
   location?: string;
@@ -52,6 +53,7 @@ export interface Alumni {
   testimonial?: string;
   bio?: string;
   isFeatured?: boolean;
+  isVerified?: boolean;
   role: "alumni";
 }
 

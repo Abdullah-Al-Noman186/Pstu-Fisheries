@@ -4,12 +4,16 @@ import { adminAuth } from "@/lib/firebase-admin";
 import Archive, { ARCHIVE_CATEGORIES } from "@/models/Archive";
 import User from "@/models/User";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await connectDB();
+    const requestedBatch = Number(req.nextUrl.searchParams.get("batch"));
+    const query: Record<string, unknown> = {};
+    if (Number.isInteger(requestedBatch) && requestedBatch > 0) query.batchNo = requestedBatch;
+    if (req.nextUrl.searchParams.get("category")) query.category = req.nextUrl.searchParams.get("category");
     const [archive, total] = await Promise.all([
-      Archive.find({}).sort({ createdAt: -1 }).limit(200).lean(),
-      Archive.countDocuments({}),
+      Archive.find(query).sort({ createdAt: -1 }).limit(200).lean(),
+      Archive.countDocuments(query),
     ]);
     return NextResponse.json({ success: true, archive, total }, { headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" } });
   } catch (error: any) {
@@ -44,10 +48,12 @@ export async function POST(req: NextRequest) {
     const category = String(body.category || "");
     const year = String(body.year || "").trim();
     const location = String(body.location || "").trim();
+    const batchNo = body.batchNo ? Number(body.batchNo) : undefined;
 
     if (!title || title.length > 160) return NextResponse.json({ success: false, error: "Enter a title up to 160 characters." }, { status: 400 });
     if (!description || description.length > 5000) return NextResponse.json({ success: false, error: "Enter a description up to 5,000 characters." }, { status: 400 });
     if (!ARCHIVE_CATEGORIES.includes(category as (typeof ARCHIVE_CATEGORIES)[number])) return NextResponse.json({ success: false, error: "Choose a valid archive category." }, { status: 400 });
+    if (category === "Reunion" && (!Number.isInteger(batchNo) || Number(batchNo) < 1)) return NextResponse.json({ success: false, error: "Choose a valid batch for this reunion announcement." }, { status: 400 });
     if (!/^https:\/\/res\.cloudinary\.com\//i.test(image)) return NextResponse.json({ success: false, error: "Upload an archive image before publishing." }, { status: 400 });
 
     const archive = await Archive.create({
@@ -57,6 +63,7 @@ export async function POST(req: NextRequest) {
       category,
       year: year.slice(0, 4),
       location,
+      ...(category === "Reunion" ? { batchNo } : {}),
       author: { name: user.name || decoded.name || "Faculty member", photo: user.photo || decoded.picture || "" },
       postedBy: decoded.uid,
     });

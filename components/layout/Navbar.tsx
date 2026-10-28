@@ -18,6 +18,8 @@ import {
   FaUserGraduate,
   FaUsers,
   FaArchive,
+  FaMoon,
+  FaSun,
 } from "react-icons/fa";
 import Image from "next/image";
 
@@ -38,10 +40,27 @@ const roleColor: Record<string, string> = {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
 
   const { user, signOut, loading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    const savedTheme = document.documentElement.dataset.colorMode === "dark" ? "dark" : "light";
+    setThemeMode(savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = themeMode === "light" ? "dark" : "light";
+    document.documentElement.dataset.colorMode = nextTheme;
+    window.localStorage.setItem("pstu-theme-mode", nextTheme);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute(
+      "content",
+      nextTheme === "dark" ? "#0B1C25" : "#F0FAFC",
+    );
+    setThemeMode(nextTheme);
+  };
 
   /* ============================================================
      SCROLL
@@ -593,6 +612,16 @@ export default function Navbar() {
                   </Link>
                 )}
               </div>
+
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${themeMode === "light" ? "dark" : "light"} theme`}
+                title={`Switch to ${themeMode === "light" ? "dark" : "light"} theme`}
+                className="theme-toggle"
+              >
+                {themeMode === "light" ? <FaMoon aria-hidden="true" /> : <FaSun aria-hidden="true" />}
+              </button>
 
             </div>
           </nav>

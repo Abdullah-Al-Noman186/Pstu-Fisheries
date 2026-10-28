@@ -57,7 +57,7 @@ export default function Footer() {
           ATMOSPHERE
       ========================================================= */}
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="home-dark-decoration pointer-events-none absolute inset-0 overflow-hidden">
         {/* Ocean blue glow */}
         <div className="absolute -left-56 -top-52 h-[520px] w-[520px] rounded-full bg-[#087EA4]/[0.06] blur-[130px]" />
 

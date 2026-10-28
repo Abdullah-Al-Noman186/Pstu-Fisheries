@@ -30,6 +30,7 @@ export interface IProfile extends Document {
   achievements?: string[];
   testimonial?: string;
   studentRecord?: Record<string, unknown>;
+  privacy?: { showEmail?: boolean; showPhone?: boolean; showAddress?: boolean };
 }
 
 const ProfileSchema = new Schema<IProfile>({
@@ -59,6 +60,15 @@ const ProfileSchema = new Schema<IProfile>({
   achievements:  [String],
   testimonial:   String,
   studentRecord: { type: Schema.Types.Mixed, default: {} },
+  privacy: {
+    showEmail: { type: Boolean, default: false },
+    showPhone: { type: Boolean, default: false },
+    showAddress: { type: Boolean, default: false },
+  },
 }, { timestamps: true });
+
+ProfileSchema.index({ role: 1, batch: 1 });
+ProfileSchema.index({ "studentRecord.batch_no": 1 });
+ProfileSchema.index({ "studentRecord.id_no": 1, "studentRecord.reg_no": 1 });
 
 export default mongoose.models.Profile || mongoose.model<IProfile>("Profile", ProfileSchema);

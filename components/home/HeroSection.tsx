@@ -8,7 +8,7 @@ import AlumniBatchesSlider from "@/components/home/AlumniBatchesSlider";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#F0FAFC] text-[#123B4A]">
+    <section className="home-hero relative min-h-screen overflow-hidden bg-[#F0FAFC] text-[#123B4A]">
      
 
       {/* =====================================================

@@ -12,8 +12,8 @@ export default function ArchiveSection() {
 
   return (
     <section className="relative overflow-hidden bg-white py-20 sm:py-24">
-      <div className="pointer-events-none absolute -right-32 -top-28 h-96 w-96 rounded-full bg-[#2DD4BF]/10 blur-[110px]" />
-      <div className="pointer-events-none absolute -bottom-40 -left-36 h-96 w-96 rounded-full bg-[#087EA4]/[0.07] blur-[120px]" />
+      <div className="home-dark-decoration pointer-events-none absolute -right-32 -top-28 h-96 w-96 rounded-full bg-[#2DD4BF]/10 blur-[110px]" />
+      <div className="home-dark-decoration pointer-events-none absolute -bottom-40 -left-36 h-96 w-96 rounded-full bg-[#087EA4]/[0.07] blur-[120px]" />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55 }} className="mb-10 flex flex-wrap items-end justify-between gap-5">
           <div>

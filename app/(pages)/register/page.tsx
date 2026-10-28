@@ -20,8 +20,8 @@ export default function RegisterPage() {
     setBusy(true);
     try {
       await registerWithEmail({ email, password, role: "student", studentId, regNo });
-      toast.success("PSTU record matched. Your account is ready.");
-      router.push("/dashboard");
+      toast.success("PSTU record matched. Verify your email before signing in.");
+      router.push("/login");
     } catch (error: any) {
       toast.error(error?.response?.data?.error || error?.message || "Registration failed.");
     } finally { setBusy(false); }

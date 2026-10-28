@@ -69,4 +69,10 @@ const AlumniSchema = new Schema<IAlumni>(
   { timestamps: true }
 );
 
+AlumniSchema.index({ batch: 1, currentCountry: 1 });
+AlumniSchema.index({ studentId: 1 });
+AlumniSchema.index({ regNo: 1 });
+AlumniSchema.index({ organization: 1, currentPosition: 1 });
+AlumniSchema.index({ presentStatus: 1, currentCity: 1 });
+
 export default mongoose.models.Alumni || mongoose.model<IAlumni>("Alumni", AlumniSchema);

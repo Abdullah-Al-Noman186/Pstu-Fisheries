@@ -4,6 +4,7 @@ export const ARCHIVE_CATEGORIES = [
   "Achievement",
   "Research",
   "Event",
+  "Reunion",
   "Award",
   "Fieldwork",
   "Student Success",
@@ -17,6 +18,7 @@ export interface IArchive extends Document {
   category: (typeof ARCHIVE_CATEGORIES)[number];
   year?: string;
   location?: string;
+  batchNo?: number;
   author: { name: string; photo?: string };
   postedBy: string;
   createdAt: Date;
@@ -30,6 +32,7 @@ const ArchiveSchema = new Schema<IArchive>(
     category: { type: String, enum: [...ARCHIVE_CATEGORIES], required: true },
     year: { type: String, trim: true, maxlength: 4 },
     location: { type: String, trim: true, maxlength: 160 },
+    batchNo: { type: Number, min: 1 },
     author: {
       name: { type: String, required: true },
       photo: String,
@@ -38,5 +41,8 @@ const ArchiveSchema = new Schema<IArchive>(
   },
   { timestamps: true }
 );
+
+ArchiveSchema.index({ category: 1, year: -1, createdAt: -1 });
+ArchiveSchema.index({ title: "text", description: "text", location: "text" });
 
 export default mongoose.models.Archive || mongoose.model<IArchive>("Archive", ArchiveSchema);

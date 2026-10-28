@@ -27,6 +27,7 @@ import {
   FaCalendarAlt,
   FaArrowRight,
   FaLayerGroup,
+  FaUsers,
 } from "react-icons/fa";
 
 /* ============================================================
@@ -45,12 +46,14 @@ interface ArchiveItem {
     | "Achievement"
     | "Research"
     | "Event"
+    | "Reunion"
     | "Award"
     | "Fieldwork"
     | "Student Success"
     | "Faculty News";
 
   year?: string;
+  batchNo?: number;
   location?: string;
   createdAt?: string;
 
@@ -72,6 +75,7 @@ const CATEGORIES = [
   "Achievement",
   "Research",
   "Event",
+  "Reunion",
   "Award",
   "Fieldwork",
   "Student Success",
@@ -83,6 +87,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   Achievement: <FaTrophy />,
   Research: <FaFlask />,
   Event: <FaCalendarAlt />,
+  Reunion: <FaUsers />,
   Award: <FaAward />,
   Fieldwork: <FaMapMarkerAlt />,
   "Student Success": <FaGraduationCap />,
@@ -98,6 +103,9 @@ const CATEGORY_COLORS: Record<string, string> = {
 
   Event:
     "bg-[#2DD4BF]/10 text-[#087EA4] border-[#2DD4BF]/10",
+
+  Reunion:
+    "bg-violet-50 text-violet-700 border-violet-100",
 
   Award:
     "bg-amber-50 text-amber-700 border-amber-100",
@@ -164,6 +172,10 @@ export default function ArchivePage() {
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [batchFilter, setBatchFilter] = useState("");
+  const [archiveFiltersReady, setArchiveFiltersReady] = useState(false);
+  const [archivePage, setArchivePage] = useState(1);
+  const archivePageSize = 12;
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedItem, setSelectedItem] =
@@ -179,12 +191,30 @@ export default function ArchivePage() {
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] =
     useState("Achievement");
+  const [storyBatch, setStoryBatch] = useState("");
 
   const [year, setYear] = useState(
     new Date().getFullYear().toString()
   );
 
   const [location, setLocation] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const initialCategory = params.get("category");
+    if (initialCategory && CATEGORIES.includes(initialCategory)) setCategory(initialCategory);
+    setBatchFilter(params.get("batch") || "");
+    setArchiveFiltersReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!archiveFiltersReady) return;
+    const params = new URLSearchParams();
+    if (category !== "All") params.set("category", category);
+    if (batchFilter) params.set("batch", batchFilter);
+    const suffix = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${suffix ? `?${suffix}` : ""}${window.location.hash}`);
+  }, [archiveFiltersReady, category, batchFilter]);
 
   const [imageFile, setImageFile] =
     useState<File | null>(null);
@@ -239,9 +269,19 @@ export default function ArchivePage() {
         category === "All" ||
         item.category === category;
 
-      return matchesSearch && matchesCategory;
+      const matchesBatch = !batchFilter || String(item.batchNo || "") === batchFilter;
+
+      return matchesSearch && matchesCategory && matchesBatch;
     });
-  }, [archive, search, category]);
+  }, [archive, search, category, batchFilter]);
+
+  useEffect(() => setArchivePage(1), [search, category]);
+
+  const archivePageCount = Math.max(1, Math.ceil(filteredArchive.length / archivePageSize));
+  const visibleArchive = useMemo(
+    () => filteredArchive.slice((archivePage - 1) * archivePageSize, archivePage * archivePageSize),
+    [filteredArchive, archivePage]
+  );
 
   /* ==========================================================
      CATEGORY COUNTS
@@ -299,6 +339,7 @@ export default function ArchivePage() {
     setTitle("");
     setDescription("");
     setSelectedCategory("Achievement");
+    setStoryBatch("");
     setYear(new Date().getFullYear().toString());
     setLocation("");
     setImageFile(null);
@@ -347,6 +388,7 @@ export default function ArchivePage() {
         category: selectedCategory,
         year,
         location: location.trim(),
+        batchNo: selectedCategory === "Reunion" ? Number(storyBatch) : undefined,
         image,
       });
 
@@ -391,7 +433,7 @@ export default function ArchivePage() {
   ).length;
 
   const eventCount = archive.filter(
-    (item) => item.category === "Event"
+    (item) => item.category === "Event" || item.category === "Reunion"
   ).length;
 
   /* ==========================================================
@@ -866,6 +908,12 @@ export default function ArchivePage() {
 
           </div>
 
+          {batchFilter && (
+            <button type="button" onClick={() => setBatchFilter("")} className="mb-5 inline-flex min-h-9 items-center gap-2 rounded-full bg-[#087EA4]/10 px-3 text-xs font-semibold text-[#087EA4]">
+              Batch {batchFilter} reunion posts <FaTimes aria-hidden="true" />
+            </button>
+          )}
+
           {/* ==================================================
               RESULTS HEADER
           ================================================== */}
@@ -910,7 +958,7 @@ export default function ArchivePage() {
               className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             >
 
-              {filteredArchive.map(
+              {visibleArchive.map(
                 (item, index) => (
 
                   <ArchiveCard
@@ -931,7 +979,18 @@ export default function ArchivePage() {
 
             </motion.div>
 
-          ) : (
+          ) : null}
+
+          {archivePageCount > 1 && (
+            <nav aria-label="Archive pages" className="mt-8 flex items-center justify-center gap-4">
+              <button type="button" disabled={archivePage <= 1} onClick={() => setArchivePage((page) => Math.max(1, page - 1))} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-4 text-sm font-semibold text-[#087EA4] disabled:cursor-not-allowed disabled:opacity-40">Previous</button>
+              <span aria-live="polite" className="text-sm text-[#55727D]">Page {archivePage} of {archivePageCount}</span>
+              <button type="button" disabled={archivePage >= archivePageCount} onClick={() => setArchivePage((page) => Math.min(archivePageCount, page + 1))} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-4 text-sm font-semibold text-[#087EA4] disabled:cursor-not-allowed disabled:opacity-40">Next</button>
+            </nav>
+
+          )}
+
+          {filteredArchive.length === 0 && (
 
             <div className="rounded-[2rem] border border-[#087EA4]/10 bg-white px-6 py-20 text-center shadow-[0_10px_40px_rgba(7,89,133,0.05)]">
 
@@ -1245,6 +1304,12 @@ export default function ArchivePage() {
                   </FormField>
 
                 </div>
+
+                {selectedCategory === "Reunion" && (
+                  <FormField label="Batch number">
+                    <input type="number" min="1" value={storyBatch} onChange={(event) => setStoryBatch(event.target.value)} placeholder="e.g. 15" className={inputClass} required />
+                  </FormField>
+                )}
 
                 {/* LOCATION */}
 

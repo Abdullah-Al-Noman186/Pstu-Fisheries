@@ -9,6 +9,7 @@ import {
   FaGraduationCap,
   FaLinkedin,
   FaMapMarkerAlt,
+  FaCheckCircle,
 } from "react-icons/fa";
 
 interface Props {
@@ -74,6 +75,7 @@ export default function AlumniCard({ alumni, index = 0, onClick }: Props) {
                   {alumni.nameBn}
                 </p>
               )}
+              {alumni.isVerified && <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold text-emerald-700" aria-label="Verified PSTU profile"><FaCheckCircle aria-hidden="true" /> Verified PSTU record</span>}
             </div>
 
             {alumni.linkedin && alumni.linkedin !== "#" && (

@@ -76,7 +76,7 @@ export default function NewsSection() {
           BACKGROUND ATMOSPHERE
       ======================================================= */}
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="home-dark-decoration pointer-events-none absolute inset-0 overflow-hidden">
         {/* Top-right ocean glow */}
         <div className="absolute -right-40 -top-40 h-[480px] w-[480px] rounded-full bg-[#2DD4BF]/10 blur-[110px]" />
 

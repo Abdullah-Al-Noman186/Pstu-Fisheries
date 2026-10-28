@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendEmailVerification,
   updateProfile
 } from "@/lib/firebase";
 import {
@@ -114,6 +115,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithEmail = async (email: string, password: string) => {
     const credential = await signInWithEmailAndPassword(auth, email, password);
+    if (!credential.user.emailVerified) {
+      await sendEmailVerification(credential.user);
+      await firebaseSignOut(auth);
+      throw new Error("Verify your email first. We sent a fresh verification link to your inbox.");
+    }
     return credential.user;
   };
 
@@ -121,11 +127,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: validation } = await axios.post("/api/auth/validate-registration", data);
     const cred = await createUserWithEmailAndPassword(auth, data.email, data.password);
     try {
+      await sendEmailVerification(cred.user);
       await updateProfile(cred.user, { displayName: validation.name || data.name || "PSTU User" });
       const token = await cred.user.getIdToken();
       await axios.post("/api/auth/register", { token, ...data, name: validation.name || data.name });
       await axios.post("/api/claim", { studentId: data.studentId, regNo: data.regNo }, { headers: { Authorization: `Bearer ${token}` } });
-      await verifyAndSetUser(cred.user);
+      await firebaseSignOut(auth);
       return true;
     } catch (error) {
       try { await deleteUser(cred.user); } catch { /* Firebase may require a fresh sign-in to remove the account. */ }

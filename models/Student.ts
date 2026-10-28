@@ -73,4 +73,9 @@ const StudentSchema = new Schema<IStudent>(
   { timestamps: true }
 );
 
+StudentSchema.index({ batch: 1, currentCountry: 1 });
+StudentSchema.index({ regNo: 1 });
+StudentSchema.index({ organization: 1, currentPosition: 1 });
+StudentSchema.index({ presentStatus: 1, currentCity: 1 });
+
 export default mongoose.models.Student || mongoose.model<IStudent>("Student", StudentSchema);

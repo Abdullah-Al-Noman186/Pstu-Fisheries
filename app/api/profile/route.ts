@@ -78,6 +78,7 @@ export async function GET(req: NextRequest) {
         status: profile.role === "alumni" ? "alumni" : "current_student",
         batch_no: savedRecord.batch_no ?? profile.batch ?? "",
         batch_session: savedRecord.batch_session || "",
+        privacy: profile.privacy || { showEmail: false, showPhone: false, showAddress: false },
       } : null });
     }
 
@@ -126,6 +127,7 @@ export async function GET(req: NextRequest) {
       photo: profile.photo,
       status: currentStatus,
       batch_no: publicRecord.batch_no ?? profile.batch ?? "",
+      privacy: profile.privacy || { showEmail: false, showPhone: false, showAddress: false },
     } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
@@ -138,12 +140,18 @@ export async function PUT(req: NextRequest) {
     if (!uid) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     await connectDB();
     const body = await req.json();
-    const allowed = ["name_bn", "gender", "dob", "permanent_address", "phone", "alt_phone", "contact", "linkedin", "present_status", "job_title", "organization", "location", "degree", "current_city", "current_country", "photo", "bio", "status"];
+    const allowed = ["name_bn", "gender", "dob", "permanent_address", "phone", "alt_phone", "contact", "linkedin", "present_status", "job_title", "organization", "location", "degree", "current_city", "current_country", "photo", "bio", "achievements", "status"];
     const update = Object.fromEntries(allowed.filter((key) => typeof body[key] === "string").map((key) => [key, body[key].trim()]));
+    const privacy = body.privacy && typeof body.privacy === "object" ? {
+      showEmail: body.privacy.showEmail === true,
+      showPhone: body.privacy.showPhone === true,
+      showAddress: body.privacy.showAddress === true,
+    } : undefined;
     if (update.status && !["alumni", "current_student"].includes(update.status)) return NextResponse.json({ success: false, error: "Invalid status" }, { status: 400 });
     const current = await Profile.findOne({ uid });
     if (!current?.studentRecord?.id_no) return NextResponse.json({ success: false, error: "Claim your student record before editing it" }, { status: 409 });
     const record = { ...(current.studentRecord as Record<string, any>), ...update };
+    if (typeof update.achievements === "string") record.achievements = update.achievements.split(/\r?\n/).map((value: string) => value.trim()).filter(Boolean).slice(0, 20);
     delete record.status;
     record.status = update.status || (current.role === "alumni" ? "alumni" : "current_student");
     const newRole = record.status === "alumni" ? "alumni" : "student";
@@ -162,6 +170,7 @@ export async function PUT(req: NextRequest) {
       dob: record.dob, permanentAddress: record.permanent_address, currentCity: record.current_city,
       currentCountry: record.current_country, presentStatus: record.present_status, degree: record.degree,
       bio: record.bio, department: record.department, isRegistered: true,
+      achievements: Array.isArray(record.achievements) ? record.achievements : [],
     };
     if (newRole === "alumni") {
       await Student.deleteOne({ uid });
@@ -172,10 +181,32 @@ export async function PUT(req: NextRequest) {
     }
     await Promise.all([
       User.updateOne({ uid }, { $set: { name: record.name, email: record.email, photo: record.photo, role: newRole } }),
+      ...(privacy ? [Profile.updateOne({ uid }, { $set: { privacy } })] : []),
     ]);
 
-    return NextResponse.json({ success: true, data: { ...record, status: record.status, _id: profile._id.toString() } });
+    return NextResponse.json({ success: true, data: { ...record, privacy: privacy || current.privacy || { showEmail: false, showPhone: false, showAddress: false }, status: record.status, _id: profile._id.toString() } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const uid = await getUID(req);
+    if (!uid) return NextResponse.json({ success: false, error: "Sign in again before deleting your account." }, { status: 401 });
+    await connectDB();
+    await adminAuth().deleteUser(uid);
+    await Promise.all([
+      Profile.deleteOne({ uid }),
+      User.deleteOne({ uid }),
+      Student.updateMany({ uid }, { $unset: { uid: 1 }, $set: { isRegistered: false } }),
+      Alumni.updateMany({ uid }, { $unset: { uid: 1 }, $set: { isRegistered: false } }),
+    ]);
+    const response = NextResponse.json({ success: true });
+    response.cookies.delete("auth_token");
+    return response;
+  } catch (error: any) {
+    console.error("Account deletion failed:", error.message);
+    return NextResponse.json({ success: false, error: "Could not delete your account. Please try again or contact the faculty administrator." }, { status: 500 });
   }
 }

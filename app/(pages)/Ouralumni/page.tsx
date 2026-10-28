@@ -49,6 +49,7 @@ interface Member {
   currentCity?: string;
   currentCountry?: string;
   isFeatured?: boolean;
+  isVerified?: boolean;
 }
 
 /* =========================================================
@@ -399,6 +400,13 @@ function StatCard({
 
 export default function AlumniPage() {
   const [search, setSearch] = useState("");
+  const [presentStatus, setPresentStatus] = useState("");
+  const [job, setJob] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [sort, setSort] = useState("name-asc");
+  const [filtersReady, setFiltersReady] = useState(false);
 
   const [activeBatch, setActiveBatch] =
     useState<number | "all">("all");
@@ -416,6 +424,35 @@ export default function AlumniPage() {
 
   const [selected, setSelected] =
     useState<Member | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setSearch(params.get("q") || "");
+    const batchParam = Number(params.get("batch"));
+    if (Number.isFinite(batchParam) && batchParam > 0) setActiveBatch(batchParam);
+    setPresentStatus(params.get("status") || "");
+    setJob(params.get("job") || "");
+    setOrganization(params.get("organization") || "");
+    setCity(params.get("city") || "");
+    setCountry(params.get("country") || "");
+    setSort(params.get("sort") || "name-asc");
+    setFiltersReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!filtersReady) return;
+    const params = new URLSearchParams();
+    if (search.trim()) params.set("q", search.trim());
+    if (activeBatch !== "all") params.set("batch", String(activeBatch));
+    if (presentStatus) params.set("status", presentStatus);
+    if (job) params.set("job", job);
+    if (organization) params.set("organization", organization);
+    if (city) params.set("city", city);
+    if (country) params.set("country", country);
+    if (sort !== "name-asc") params.set("sort", sort);
+    const suffix = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${suffix ? `?${suffix}` : ""}${window.location.hash}`);
+  }, [filtersReady, search, activeBatch, presentStatus, job, organization, city, country, sort]);
 
   const listTopRef =
     useRef<HTMLDivElement>(null);
@@ -474,7 +511,7 @@ export default function AlumniPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [search, activeBatch]);
+  }, [search, activeBatch, presentStatus, job, organization, city, country, sort]);
 
   /* =====================================================
      SEARCH
@@ -484,8 +521,6 @@ export default function AlumniPage() {
     const query = search
       .toLowerCase()
       .trim();
-
-    if (!query) return alumni;
 
     return alumni.filter((member) => {
       const searchable = [
@@ -503,9 +538,23 @@ export default function AlumniPage() {
         .join(" ")
         .toLowerCase();
 
-      return searchable.includes(query);
-    });
-  }, [alumni, search]);
+      return !query || searchable.includes(query);
+    }).filter((member) =>
+      (!presentStatus || (member.presentStatus || "").toLowerCase() === presentStatus.toLowerCase()) &&
+      (!job || (member.currentPosition || "") === job) &&
+      (!organization || (member.organization || "") === organization) &&
+      (!city || (member.currentCity || "") === city) &&
+      (!country || (member.currentCountry || "") === country)
+    );
+  }, [alumni, search, presentStatus, job, organization, city, country]);
+
+  const options = useMemo(() => ({
+    statuses: Array.from(new Set(alumni.map((member) => member.presentStatus).filter(Boolean))).sort(),
+    jobs: Array.from(new Set(alumni.map((member) => member.currentPosition).filter(Boolean))).sort(),
+    organizations: Array.from(new Set(alumni.map((member) => member.organization).filter(Boolean))).sort(),
+    cities: Array.from(new Set(alumni.map((member) => member.currentCity).filter(Boolean))).sort(),
+    countries: Array.from(new Set(alumni.map((member) => member.currentCountry).filter(Boolean))).sort(),
+  }), [alumni]);
 
   /* =====================================================
      BATCHES
@@ -547,16 +596,14 @@ export default function AlumniPage() {
 
   const visible = useMemo(
     () =>
-      sortAZ(
-        activeBatch === "all"
-          ? searched
-          : searched.filter(
-              (member) =>
-                member.batch ===
-                activeBatch
-            )
-      ),
-    [searched, activeBatch]
+      (activeBatch === "all" ? searched : searched.filter((member) => member.batch === activeBatch))
+        .sort((a, b) => {
+          if (sort === "name-desc") return sortKey(b.name).localeCompare(sortKey(a.name), "en", { sensitivity: "base" });
+          if (sort === "batch-desc") return b.batch - a.batch || sortKey(a.name).localeCompare(sortKey(b.name), "en", { sensitivity: "base" });
+          if (sort === "batch-asc") return a.batch - b.batch || sortKey(a.name).localeCompare(sortKey(b.name), "en", { sensitivity: "base" });
+          return sortKey(a.name).localeCompare(sortKey(b.name), "en", { sensitivity: "base" });
+        }),
+    [searched, activeBatch, sort]
   );
 
   /* =====================================================
@@ -702,6 +749,21 @@ export default function AlumniPage() {
   const clearAll = () => {
     setSearch("");
     setActiveBatch("all");
+    setPresentStatus("");
+    setJob("");
+    setOrganization("");
+    setCity("");
+    setCountry("");
+    setSort("name-asc");
+  };
+
+  const copySearchLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      window.alert("Filtered directory link copied.");
+    } catch {
+      window.prompt("Copy this filtered directory link:", window.location.href);
+    }
   };
 
   /* =====================================================
@@ -1029,6 +1091,35 @@ export default function AlumniPage() {
             </div>
           </motion.div>
 
+          <div className="mx-auto mt-3 grid max-w-4xl gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <label className="sr-only" htmlFor="alumni-status-filter">Filter by present status</label>
+            <select id="alumni-status-filter" value={presentStatus} onChange={(event) => setPresentStatus(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All present statuses</option>{options.statuses.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="alumni-job-filter">Filter by job or position</label>
+            <select id="alumni-job-filter" value={job} onChange={(event) => setJob(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All jobs / positions</option>{options.jobs.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="alumni-organization-filter">Filter by organization</label>
+            <select id="alumni-organization-filter" value={organization} onChange={(event) => setOrganization(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All organizations</option>{options.organizations.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="alumni-city-filter">Filter by city</label>
+            <select id="alumni-city-filter" value={city} onChange={(event) => setCity(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All cities</option>{options.cities.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="alumni-country-filter">Filter by country</label>
+            <select id="alumni-country-filter" value={country} onChange={(event) => setCountry(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All countries</option>{options.countries.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="alumni-sort">Sort alumni</label>
+            <select id="alumni-sort" value={sort} onChange={(event) => setSort(event.target.value)} className="min-h-11 rounded-xl border border-[#DCEEF2] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="name-asc">Name: A to Z</option><option value="name-desc">Name: Z to A</option><option value="batch-asc">Batch: oldest first</option><option value="batch-desc">Batch: newest first</option>
+            </select>
+            <button type="button" onClick={() => void copySearchLink()} className="min-h-11 rounded-xl border border-[#087EA4]/20 bg-white px-3 text-sm font-semibold text-[#087EA4] transition hover:bg-[#EAF5F8]">Copy filtered link</button>
+            <button type="button" onClick={clearAll} className="min-h-11 rounded-xl border border-transparent px-3 text-sm font-semibold text-[#55727D] transition hover:bg-[#EAF5F8] hover:text-[#087EA4]">Clear filters</button>
+          </div>
+
           {/* =================================================
               BATCH FILTER
           ================================================= */}
@@ -1276,6 +1367,7 @@ export default function AlumniPage() {
                           Profiles sorted
                           alphabetically
                         </p>
+                        <a href={`/batch/${activeBatch}`} className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#087EA4]/15 px-3 py-2 text-xs font-bold text-[#087EA4] transition hover:bg-[#EAF5F8]">Open batch page <FaArrowRight aria-hidden="true" /></a>
                       </div>
 
                       <div className="grid grid-cols-2 gap-3">

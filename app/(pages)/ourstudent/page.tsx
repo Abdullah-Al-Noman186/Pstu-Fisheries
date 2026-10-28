@@ -3,6 +3,9 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import Image from "next/image";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   FaArrowRight,
   FaBookOpen,
@@ -16,6 +19,7 @@ import {
   FaTimes,
   FaUserGraduate,
   FaUsers,
+  FaCheckCircle,
 } from "react-icons/fa";
 
 /* =========================================================
@@ -24,6 +28,8 @@ import {
 
 interface Student {
   id?: string;
+  uid?: string;
+  isVerified?: boolean;
 
   name?: string;
   name_bn?: string;
@@ -44,6 +50,12 @@ interface Student {
   session?: string;
 
   present_status?: string;
+  currentPosition?: string;
+  job_title?: string;
+  organization?: string;
+  location?: string;
+  current_city?: string;
+  current_country?: string;
 
   current_semester?: string;
   semester?: string;
@@ -234,6 +246,13 @@ export default function OurStudentPage() {
   const [search, setSearch] = useState("");
   const [selectedBatch, setSelectedBatch] =
     useState("All");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [jobFilter, setJobFilter] = useState("");
+  const [organizationFilter, setOrganizationFilter] = useState("");
+  const [cityFilter, setCityFilter] = useState("");
+  const [countryFilter, setCountryFilter] = useState("");
+  const [sortOrder, setSortOrder] = useState("name-asc");
+  const [filtersReady, setFiltersReady] = useState(false);
 
   const [selectedStudent, setSelectedStudent] =
     useState<Student | null>(null);
@@ -241,6 +260,34 @@ export default function OurStudentPage() {
   const [page, setPage] = useState(1);
 
   const studentsPerPage = 12;
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setSearch(params.get("q") || "");
+    setSelectedBatch(params.get("batch") || "All");
+    setStatusFilter(params.get("status") || "");
+    setJobFilter(params.get("job") || "");
+    setOrganizationFilter(params.get("organization") || "");
+    setCityFilter(params.get("city") || "");
+    setCountryFilter(params.get("country") || "");
+    setSortOrder(params.get("sort") || "name-asc");
+    setFiltersReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!filtersReady) return;
+    const params = new URLSearchParams();
+    if (search.trim()) params.set("q", search.trim());
+    if (selectedBatch !== "All") params.set("batch", selectedBatch);
+    if (statusFilter) params.set("status", statusFilter);
+    if (jobFilter) params.set("job", jobFilter);
+    if (organizationFilter) params.set("organization", organizationFilter);
+    if (cityFilter) params.set("city", cityFilter);
+    if (countryFilter) params.set("country", countryFilter);
+    if (sortOrder !== "name-asc") params.set("sort", sortOrder);
+    const query = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
+  }, [filtersReady, search, selectedBatch, statusFilter, jobFilter, organizationFilter, cityFilter, countryFilter, sortOrder]);
 
   /* =====================================================
      FETCH STUDENTS
@@ -384,7 +431,11 @@ export default function OurStudentPage() {
         batch === selectedBatch;
 
       if (!matchesBatch) return false;
-
+      if (statusFilter && (student.present_status || "") !== statusFilter) return false;
+      if (jobFilter && (student.job_title || student.currentPosition || "") !== jobFilter) return false;
+      if (organizationFilter && (student.organization || "") !== organizationFilter) return false;
+      if (cityFilter && (student.current_city || "") !== cityFilter) return false;
+      if (countryFilter && (student.current_country || "") !== countryFilter) return false;
       if (!query) return true;
 
       const searchableText = [
@@ -398,17 +449,43 @@ export default function OurStudentPage() {
         getAddress(student),
         student.email || "",
         student.phone || "",
+        student.present_status || "",
+        student.job_title || student.currentPosition || "",
+        student.organization || "",
+        student.current_city || "",
+        student.current_country || "",
       ]
         .join(" ")
         .toLowerCase();
 
       return searchableText.includes(query);
+    }).sort((a, b) => {
+      const first = getStudentName(a).toLowerCase();
+      const second = getStudentName(b).toLowerCase();
+      if (sortOrder === "name-desc") return second.localeCompare(first);
+      if (sortOrder === "batch-asc") return Number(getBatch(a)) - Number(getBatch(b)) || first.localeCompare(second);
+      if (sortOrder === "batch-desc") return Number(getBatch(b)) - Number(getBatch(a)) || first.localeCompare(second);
+      return first.localeCompare(second);
     });
   }, [
     currentStudents,
     search,
     selectedBatch,
+    statusFilter,
+    jobFilter,
+    organizationFilter,
+    cityFilter,
+    countryFilter,
+    sortOrder,
   ]);
+
+  const filterOptions = useMemo(() => ({
+    statuses: Array.from(new Set(currentStudents.map((student) => student.present_status).filter(Boolean))).sort(),
+    jobs: Array.from(new Set(currentStudents.map((student) => student.job_title || student.currentPosition).filter(Boolean))).sort(),
+    organizations: Array.from(new Set(currentStudents.map((student) => student.organization).filter(Boolean))).sort(),
+    cities: Array.from(new Set(currentStudents.map((student) => student.current_city).filter(Boolean))).sort(),
+    countries: Array.from(new Set(currentStudents.map((student) => student.current_country).filter(Boolean))).sort(),
+  }), [currentStudents]);
 
   /* =====================================================
      PAGINATION
@@ -438,7 +515,7 @@ export default function OurStudentPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [search, selectedBatch]);
+  }, [search, selectedBatch, statusFilter, jobFilter, organizationFilter, cityFilter, countryFilter, sortOrder]);
 
   /* =====================================================
      BATCH SELECT
@@ -456,6 +533,26 @@ export default function OurStudentPage() {
           block: "start",
         });
     }, 50);
+  };
+
+  const clearDirectoryFilters = () => {
+    setSearch("");
+    setSelectedBatch("All");
+    setStatusFilter("");
+    setJobFilter("");
+    setOrganizationFilter("");
+    setCityFilter("");
+    setCountryFilter("");
+    setSortOrder("name-asc");
+  };
+
+  const copyDirectoryLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success("Filtered student directory link copied.");
+    } catch {
+      window.prompt("Copy this filtered directory link:", window.location.href);
+    }
   };
 
   /* =====================================================
@@ -888,6 +985,35 @@ export default function OurStudentPage() {
             </div>
           </div>
 
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            <label className="sr-only" htmlFor="student-status-filter">Filter by present status</label>
+            <select id="student-status-filter" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All statuses</option>{filterOptions.statuses.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="student-job-filter">Filter by job or position</label>
+            <select id="student-job-filter" value={jobFilter} onChange={(event) => setJobFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All jobs / positions</option>{filterOptions.jobs.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="student-organization-filter">Filter by organization</label>
+            <select id="student-organization-filter" value={organizationFilter} onChange={(event) => setOrganizationFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All organizations</option>{filterOptions.organizations.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="student-city-filter">Filter by city</label>
+            <select id="student-city-filter" value={cityFilter} onChange={(event) => setCityFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All cities</option>{filterOptions.cities.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="student-country-filter">Filter by country</label>
+            <select id="student-country-filter" value={countryFilter} onChange={(event) => setCountryFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="">All countries</option>{filterOptions.countries.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+            <label className="sr-only" htmlFor="student-sort">Sort students</label>
+            <select id="student-sort" value={sortOrder} onChange={(event) => setSortOrder(event.target.value)} className="min-h-11 rounded-xl border border-[#D6E9EE] bg-white px-3 text-sm text-[#123B4A]">
+              <option value="name-asc">Name: A to Z</option><option value="name-desc">Name: Z to A</option><option value="batch-asc">Batch: oldest first</option><option value="batch-desc">Batch: newest first</option>
+            </select>
+            <button type="button" onClick={() => void copyDirectoryLink()} className="min-h-11 rounded-xl border border-[#087EA4]/20 bg-white px-3 text-sm font-semibold text-[#087EA4] transition hover:bg-[#F0FAFC]">Copy filtered link</button>
+            <button type="button" onClick={clearDirectoryFilters} className="min-h-11 rounded-xl border border-transparent px-3 text-sm font-semibold text-[#55727D] transition hover:bg-[#F0FAFC] hover:text-[#087EA4]">Clear filters</button>
+          </div>
+
           {/* ACTIVE FILTER */}
           {(search ||
             selectedBatch !== "All") && (
@@ -1206,6 +1332,8 @@ function StudentCard({
               </p>
             )}
 
+            {student.isVerified && <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold text-emerald-700"><FaCheckCircle aria-hidden="true" /> Verified PSTU record</span>}
+
             <span className="mt-3 inline-flex max-w-full items-center gap-2 rounded-full bg-[#F4F8FA] px-2.5 py-1 text-[11px] font-semibold text-[#55727D]">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#22B8A5]" />
               <span className="truncate">{status}</span>
@@ -1372,6 +1500,7 @@ function StudentModal({
   student: Student;
   onClose: () => void;
 }) {
+  const { user } = useAuth();
   const name = getStudentName(student);
   const banglaName = getBanglaName(student);
   const imageUrl = getImageUrl(
@@ -1382,6 +1511,21 @@ function StudentModal({
   useEffect(() => {
     setImageFailed(false);
   }, [imageUrl]);
+
+  const reportProfile = async () => {
+    if (!user) {
+      toast.error("Sign in to report a profile.");
+      return;
+    }
+    const message = window.prompt("What information is incorrect? Please describe it in at least 10 characters.");
+    if (!message?.trim()) return;
+    try {
+      await axios.post("/api/profile/report", { targetUid: student.uid, message });
+      toast.success("Report sent to the faculty team for review.");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || "Could not send the report.");
+    }
+  };
 
   return (
     <motion.div
@@ -1459,6 +1603,7 @@ function StudentModal({
               <h2 className="mt-1 break-words text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
                 {name}
               </h2>
+              {student.isVerified && <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-semibold text-white"><FaCheckCircle aria-hidden="true" /> Verified PSTU record</span>}
 
               {banglaName &&
                 banglaName !== name && (
@@ -1558,6 +1703,14 @@ function StudentModal({
                   />
                 )}
               </div>
+            </div>
+          )}
+
+          {student.uid && (
+            <div className="mt-6 border-t border-[#E7F0F2] pt-4">
+              <button type="button" onClick={() => void reportProfile()} className="min-h-11 rounded-xl border border-[#DCEEF2] px-4 py-2 text-sm font-semibold text-[#55727D] transition hover:bg-[#F0FAFC] hover:text-[#087EA4]" aria-label={`Report incorrect information for ${name}`}>
+                Report incorrect information
+              </button>
             </div>
           )}
         </div>
